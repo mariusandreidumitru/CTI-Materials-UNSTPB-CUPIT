@@ -1,0 +1,68 @@
+Problema 1
+Constructorul clasei A are semnatura:  public A(int x)
+In clasa A avem metoda afisare( ) ce are semnatura: public void afisare(int y)
+a.	Instantiati un obiect din clasa A
+        A obj=new A(5);
+
+b.	Dati un exemplu de apel pentru metoda afisare(), din afara clasei A
+        A obj=new A(5);
+        obj.afisare(8);
+
+Problema 2
+In clasa A avem metoda f( ) ce are semnatura:
+public static int f(String s)
+   Dati un exemplu de apel pentru metoda f(), din afara clasei A
+
+   int rezultat=A.f("casa");
+
+Problema 3
+Scrieti clasa DouaNumere ce are ca variabile de instanta pe a si b, de tipul int.
+Ca metode: constructorul clasei, metoda medie() ce returneaza media aritmetica a celor doua numere si metoda suntAmbelePatratePerfecte() care returneaza true daca si a si b sunt patrate perfecte. Scrieti si clasa Main , ce testeaza aceste metode.
+
+public class DouaNumere{
+  private int a,b;
+  public DouaNumere(int a, int b){
+     this.a=a;
+     this.b=b;
+  }
+  public double medie(){
+    return (a+b)/2.0;
+  }
+  boolean estePatratPerfect(int nr){
+   if(nr<0)return false;
+   int radical=(int)Math.sqrt(nr);
+   if(radical*radical==nr)return true;
+   else return false;
+ }
+ public boolean suntAmbelePatratePerfecte() {
+   if(estePatratPerfect(a) && estePatratPerfect(b))return true;
+   else return false;
+ }
+}
+
+public class Main{
+  public static void main(String args[]){
+    DouaNumere d=new DouaNumere(3,13);
+    System.out.println("media="+d.medie());
+    System.out.println(d.suntAmbelePatratePerfecte());
+ }
+}
+
+Problema 4
+Adaugati in clasa Lista, ce modeleaza o lista inlantuita de numere intregi (are variabila de instanta head, de tipul Nod, unde Nod este clasa ce modeleaza un nod din lista), metoda toateEgale(), ce are semnatura: public boolean toateEgale()
+Metoda returneaza true daca toate numerele din lista sunt egale intre ele.
+public boolean toateEgale(){
+  //sunt toate egale daca sunt toate egale cu primul numar
+  int primul=head.nr;
+  Nod nodCrt=head.next;
+  for(;;){
+    if(nodCrt==null)break;
+    int nrCrt=nodCrt.nr;
+    if(nrCrt!=primul)return false;
+    nodCrt=nodCrt.next;
+  }
+  return true;
+}
+
+
+

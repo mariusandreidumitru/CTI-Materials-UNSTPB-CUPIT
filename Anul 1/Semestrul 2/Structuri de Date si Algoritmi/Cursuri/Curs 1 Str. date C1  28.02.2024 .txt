@@ -1,0 +1,451 @@
+Curs 1 Str. date Calc. 1
+ 
+Bibliografie:
+ Ene, Al., Anghelescu, P., Structuri de date. Lucrari de laborator, Editura Univ. din Pitesti, 2009
+
+Cea mai simpla dar si cea mai utilizata structura de date: vectorii !
+
+N. Wirth: program=structuri de date+algoritmi
+O structura: un mod de aranjare a datelor in memorie. Implica o ordine.
+Recapitulare functii
+ Tb. sa stim sa scriem antetele
+Ex: Care este antetul functiei f ce are ca par. un numar intreg nr si scoate ca
+rezultat un nr. intreg ?
+  int f(int nr)
+Tb. sa stim cum o apelam pe baza antetului:
+  int rezultat=f(7);
+
+Care este antetul functiei f ce are ca par. un numar intreg nr si nu scoate 
+niciun rezultat?
+  void f(int nr)
+Tb. sa stim cum o apelam pe baza antetului:
+  f(7);
+
+Care este antetul functiei ce are doi parametrii de intrare/iesire 
+si nu scoate niciun rezultat?
+void f(int& a, int& b)
+Modul de apel:
+ int a=3;
+ int b=5;
+ f(a,b);
+
+Ex: 
+Recap. vectori
+Declarare:
+ int a[100];//a[0],...,a[99]
+Ex. 2:
+  int N; cin>>N;
+  int a[N];
+Nu se poate depasi dimensiunea maxima !
+  int a[20];
+  a[100]=10;//eroare Nu exista a[100]
+
+Algoritmi cu vectori
+  Comparam doi algoritmi intre ei ( care este mai eficient) d.p.v. al timpului de executie
+  si d.p.v. al necesarului de memorie.
+
+D.p.v. al timpului de executie: este important numarul MAXIM (sau nr. mediu) de operatii ce se fac in algoritm
+(ex: nr de atribuiri , nr de comparatii, etc)
+
+Daca dimensiunea vectorului este N, ne intreseaza cand vb de timpul de executie cum se modifica timpul de executie atunci cand N creste .
+Daca se dubleaza N , se modifica timpul de executie ? Daca nu: O(1)
+Daca se dubleaza N si se dubleaza si timpul de executie ? daca da avem O(N) 
+...
+
+Exemple de algoritmi cu timp de executie O(N):
+
+Oimagine pentru un vector: un rand de scaune din amfiteatru
+SUMA ELEMENTELOR UNUI VECTOR
+ O functie ce are ca parametrii numele unui vector si dimensiunea lui. Functia returneaza suma.
+ int suma(int a[], int N){
+    int s=0;//initializare
+    int i;
+    //parcurg vector:
+    for(i=0;i<N;i++)
+      s=s+a[i];//s+=a[i];
+    return s;
+ }
+
+ Ex. de apel:
+ int main(){
+   int a[4]={1,2,-3,5};
+   int rez=suma(a,4);
+   cout<<rez;
+   return 0;
+ }
+Timp de executie O(N)
+ DE ce nu are imp. pt timpul de executie ca sunt N atribuiri sau N+1 atribuiri ?
+ Pt. ca N este f. mare ( pt N f. mare discutam de timp de executie)
+
+CATE NUMERE CE INDEPLINESC UN ANUMIT CRITERIU SUNT IN VECTOR ?
+O functie ce are ca parametrii numele unui vector si dimensiunea lui. Functia returneaza cate numere PARE sunt.
+ int nPare(int a[], int N){
+    int contor=0;
+    int i;
+    for(i=0;i<N;i++)
+      if(a[i]%2==0)contor++;
+    return contor;
+ }
+Timp de executie: O(N)
+Alt exemplu:
+Cate numere din vector au suma cifrelor egala cu 7 ?
+
+int calcul(int a[], int N){
+ int contor=0;
+ int i;
+ for(i=0;i<N;i++)
+   if(areSumaCifre(a[i],7)==1)contor++;
+ return contor;
+}
+
+int areSumaCifre(int nr, int S){
+ int suma=0;
+ for(;;){
+   int u=nr%10;
+   suma+=u;
+   nr=nr/10;//nr/=10;
+   if(nr==0)break;
+   if(suma==S)return 1;
+   else return 0;
+ }
+}
+ Timp de executie: O(N)
+
+  
+MAXIMUL DIN VECTOR
+O functie ce are ca parametrii numele unui vector si dimensiunea lui. Functia returneaza maximul.
+ int maxim(int a[], int N){
+    int maxV=a[0];
+    int i;
+    for(i=1;i<N;i++)
+      if(a[i]>maxV)maxV=a[i];
+    return maxV;
+ }
+Timp de executie: O(N)
+
+ALGORITMUL DE CAUTARE LINIARA
+O functie ce are ca parametrii numele unui vector si dimensiunea lui si un numar x. Functia returneaza 1, daca x este
+prezent in vector si 0, daca nu este.
+ int cautare(int a[], int N, int x){
+    int i;
+    for(i=0;i<N;i++)
+      if(a[i]==x)return 1;
+    return 0;
+ }
+Nr. maxim de comparatii este N. Deci: O(N)
+
+COPIERE NUMERE CE INDEPLINESC UN ANUMIT CRITERIU DINTR_UN VECTOR IN ALT VECTOR
+O functie ce are ca parametru de intrare vectorul a si dimensiunea lui na.
+In functie se copiaza toate numerele pare din vectorul a, in vectorul b.
+Deci, vor fi ca parametrii de iesire, vectorul b si dimensiunea lui nb.
+
+void copiere(int a[], int na, int b[], int& nb){
+  int i;
+  int j=0;//index in vectorul b:
+  //parcurg vectorul a:
+  for(i=0;i<na;i++)
+    if(a[i]%2==0){
+       b[j]=a[i];
+       j++;
+    }
+  nb=j;
+}
+
+Ex. de apel:
+int main(){
+  int N; cout<<"N="; cin>>N;
+  int a[N];
+  int b[N];
+  int nb;
+  //citire a:
+  int i;
+  for(i=0;i<N;i++)
+    cin>>a[i];
+  copiere(a,N,b,nb);
+  //afisare b:
+  for(i=0;i<nb;i++)
+    cout<<b[i]<<" ";
+  return 0;
+}
+Timp de executie: O(N)
+
+SUNT TOATE NUMERELE EGALE IN VECTOR ?
+Scriem o functie ce are ca par.  numele unui vector si dimensiunea lui.
+Functia returneaza 1 daca toate elementele vectorului sunt egale intre ele
+si 0 daca nu sunt.
+
+int toateEgale(int a[], int N){
+ //compar fiecare element cu primul 
+ int i;
+ for(i=1;i<N;i++)
+   if(a[i]!=a[0])return 0;
+ return 1;
+}
+Timp de executie: O(N)
+
+ALGORITMI CU TIMPI DE EXECUTIE O(N*N)
+  Daca se dubleaza N, atunci pt acesti algoritmi , timpul de executie creste de 4 ori
+
+ TOATE DIFERITE
+Scriem o functie ce are ca par.  numele unui vector si dimensiunea lui.
+Functia returneaza 1 daca toate elementele vectorului sunt diferite intre ele
+si 0 daca nu sunt.
+ Ex: {1,2,3,2} NU
+     {1,2,5,6} DA
+
+int toateDiferite(int a[], int N){
+  //compar fiecare element cu toate de dupa el
+  int i, j;
+  for(i=0;i<N-1;i++)
+    //compar pe a[i] cu: a[i+1], a[i+2],....
+    for(j=i+1; j<N;j++)
+       if(a[i]==a[j])return 0;
+  return 1;
+}
+
+Sa calculam nr. MAXIM de comparatii:
+ Pe primul il comparam cu N-1 elemente, pe al doilea cu N-2 elemente, etc.
+ Nr maxim comparatii=(N-1)+(N-2)+...+1=(N-1)*N/2
+(N-1)*N/2=N*N/2 - N/2
+Daca N este mare , atunci N/2 este neglijabil.
+Deci nr maxim comparatii este: N*N/2
+Deci avem O(N*N)
+
+O(N*N): daca dublam pe N, timpul de executie se mareste de 4 ori
+ 
+ SORTARE PRIN INTERSCHIMBARE
+Ex: {7,6,8,3}
+6,7,8,3
+3,7,8,6
+.....
+void sortare(int a[], int N){
+  //compar fiecare element cu toate de dupa el
+  int i, j;
+  for(i=0;i<N-1;i++)
+    for(j=i+1; j<N;j++)
+       if(a[i]>a[j]){
+         //le comut:
+         int aux=a[i];
+         a[i]=a[j];
+         a[j]=aux;
+       }
+}
+
+SORTARE BUBBLE-SORT
+    
+      compar el. crt cu elementul urmator (pe a[i] cu a[i+1])
+
+Ex: 
+{1,7,5,4}
+1,5,4,7  Dupa prima trecere ajunge max pe ultima pozitie
+1,4,5,7
+
+void bubbleSort(int a[], int N){
+ int i;
+ for(;;){
+   int suntInversiuni=0;//presupun ca nu mai sunt inv
+   for(i=0;i<N-1;i++)
+     if(a[i]>a[i+1]){
+       //int aux=a[i];
+       //a[i]=a[i+1];
+       //a[i+1]=aux;
+       swap(a[i],a[i+1]);
+       suntInversiuni=1;
+     }
+   if(suntInversiuni==0)break;
+ }
+}
+     
+ALGORITMI CU TIMPI DE EXECUTIE O(log_2(N))
+  Cautarea binara
+- vectorul sa fie deja sortat
+- cautam injumatatind intervalul de cautare
+
+FUNCTII RECURSIVE
+ Sunt functii care se autoapeleaza.
+
+Ex. simplu: calculul unor functii definite matematic recursiv :
+ Functia factorial:
+  n!=1*2*..*N  (def. nerecursiva)
+  
+Definitia recursiva:
+ n!= 1 daca n=1 (conditie limita)
+ n!=n*(n-1)! daca n>1
+
+Varianta recursiva a functiei factorial:
+ //presupunem n>=1
+int factorial(int n){
+ if(n==1)return 1;
+ else return n*factorial(n-1);
+}
+
+Varianta nerecursiva (iterativa):
+// n!=1*2*..*N  (def. nerecursiva)
+int factorial(int n){
+ int P=1;
+ int i;
+ for(i=1;i<=N;i++)
+   P=P*i;
+ return P;
+}
+
+Observatii:
+Recursivitatea este o alternativa la instructiunea de repetare !
+
+ 
+
+Alt exemplu simplu:
+ calculul termenului de rang n din sirul lui Fibonacci
+Se defineste mate astfel:
+ a_0=1 prin definitie
+ a_1=1
+ Pt n>=2:
+ a_n=a_(n-1) + a_(n-2)
+
+a_4=?
+a_0=1
+a_1=1
+a_2=1+1`=2
+a_3=2+1=3
+a_4=3+2=5
+
+
+Varianta recursiva:
+int fib(int n){
+ if(n==0)return 1;
+ else if(n==1)return 1;
+ else return fib(n-1)+fib(n-2);
+}
+
+Ex: n=3
+return  fib(2)+fib(1)
+
+fib(2): return fib(1)+fib(0)
+
+fib(1): 1
+fib(0):1
+Deci fib(2): 1+1=2
+
+
+#include <iostream>
+
+using namespace std;
+int fib(int n){
+ if(n==0)return 1;
+ else if(n==1)return 1;
+ else return fib(n-1)+fib(n-2);
+}
+
+int fibNerecursiv(int n){
+ if(n==0)return 1;
+ if(n==1)return 1;
+ //daca n>=2:
+ int ultim=1;//a_1
+ int pen=1;//a_0
+ int crt;//ultim+pen
+ int i;
+ for(i=2;i<=n;i++){
+    crt=ultim+pen;
+    pen=ultim;
+    ultim=crt;//are imp. ordinea atribuirilor !
+ }
+ return crt;
+}
+int main()
+{
+    cout << fibNerecursiv(40) << endl;//10946
+    cout << fib(40) << endl;
+    return 0;
+}
+
+Varianta nerecursiva cu vectori:
+int fib(int N){
+//trebuie sa-i calculez pe toti
+ int t[N+1];
+ t[0]=1;
+ t[1]=1;
+ int i;
+ for(i=2;i<=N;i++)
+    t[i]=t[i-1]+t[i-2];
+ return t[N];
+}
+Din acest exemplu rulat in CodeBlocks, se vede ca varianta recursiva dureaza mai mult ca timp 
+de calcul al termenului de rang 40 din sirul lui Fibonacci.
+
+Recursivitatea este o alternativa la instructiunea de repetare.
+Avantaje:
+ - este mai usor de implementat pt anumiti algoritmi  decat nerecursiv (v. ex. cu Fibonacci)
+
+Dezavantaje:
+ - in general este mai lent decat nerecursiv 
+ - se poate umple stiva datorita ca sunt prea multe apeluri (STACK OVERFLOW)
+
+Alte exemple:
+ Sa scriem o functie recursiva in care se afiseaza N stelute (N>=1)
+void afisare(int N){
+ //caz limita:
+ if(N==1){
+    cout<<"*";
+    return ;
+ }
+ //cazul general:
+ cout<<"*";
+ afisare(N-1);//apel recursiv
+}
+
+Varianta nerecursiva:
+void afisare(int N){
+ int i;
+ for(i=1;i<=N;i++)
+   cout<<"*";
+}
+
+
+Sa calculam cate cifre are un numar natural (>=0) dat ca parametru;
+Varianta recursiva:
+int nCifre(int nr){
+ //caz limita:
+ if(nr<10)return 1;
+ else //caz general
+  return 1+nCifre(nr/10);
+}
+
+Ex: nr=123
+ return 1+nCifre(12)
+            |--------->1+ nCifre(1)
+                            |----------> 1
+
+Varianta nerecursiva:
+int nCifre(int nr){
+ int contor=0;
+ for(;;){
+   contor++;
+   nr=nr/10;
+   if(nr==0)break;
+ }
+ return contor;
+}
+ 
+ Sa calculam cu o functie recursiva suma cifrelor unui numar natural (nr>=0)
+Ex: nr=1232 Suma=8
+
+int sumaCifre(int nr){
+ //caz limita:
+ if(nr<10)return nr;
+ //cazul general: cifra unitatilor+ suma cifrelor numarului redus
+ return nr%10+sumaCifre(nr/10); 
+}
+
+Varianta nerecursiva:
+int sumaCifre(int nr){
+ int suma=0;
+ for(;;){
+   int u=nr%10;
+   suma+=u;
+   nr=nr/10;
+   if(nr==0)break;
+ }
+ return suma;
+}
+
+ 

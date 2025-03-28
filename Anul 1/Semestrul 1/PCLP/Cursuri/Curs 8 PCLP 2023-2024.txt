@@ -1,0 +1,219 @@
+CURS 8 2023- 2024
+Ca parametru intr-o functie se declara un vector v, astfel:
+tipDate v[]
+Tipic, pe langa numele vectorului, intr-o functie avem ca parametru si dimensiunea
+vectorului.
+Compilatorul atribuie numelui vectorului, adresa de inceput a vectorului.
+Numele vectorului este o adresa !
+
+Cand apelam o functie ce are ca par. un vector, folosim in apel doar 
+numele vectorului (fara []).
+ALGO. 1
+SUMA elem. vector
+int main(){
+ int N; cin>>N;
+ int a[N];
+ //citire de la tastatura:
+ int i;
+ for(i=0;i<N;i++)
+  cin>>a[i];
+ //suma:
+ int suma=0;
+ //parcurgem vector:
+ for(i=0;i<N;i++)
+   suma=suma+a[i];
+
+ cout<<suma;
+ return 0;
+}
+
+SUMA folosind o functie:
+int suma(int a[], int N);
+int main(){
+ int N; cin>>N;
+ int a[N];
+ //citire de la tastatura:
+ int i;
+ for(i=0;i<N;i++)
+  cin>>a[i];
+ int S=suma(a,N); 
+ cout<<S;
+ return 0;
+}
+int suma(int a[], int N){
+  int sum=0;
+  for(int i=0;i<N;i++)
+    sum+=a[i];
+  return sum;
+}
+
+Timp de executie program depinde de N, dimensiunea vector.
+Daca dublam pe N si timpul de excutie se va dubla.
+Spunem ca timp de executie depinde liniar de N, este O(N)
+
+ALGO 2
+ Numaram ceva din vector.
+ CATE NUMERE PARE SUNT IN VECTOR
+ int nPare(int a[], int N){
+    int contor=0;
+    //parcurg vector:
+    for(int i=0; i<N;i++)
+      if(a[i]%2==0)contor++;
+    return contor;
+ }
+
+Face N comparatii, deci timp de executie este O(N)
+
+ALGO 3
+ MAXIMUL DIN VECTOR
+ int maxim(int a[], int N){
+   int maxi=a[0];
+   for(int i=1; i<N; i++)
+      if(a[i]>maxi)maxi=a[i];
+   return maxi;
+ }
+
+Face N comparatii, deci timp de executie este O(N)
+ALGO 4
+ CAUTARE LINIARA INTR_UN VECTOR
+
+int cautare(int a[], int N, int x);
+int main(){
+ int N; cin>>N;
+ int a[N];
+ int x; cin>>x;
+ //citire de la tastatura vector:
+ int i;
+ for(i=0;i<N;i++)
+  cin>>a[i];
+ int rezultat=cautare(a,N,x); 
+ if(rezultat==1) cout<<"este";
+ else cout<<"nu este";
+ return 0;
+}
+int cautare(int a[], int N, int x){
+  //parcurg vector:
+  for(int i=0;i<N;i++)
+     if(a[i]==x)return 1;
+     //else return 0; GRESIT !!
+  return 0;
+}
+
+Timp de executie:
+  nr maxim de comparatii: N
+  O(N) 
+
+ALGO 5
+ TOATE EGALE 
+Daca sunt toate egale intre ele, ele sunt egale cu primul element
+
+int toateEgale(int a[], int N){
+ int i;
+ for(i=1;i<N;i++)
+   if(a[i]!=a[0])return 0;
+ return 1;
+}
+
+Timp de executie: O(N)
+
+ALGO 6
+ TOATE DIFERITE
+Ex: a={1,2,7,4} sunt toate diferite
+    a={1,2,7,5,7} nu sunt toate diferite
+
+Pe cine cu cine comparam ?
+Compar fiecare element cu toate elementele de dupa el
+
+int toateDiferite(int a[], int N){
+ int i,j;
+ //parcurg vector:
+ for(i=0;i<N-1;i++)
+   //el. crt, a[i], il compar cu TOATE elem. de dupa el:
+   for(j=i+1;j<N;j++)
+      if(a[i]==a[j])return 0;
+ return 1;
+}
+Nr. maxim de comparatii ?
+(N-1)+(N-2)+...+1=(N-1)*N/2=(N^2)/2-N/2
+Timpul de executie se calculeaza pt o dimensiune N MARE !
+N^2-N este N^2
+O(N^2)
+Daca se mareste N de 2 ori, timpul de excutie se mareste de 4 ori.
+Ce timp de executie e mai bun ? O(N) sau O(N^2) ?
+O(N) este mai bun !
+
+ALGO 7 
+ SORTAREA PRIN INTERSCHIMBARE
+Ordonam crescator vectorul
+Facem exact aceleasi comparatii ca la algo. TOATE DIFERITE.
+
+Ex: 
+7, 8, 4, 3, 6   : de sortat crescator
+Compar pe primul cu toate de dupa el. Daca nu sunt in ordinea crescatoare, le interschimb
+3, 8, 7, 4, 6
+Dupa prima trecere, ajunge minimul pe prima pozitie
+A doua trecere:
+3, 4, 8, 7, 6
+3,4,6,8,7
+3,4,6,7,8
+void sortare(int a[], int N){
+//vectorul este par. de intrare/iesire:
+ int i,j;
+ //parcurg vector:
+ for(i=0;i<N-1;i++)
+   //el. crt, a[i], il compar cu TOATE elem. de dupa el:
+   for(j=i+1;j<N;j++)
+      if(a[i]>a[j]){
+        int aux=a[i];
+        a[i]=a[j];
+        a[j]=aux;
+      }
+}
+
+Timp de executie: O(N^2)  
+Ex. de apel:
+int main(){
+ int a[5]={3,4,2,1,-1};
+ sortare(a,5);
+ int i;
+ for(i=0;i<N;i++)
+   cout<<a[i]<<" ";
+
+ALGO 8
+COPIERE ELEMENTELE VECTORUI CE INDEPLINESC UN CRITERIU,  IN ALT VECTOR   
+Copiere numere din vector a, in vector b:
+int main(){
+ int N; cin>>N;
+ int a[N];
+ //citire de la tastatura vector:
+ int i;
+ for(i=0;i<N;i++)
+  cin>>a[i];
+ int b[N];//dim. acoperitoare (pot fi toate numerele pare)
+// parcurg vector a:
+/*
+GRESIT  asa !
+ for(i=0;i<N;i++)
+   if(a[i]%2==0)b[i]=a[i];
+
+
+a: 1,3,7,4,6
+b: b[3]=4, b[4]=6
+*/
+ //CORECT:
+ int j=0; //index in b[]
+ for(i=0;i<N;i++)
+  if(a[i]%2==0){
+    b[j]=a[i];
+    j++;
+  }
+ int nB=j;//schimb notatia, nr de elem din vector b
+ // afisare b[]:
+ for(i=0;i<nB;i++)
+   cout<<b[i]<<" ";
+
+ 
+  
+ 
+
+

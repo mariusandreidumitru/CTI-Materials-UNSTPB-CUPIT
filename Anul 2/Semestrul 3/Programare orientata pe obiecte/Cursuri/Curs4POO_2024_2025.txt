@@ -1,0 +1,487 @@
+Curs 4
+
+RCAPITULARE IMP:
+Ca sa stim cum se apeleaza o metoda public dintr-o clasa de biblioteca trebuie ca sa stim doua lucruri:
+-semnatura constructorului
+-semnatura metodei
+Ex: clasa Random are constructorul:
+public Random()
+Avem metodele:
+public int nextInt(int N)
+
+Cum apelam nextInt() ?
+Mai intai creez obiect:
+Random r=new Random();
+Apelez metoda:
+int nr=r.nextInt();
+
+Alt exemplu:
+ clasa Dreptunghi are constructorul:
+public Dreptunghi(int a, int b)
+ Avem metoda : public int arie()
+Cum o apelez din afara clasei Dreptunghi:
+//Pasul 1:
+Dreptunghi d=new Dreptunghi(3, 12);
+//Pasul 2: cu obiectul d, apelez metoda arie():
+int rezultat=d.arie();
+//////////////////////////////////////
+
+
+
+
+O clasa poate sa aiba 0,1 sau mai multi constructori (acestia difera prin nr. sau tipul parametrilor:
+         polimorfism parametric in cazul in care sunt mai multi constructori.)
+
+public class Cerc {
+	private int r;
+	public Cerc(int r) {
+		this.r=r;
+	}
+	public Cerc() {
+		r=1;
+	}
+
+	public void set(int r) {this.r=r;}
+	public int get() {return r;}
+	public double arie() {
+		return Math.PI*r*r;
+	}
+	public boolean egale(Cerc c) {
+        //verifica daca cercul curent (cel referit prin this, are aceeasi             //raza cu cercul c, dat ca parametru
+		if(r==c.r)return true;//pt claritate: if(this.r==c.r)
+		else return false; 
+     }
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Cerc c1 = new Cerc();//creaza cerc cu r=1
+		double a1 = c1.arie();
+		System.out.println("aria 1=" + a1);
+		Cerc c2 = new Cerc(2);
+		double a2 = c2.arie();
+		System.out.println("aria 2=" + a2);
+		//public boolean egale(Cerc c)
+		//Compar c1 cu c2:
+		boolean rez=c1.egale(c2);//rez=c2.egale(c1); este corect si asa!
+                if(rez==true)System.out.println("egale");
+                else if(rez==true)System.out.println("nu egale");
+	}
+
+}
+
+Deoarece la instantierea unui obiect se apeleaza AUTOMAT constructorul, ce se intampla daca 
+in clasa nu a fost definit nici un constructor ?
+ Daca nu definim noi niciun constructor, Java va defini implicit un constructor, 
+fara parametrii  si in care nu se face nimic.
+Ex:
+ class Punct{
+   public int x;
+   public int y;
+ }
+Nu am definit in clasa Punct vreun constructor, dar Java creeaza automat 
+constructorul:
+ public Punct(){
+ }
+Cum creem un obiect?
+Punct p=new Punct();
+p.x=1; p.y=-1;
+ 
+Daca vrem sa interzicem instantierea obiectelor dintr-o clasa, atunci facem
+constructorul private. Ex: Clasa Math are un constructor private, deci:
+Math m=new Math() ; //eroare la compilare
+
+In cazul unui constructor definit de programator, instantierea unui obiect se face 
+tinand cont de parametrii constructorului (de numarul si tipul lor).
+
+Exemple de instantiere de obiecte pe baza semnaturii constructorului:
+TEST usor si la EXAMEN !!!( este abc-ul POO !)
+
+1. public Patrat(int a) 
+Atunci:
+   Patrat p=new Patrat(7);
+si nu asa: Patrat p=new Patrat();
+
+2. Stim semnatura constructor:
+       public Punct(int x, int y)
+   Cum creez obiect din clasa Punct?
+   Punct p1=new Punct(10,20);
+
+3. class Carte{
+     public String titlu;
+     public String autor;
+     int nrPagini;
+     public Carte(String titlu, String autor, int nrPagini){
+         this.titlu=titlu;
+         this.autor=autor;
+         this.nrPagini=nrPagini;
+     }
+     ...
+   }
+Ex. de instantiere:
+   Carte c=new Carte("Amintiri din copilarie","Ion Creanga", 100);
+
+Alte exemple de clase:
+
+Scriem clasa Cerc ce are ca proprietati raza si coordonatele centrului:
+
+public class Cerc {
+	private int r;
+	private int x0;//coordonata x a centrului
+	private int y0;
+	public Cerc(int r, int x0, int y0) {
+		this.r = r;
+		this.x0 = x0;
+		this.y0 = y0;
+	}
+	public int getR() {
+		return r;
+	}
+	public void setR(int r) {
+		this.r = r;
+	}
+	public int getX0() {
+		return x0;
+	}
+	public void setX0(int x0) {
+		this.x0 = x0;
+	}
+	public int getY0() {
+		return y0;
+	}
+	public void setY0(int y0) {
+		this.y0 = y0;
+	}
+	public double arie() {
+		return Math.PI*r*r;
+	}
+	public boolean egale(Cerc c) {
+        if(r==c.r && x0==c.x0 && y0==c.y0)return true;
+		else return false; 
+     }
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		Cerc c1=new Cerc(1,2,3);
+		double a1=c1.arie();
+		System.out.println("arie 1="+a1);
+		Cerc c2=new Cerc(1,2,30);
+		boolean rez=c1.egale(c2);
+		System.out.println(rez);
+	}
+
+}
+
+Alte exemple de clase elementare:
+Clasa Punct ce modeleaza un punct in plan.
+
+public class Punct {
+	private int x;
+	private int y;
+	public Punct(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	public int getX() {
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+	public double dist_0() {
+		return Math.sqrt(x*x+y*y);
+	}
+	public double dist(Punct p) {
+		//distanta intre punctul crt si punctul p:
+		return Math.sqrt((this.x-p.x)*(this.x-p.x)+(this.y-p.y)*(this.y-p.y));
+	}
+	public boolean egale(Punct p) {
+		if(this.x==p.x && this.y==p.y)return true;
+		else return false;
+	}
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		Punct p1=new Punct(3,4);
+		System.out.println("dist. lui p1 fata de origine = "+p1.dist_0());
+		Punct p2=new Punct(3,4);
+		System.out.println("distanta intre p1 si p2 = "+p1.dist(p2));
+	}
+}
+
+//// Clasa Unghi //////////////////////////
+ u: int - masura in grade a unui unghi
+class Unghi{
+ private int u;
+ public Unghi(int u){
+   this.u=u;
+ }
+ public void set(int u){
+   this.u=u;
+ }
+ public int get(){
+   return u;
+ }
+ //conversia unghiului in radiani
+ public double radiani(){
+   //180 grade ....  Math.PI radiani
+   // u  grade ....  ?
+   return u*Math.PI/180;
+ }
+ public boolean suntComplementare(Unghi angle){
+   if(this.u+angle.u==90)return true;
+   else return false;
+}
+
+class Test{
+ public static void main(String args[]){
+  //Citim de la tastatura un unghi, in grade.
+  // Sa-i afisam masura in radiani.
+  Scanner sc=new Scanner(System.in);
+  System.out.print("dati un unghgi in grade: ";
+  int x=sc.nextInt();
+
+  //Pt a apela metoda:  public double radiani(), mai intai trebuie
+  // sa creem obiect:
+  Unghi u1=new Unghi(x);
+  //apel metoda:
+  double rezultat=u1.radiani();
+  System.out.println(rezultat);
+  Unghi u2=new Unghi(60);
+  //Sunt u1 si u2 complementare ?
+  //if(u1+u2==90) NU ASA ! Nu adunam obiecte !
+  //public boolean suntComplementare(Unghi angle)
+  boolean sunt=u1.suntComplementare(u2);
+  if(sunt==true)System.out.println("da");
+  else System.out.println("nu");
+ }
+}
+
+
+//////Clasa Timp ////////////////////////////
+Clasa Timp are ca var de instanta: ore , minute si secunde:
+
+
+
+public class Timp {
+	private int ore;
+	private int min;
+	private int sec;
+	public Timp(int ore, int min, int sec) {
+		this.ore = ore;
+		this.min = min;
+		this.sec = sec;
+	}
+	public int getOre() {
+		return ore;
+	}
+	public void setOre(int ore) {
+		this.ore = ore;
+	}
+	public int getMin() {
+		return min;
+	}
+	public void setMin(int min) {
+		this.min = min;
+	}
+	public int getSec() {
+		return sec;
+	}
+	public void setSec(int sec) {
+		this.sec = sec;
+	}
+	public int conversieInSecunde() {
+		return 3600*ore+60*min+sec;
+	}
+	
+	//metoda ce da o reprezentare ca String pt obiectul Timp:
+	public String conversieLaString() {
+		return "ore="+ore+" minute="+min+" secunde="+sec;
+	}
+	/*
+	@Override
+	public String toString() {
+		return "Timp [ore=" + ore + ", min=" + min + ", sec=" + sec + "]";
+	}
+	*/
+	
+	public void compara(Timp t) {
+		 int timpCrt_sec=conversieInSecunde();
+		 int t_sec=t.conversieInSecunde();
+		 if(timpCrt_sec>t_sec)System.out.println("primul timp este mai mare");
+		 else if(timpCrt_sec<t_sec)System.out.println("al doilea timp este mai mare");
+		 else System.out.println("timpi egali");
+	}
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Timp t1=new Timp(1,5,50);
+		System.out.println("t1 in secunde : "+t1.conversieInSecunde());
+		Timp t2=new Timp(10,5,50);
+		//public void compara(Timp t)
+		t1.compara(t2);
+	}
+
+}
+
+
+CLASA Complex, ce modeleaza un numar complex
+De la matematica:  2+3i
+(2+3i)+(-1+5i)=1+8i
+modul(a+ib)=sqrt(a*a+b*b)
+Complex conjugatul lui 2+3i este: 2-3i
+
+
+
+public class Complex {
+	private double re;
+	private double im;
+	public Complex(double re, double im) {
+		this.re = re;
+		this.im = im;
+	}
+	public double getRe() {
+		return re;
+	}
+	public void setRe(double re) {
+		this.re = re;
+	}
+	public double getIm() {
+		return im;
+	}
+	public void setIm(double im) {
+		this.im = im;
+	}
+	public double modul() {
+		return Math.sqrt(re*re+im*im);
+	}
+	public Complex complexConjugat() {
+		/*
+		Complex conj=new Complex(re, -im);
+		return conj;
+		*/
+		return new Complex(re,-im);
+	}
+	public Complex suma(Complex c) {
+		double rezultat_re=this.re+c.re;
+		double rezultat_im=this.im+c.im;
+		Complex rezultat=new Complex(rezultat_re, rezultat_im);
+		return rezultat;
+		//se putea face si direct asa:
+		//return new Complex(this.re+c.re, this.im+c.im);
+	}
+
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Complex c1=new Complex(3,4);
+		System.out.println("modul="+c1.modul());
+		Complex c2=c1.complexConjugat();
+		System.out.println("re="+c2.getRe()+" im="+c2.getIm());
+	}
+
+}
+
+Tema
+De adaugat in clasa Complex metoda  afisare() a.i,. sa afiseze numarul 
+complex (ce are partea reala re si cea imaginara im) ca la matematica.
+Ex.: 2-3i
+Exemplu: -2+7i
+Modificati si metoda main() din clasa Main astfel:
+  In main, citim N, nr natural. Citim de la tastatura N numere complexe.
+  Sa calculam suma lor, apeland metoda suma() din clasa Complex.
+
+COMPOZITIA (AGREGAREA)
+ Ce este compozitia ? Putem avea ca atribute intr-o clasa (var. de instanta) 
+obiecte din alte clase.
+
+Ex: clasa Cerc ce modeleaza un cerc cu centru x0, y0
+Fara compozitie:
+public class Cerc {
+	private int r;
+	private int x0;
+	private int y0;
+.....
+}
+
+Cu compozitie:
+public class Cerc {
+	private int r;
+	private Punct centru;
+.....
+}
+
+Codul complet al clasei Cerc, folosind compozitia:
+public class Punct {
+	public int x;
+	public int y;
+	public Punct(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+}
+
+public class Cerc {
+	private int r;
+	private Punct centru;
+	public Cerc(int r, Punct centru) {
+		this.r = r;
+		this.centru = centru;
+	}
+	public int getR() {
+		return r;
+	}
+	public void setR(int r) {
+		this.r = r;
+	}
+	public Punct getCentru() {
+		return centru;
+	}
+	public void setCentru(Punct centru) {
+		this.centru = centru;
+	}
+	public double arie() {
+		return Math.PI*r*r;
+	}
+	public boolean egale(Cerc c) {
+		if(this.r==c.r && centru.x==c.centru.x &&
+				    centru.y==c.centru.y) return true;
+                                //NOU !!! sintaxa obiect1.obiect2.proprietate	
+		else return false;
+	}
+	
+	
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		//crez obiect cerc cu raza d1 si centrul de 
+		// coordonate 2 si 3, care este un obiect Punct:
+		Cerc c1=new Cerc(1,new Punct(2,3)); //NOU !!!
+		double a=c1.arie();
+		System.out.println("aria="+a);
+	}
+
+}
+
+/////////////////////////////////////////////////
+

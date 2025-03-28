@@ -1,0 +1,200 @@
+CURS 7
+Matrice de obiecte
+Construim o matrice patratica de N linii si N coloane , de obiecte Numar.
+
+
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		int N;
+		Scanner sc=new Scanner(System.in);
+		System.out.print("N=");N=sc.nextInt();
+		Numar m[][]=new Numar[N][N];
+		int i,j;
+		for(i=0;i<N;i++)
+			for(j=0;j<N;j++) {
+				System.out.print("nr=");
+				int x=sc.nextInt();
+				m[i][j]=new Numar(x);
+			}
+		//Sa afisam cati divizori are fiecare numar din matrice:
+		for(i=0;i<N;i++)
+			for(j=0;j<N;j++)
+				System.out.println("numarul "+m[i][j].getNr()+" are "+m[i][j].catiDivizori());
+		
+	}
+}
+
+
+Clasa Matrix:
+ -incapsuleaza o matrice si operatii cu matrici (suma, inmultire cu scalar, ...)
+import java.util.Scanner;
+
+import java.util.Scanner;
+
+public class Matrix {
+	private int nL;//nr linii
+	private int nC;
+	private int m[][];
+	public Matrix(int nL, int nC) {
+		this.nL = nL;
+		this.nC = nC;
+		m=new int[nL][nC];
+	}
+	public void citire() {
+		Scanner sc=new Scanner(System.in);
+		int i,j;
+		for(i=0;i<nL;i++)
+			for(j=0;j<nC;j++) {
+				System.out.print("nr=");
+				m[i][j]=sc.nextInt();
+			}
+	}
+
+	public void afisare() {
+		//afisare ca tabel:
+				int i,j;
+				for(i=0;i<nL;i++) {
+					//afisare linia i:
+					for(j=0;j<nC;j++)
+						System.out.print(m[i][j]+" ");
+					System.out.println();
+				}
+	}
+	public Matrix suma(Matrix t) {
+		if(t.nL !=nL)return null;
+		if(t.nC !=nC)return null;
+		Matrix rezultat=new Matrix(nL,nC);
+		int i,j;
+		for(i=0;i<nL;i++)
+			for(j=0;j<nC;j++)
+				rezultat.m[i][j]=this.m[i][j]+t.m[i][j];
+		return rezultat;		
+	}
+}
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Matrix a=new Matrix(2,3);
+		a.citire();
+		System.out.println("afisare a:");
+		a.afisare();
+		Matrix b=new Matrix(2,3);
+		b.citire();
+		System.out.println("afisare b:");
+		b.afisare();
+		Matrix rezultat=a.suma(b);
+		if(rezultat!=null)rezultat.afisare();
+	}
+
+}
+
+Pt examen, pregatire:
+Adaugati in clasa Matrix urmatoarele metode:
+a. transpusa() ce returneaza transpusa matricii curente
+public Matrix transpusa()
+b. inmultireScalar() inmulteste toate elementele matricii cu un nr dat ca parametru
+public Matrix inmultireScalar(int k)
+c. init() initializeaza matricea cu nr aleatoare in gama [0, N] unde N este parametru
+public void init(int N)
+
+Adaugati in clasa Main, testele corespunzatoare pt aceste metode
+ 
+
+                 SIRURI DE CARACTERE. Clasa String
+In C: un sir de caractere este un vector de caractere.
+In Java: un sir este un OBIECT instantiat din clasa String.
+Clasa String face parte din pachetul java.lang
+
+Cum se instantiaza un obiect String ?
+Ex:
+String s1=new String("abc");
+sau, direct:
+String s2="xyz"; 
+In acest caz, compilatorul apeleaza new
+
+Stringurile sunt IMUTABILE (nu se pot modifica). De retinut !
+
+Ex:
+String s="abc";
+s="xyz";// este corect
+Se pare ca am modificat obiectul s ? Nu !
+Explicatie:
+String s="abc"; In memoria dinamica se creaza obiectul "abc" a carui adresa se depoziteaza in variabila s
+s="xyz"; In memoria dinamica se creeaza un alt obiect: "xyz" a carui adresa se va memora in variabila s.
+Inseamna ca primul obiect creat: "abc" nu va mai fi referit, si spatiul din memorie ocupat de el 
+va fi automat eliberat de Java 
+(garbage collector - un proces care ruleaza in background)
+
+-Citire sir de la tastatura:
+ clasa Scanner si metoda nextLine()
+public String nextLine()
+
+Afisare string: System.out.println(stringul);
+
+Daca asupra unui sir trebuie facute mai multe modificari, se recomanda sa folosim in loc de clasa 
+String, clasa StringBuffer (aici stringurile sunt mutabile).
+
+METODE DE BAZA DIN CLASA String
+1) metoda length()
+  public int length() 
+Returneaza lungimea sirului.
+Atentie: este functie, si nu var. de instanta, cum avem la vectori
+
+
+Ex. 1
+Citim un sir de la tastatura. Sa-i afisam lungimea.
+import java.util.*;
+class S1{
+ public static void main(String args[]){
+   Scanner sc=new Scanner(System.in);
+   String s;
+   System.out.print("sir=");
+   s=sc.nextLine();
+   int L=s.length();
+   System.out.println("lungime="+L);
+ }
+}
+
+2) charAt()
+In Java, nu mai putem accesa caracterul de pe pozitia i dintr-un string prin indexare,
+pt ca un string nu este un vector !
+   public char charAt(int index)
+   Returneaza caracterul de pe pozitia index
+Atentie: in C, primul caracter din sirul s este: s[0]
+         in Java: s.charAt(0);
+
+Ex. 
+Citim un cuvant de la tastatura. Cate caractere 'a' are ?
+Are toate caracterele egale intre ele?
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		System.out.print("cuvant=");
+		String s=sc.nextLine();
+		int contor=0;
+		for(int i=0;i<s.length();i++)
+			if(s.charAt(i)=='a')contor++;
+		System.out.println(" nr car. a="+contor);
+		System.out.println(toateEgale(s));	
+
+	}
+    static boolean toateEgale(String s) {
+    	for(int i=1;i<s.length();i++)
+    		if(s.charAt(i)!=s.charAt(0))return false;
+    	return true;
+    }
+}
+
+//////////////////////////////////
+
+
+ 

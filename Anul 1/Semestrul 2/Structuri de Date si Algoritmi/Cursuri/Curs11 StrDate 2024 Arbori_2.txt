@@ -1,0 +1,599 @@
+
+CURS 11
+
+ Informatia din nod arbore poate sa fie orice tip de date ( un sir de caractere, un caracter, o structura, etc. ). 
+Dam in continuare un exemplu de arbore binar de caractere 
+(informatia din fiecare nod esteun caracter ). 
+Construim un arbore de test si scriem o functie care calculeaza cate litere A sunt in acest arbore.
+#include <iostream>
+#include <conio.h>
+#include <math.h>
+using namespace std;
+typedef struct nod{
+      char ch;
+      nod* fSt;
+      nod* fDr;
+}NOD;
+void calculNumarLiteraA(NOD* nodCrt,int &contor){
+  if(nodCrt==NULL)return;
+  //R:
+  if(nodCrt->ch=='A')contor++;
+  //S:
+  calculNumarLiteraA(nodCrt->fSt, contor);
+  calculNumarLiteraA(nodCrt->fDr, contor);
+}
+
+
+
+int main()
+{
+ NOD* rad;
+/*
+              0:'A'
+     1:'B'             2:'C' (nu are fii)
+            3:'A'
+*/
+//Are 2 frunze. Le construim primele:
+NOD* f2=new NOD; f2->ch='C'; f2->fSt=NULL; f2->fDr=NULL;
+NOD* f3=new NOD; f3->ch='A'; f3->fSt=NULL; f3->fDr=NULL;
+
+NOD* f1=new NOD; f1->ch='B'; f1->fSt=NULL; f1->fDr=f3;
+//Utima completata e rad:
+ rad=new NOD; rad->ch='A'; rad->fSt=f1; rad->fDr=f2;
+ int contor_A=0;
+ calculNumarLiteraA(rad,contor_A);
+ cout<<"numar car A =  "<<contor_A;
+ return 0;
+}
+
+DEFINITIE:
+ Inaltimea unui nod intr-un arbore binar este egal cu numarul de muchii al drumului de la 
+acest nod la cea mai departata frunza a lui. Daca nodul nu are frunze, inaltimea nodului este 0.
+ Inaltimea unui arbore binar este inaltimea nodului radacina (deci este egala cu nr. de muchii de la radacina 
+la cea mai departata frunza de radacina).
+
+DEFINITIE:
+   Un arbore binar este echilibrat daca pentru ORICE nod, diferenta de inaltime intre 
+subarborele stang si inaltimea subarborelui drept este, in modul (valoare absoluta),
+ cel mult 1.
+
+Ex. de arbore binar echilibrat:
+     1
+   /   \
+  2     3  
+ /     / \  
+4     5   6  
+     /  
+    7  
+
+
+Ex. de arbore binar dezechilibrat:
+     1
+   /   \
+  2     3   
+ /     /
+4     5  
+     /  
+    6
+Este dezechilibrat pt ca in nodul 3 subarborele stang are 2 noduri, iar cel drept nu exista (0 noduri).
+
+
+Tema de casa (2 saptamani)
+1. Avem un arbore binar de cuvinte. Scrieti o functie care calculeaza 
+numarul de cuvinte de lungime L (L - citit de la tastatura) din arbore.
+
+2. Avem un arbore binar de cautare de cuvinte.  Cuvintele se compara dpv alfabetic.
+Scrieti o functie ce are ca parametru un cuvant x, si functia 
+returneaza 1 daca cuvantul x este prezent in arbore si 0, daca nu este prezent.
+
+3. Avem un arbore multicai ce contine numere intregi. Scrieti o functie ce calculeaza 
+cate numere prime sunt stocate in nodurile arborelui.
+
+
+ARBORI BINARI DE CAUTARE
+	Un arbore binar de cautare este un arbore in care pentru ORICE nod  x din arbore, 
+informatia din acel nod este mai mare decat informatia care este in oricare nod al subarborelui stang al lui x, 
+si informatia din nodul x este mai mica decat informatia care este in oricare nod al subarborelui drept al lui x.
+Un arbore binar de cautare pe care il parcurgem srd (inordine) ne va da o  secventa crescatoare pentru cheile sale. 
+Exemplu de arbore binar de cautare:
+            12
+         /     \
+      5        20
+    /    \        \
+  4       8       30
+
+          
+Ex. de mai jos NU este arbore binar de cautare:
+           12
+        /     \
+      5        20
+    /    \        \
+  8       4       30
+
+Sa se deseneze un ABC (pescurtare pt Arbore Binar de Cautare, in engleza: BST =Binary Search Tree)
+ in care sa se puna in ordine urmatoarele valori:
+{12,49,15,7,2,1}
+           12
+     7                49
+   2               15
+1            
+
+
+ Un ABC total dezechilibrat:
+{4,5,8,20}
+
+  4
+    \
+      5
+       \
+        8
+          \
+          20
+Este de fapt o lista simplu inlantuita.
+
+Cautarea intr-un arbore binar de cautare care este si echilibrat, are ca timp de executie O(log2(N)),
+ deoarece la fiecare pas al cautarii se elimina jumatate din posibilitati.
+
+ Algoritmul de cautare al prezentei unei valori x in arbore este urmatorul:
+  Se pleaca din nodul radacina
+  Daca cheia radacinii este egala cu x, am gasit ceea ce cautam.
+  Daca x > cheia radacinii, continuam cautarea in subarborele drept al radacinii (deci am eliminat din cautare tot subarborele stang )
+ Daca x < cheia radacinii, continuam cautarea in subarborele stang al radacinii (deci am eliminat din cautare tot subarborele drept )
+ si asa mai departe, pentru fiecare nod in care am ajuns, fie ne oprim daca am gasit in nod valoarea x,
+ fie mergem mai departe in subarborele drept ( daca x > cheia nodului curent), fie in subarborele stang.
+
+Timp de executie pt cautare intr-un ABC echilibrat: O(log_2(N))
+Ex:
+           12
+        /     \
+      5        20
+    /    \        \
+  4       8       30
+
+Este 6 prezent in acest ABC ?
+6<12 Caut in stanga rad.
+6>5 : caut in dreapta lui 5
+6<8 : caut in stanga lui 8
+         8 nu are fii, deci val. 6 nu exista !
+
+
+La fel, calculul valorii maxime dintr-un arbore binar de cautare se face foarte rapid: 
+ plecam din radacina si mergem de fiecare data in fiul drept al nodului curent. Daca nu mai are fiu drept, valoarea din nodul in care am ajuns este maximul.
+
+Parcurgerile arborelui binar de cautare : srd, rsd, si sdr sunt identice ca si la 
+arborii binari oarecare.
+Parcurgerea srd a unui ABC va afisa cheile (valorile memorate in noduri) in ordine crescatoare.
+
+Spre deosebire de implementarea arborilor binari din cursul precedent, acum declaram radacina arborelui ca variabila globala.
+
+#include <iostream>
+using namespace std;
+typedef struct NOD{
+  int nr;
+  NOD* fSt;
+  NOD* fDr;}NOD;
+//var globala:
+NOD* rad=NULL;
+
+NOD* cautareRecursiva(NOD* nodCrt, int x)
+{
+  if(nodCrt==NULL)return NULL;
+  if(x==nodCrt->nr)return nodCrt;
+  else if(x<nodCrt->nr)return cautareRecursiva(nodCrt->fSt,x);
+  else return cautareRecursiva(nodCrt->fDr,x);
+  //la arbori binari oarecare mergeam si pe stanga si pe dreapta.
+  //Aici, fie pe stanga, fie pe dreapta. 
+}
+
+//Cautare nerecursiva:
+NOD* cautare(int x){
+  NOD* nodCrt=rad;
+  while(nodCrt!=NULL){
+    if(x==nodCrt->nr)return nodCrt;
+    else if(x<nodCrt->nr)nodCrt=nodCrt->fSt;
+    else nodCrt=nodCrt->fDr;
+ }
+ return NULL;
+}
+
+
+// Calcul maxim:
+
+int maxim()
+{
+     //mergem doar pe drepta
+     //Presupunem ca nu este vid
+     NOD* nodCrt=rad;
+     for(;;){
+       if(nodCrt->fDr==NULL)return nodCrt->nr;
+       else nodCrt=nodCrt->fDr;
+     }       
+}
+
+//parcurgerea srd: ca la arbori binari
+  
+
+
+
+Vom scrie functiile de inserare si de stergere a unei valori 
+dintr-un arbore binar de cautare.
+ 
+#include <iostream>
+using namespace std;
+typedef struct NOD{
+  int nr;
+  NOD* fSt;
+  NOD* fDr;}NOD;
+//var globala:
+NOD* rad=NULL;
+
+
+int inserare(int x);
+int stergere(int x);//stergerea nodului cu valoarea x, si
+ //refacerea arborelui a.i. sa ramana arbore binar de cautare
+
+int main()
+{
+    inserare(13);
+    inserare(7);
+    inserare(15);
+    inserare(3);
+    inserare(14);
+    inserare(9);
+    inserare(20);
+    inserare(17);
+    inserare(23);
+    inserare(18);
+    inserare(8);
+ 
+    stergere(13);//stergerea nodului radacina
+    ...
+    return 0;
+}
+
+int inserare(int x)
+{
+    //Returneaza 1, daca  a reusit inserarea
+    //Returneaza 0, daca nu a reusit (cheie dubla)
+    //x va fi nod frunza
+    //Primul caz analizat: este arborele vid?
+    if(rad==NULL){
+        rad=new NOD;
+        rad->nr=x;
+        rad->fSt=NULL;
+        rad->fDr=NULL;
+        return 1;}
+   //cazul general:
+    NOD* nodNou=new NOD;
+    nodNou->nr=x;
+    nodNou->fSt=NULL;
+    nodNou->fDr=NULL;
+    //caut pozitia de inserare, nodul de care-l leg, plecand de la rad:
+    NOD* nodCrt=rad;
+    for(;;){
+       if(nodCrt->nr==x){
+         //cheie dubla
+         delete nodNou;
+         return 0; //nu am putut sa inserez}
+       if(x<nodCrt->nr){
+         //mergem pe stanga, daca se mai poate:
+         if(nodCrt->fSt!=NULL)nodCrt=nodCrt->fSt;
+         else{
+               nodCrt->fSt=nodNou;
+               return 1;}
+       if(x>nodCrt->nr){
+         //mergem pe dreapta, daca se mai poate:
+         if(nodCrt->fDr!=NULL)nodCrt=nodCrt->fDr;
+         else{
+               nodCrt->fDr=nodNou;
+               return 1;}
+}
+
+ 
+
+int stergere(int x)
+//daca nu exista valoarea x de sters, va returna 0
+{
+    NOD* nodCrt;
+    //daca x este cheia radacinii?
+    if(rad->nr==x){
+        //1. radacina nu are fii
+        if((rad->fSt==NULL)&&(rad->fDr==NULL)){
+            delete rad;
+            rad=NULL;
+            return 1;
+        }
+        //2. radacina nu are decat subarbore stang (nu are fiu dreapta)
+        if(rad->fDr==NULL){
+            NOD* nodFiuSt=rad->fSt;
+            delete rad;
+            rad=nodFiuSt;
+            return 1;
+        }
+   
+        //3. radacina nu are decat subarbore dreapta (nu are fiu stanga)
+        if(rad->fSt==NULL){
+            NOD* nodFiuDr=rad->fDr;
+            delete rad;
+            rad=nodFiuDr;
+            return 1;
+        }
+        //4. radacina are atat fiu st cat si fiu dr:
+        //Fiul stanga devine noua radacina.
+        NOD* nouaRad=rad->fSt;
+        //Cea mai din dreapta frunza a subarborelui stang o legam de
+        // fiul dreapta al lui rad
+        nodCrt=rad->fSt;
+        while(nodCrt->fDr!=NULL)
+             nodCrt=nodCrt->fDr;
+        //legarea:
+        nodCrt->fDr=rad->fDr;
+        //stergem vechea rad:
+        delete rad;
+        rad=nouaRad;
+        return 1;
+    }
+
+
+    //nodul de sters este diferit de radacina:
+    //Gasim adresa nodului de sters si adresa parintelui sau:
+    NOD* nodDeSters;
+    NOD* nodParinte=rad;
+    int exista=0;//presupunem ca nu exista valoarea de sters x
+    if(x<rad->nr)nodCrt=rad->fSt;
+    else nodCrt=rad->fDr;
+    for(;;){
+        if(nodCrt==NULL)break;//nu exista valoarea de sters
+        if(x==nodCrt->nr){
+            exista=1;
+            nodDeSters=nodCrt;
+            break;
+        }else if(x<nodCrt->nr){
+            nodParinte=nodCrt;
+            nodCrt=nodCrt->fSt;
+        }else{
+            nodParinte=nodCrt;
+            nodCrt=nodCrt->fDr;
+        }
+    }//for ;;
+    if(exista==0)return 0;//nu exista valoarea de sters
+    //Are 0, 1 sau 2 fii ?
+    //Are 0 fii?
+    if((nodDeSters->fSt==NULL)&&(nodDeSters->fDr==NULL)){
+        //este nod frunza
+        //Este fiul stanga?
+        if(nodParinte->fSt==nodDeSters)nodParinte->fSt=NULL;
+        else nodParinte->fDr=NULL;
+        delete nodDeSters;
+        return 1;
+    }
+    //Are doar 1 fiu, si anume fiu stang ?
+    if(nodDeSters->fDr==NULL){
+        //nodul de sters este fiu stanga?
+        if(nodParinte->fSt==nodDeSters){
+            nodParinte->fSt=nodDeSters->fSt;
+            delete nodDeSters;
+            return 1;
+        }else{
+            nodParinte->fDr=nodDeSters->fSt;
+            delete nodDeSters;
+            return 1;
+        }
+    }
+    //Are doar 1 fiu si anume fiul drept?
+    if(nodDeSters->fSt==NULL){
+        //nodul de sters este fiu stanga?
+        if(nodParinte->fSt==nodDeSters){
+            nodParinte->fSt=nodDeSters->fDr;
+            delete nodDeSters;
+            return 1;
+        }else{
+            nodParinte->fDr=nodDeSters->fDr;
+            delete nodDeSters;
+            return 1;
+        }
+    }
+    //Nodul de sters are atat fiu  dreapta cat si fiu stanga:
+    //Nu stergem efectiv nodDeSters ci doar ii schimbam valoarea (cheia)
+    //Cheia o inlocuim cu valoarea din succesorul sau (cea mai mica cheie din subarborele
+// drept):
+    //Efectiv vom sterge succesorul.
+    //Calculam nodul succesor si nodul parinte al succesorului:
+        NOD* nodSuccesor=nodDeSters->fDr;
+        NOD * nodParinteSuccesor=nodDeSters;
+        while(nodSuccesor->fSt!=NULL){
+            nodParinteSuccesor=nodSuccesor;
+            nodSuccesor=nodSuccesor->fSt;}
+        //Am gasit nodSuccesor. Ce fel de fiu este el: dreapta sau stanga?
+        if(nodSuccesor==nodParinteSuccesor->fDr){
+            //Succesorul este un fiu dreapta al parintelui sau
+           //inlocuim valoarea din nodul de sters cu valoarea din succesor:
+           nodDeSters->nr=nodSuccesor->nr;
+           nodDeSters->fDr=nodSuccesor->fDr;
+           delete nodSuccesor;
+           return 1;
+        }else{
+           //succesorul este un fiu stanga al parintelui sau
+           //inlocuim valoarea din nodul de sters cu valoarea din succesor:
+           nodDeSters->nr=nodSuccesor->nr;
+           //Fiul dreapta al nodului de sters nu se modifica.
+           //Fiul stanga al parintelui succesorului  se modifica: devine
+           // fiul dreapta al succesorului:
+           nodParinteSuccesor->fSt=nodSuccesor->fDr;
+           delete nodSuccesor;
+           return 1;
+        }
+}//stergere()
+
+Obs: Pentru examen, se cere doar stergerea nodului radacina !
+
+ARBORI MULTICAI
+
+Intr-un arbore multicai, un nod poate sa aiba si mai mult de doi fii.
+ Structura de foldere dintr-un sistem de operare este un exemplu de arbore multicai.
+ Sau, un abore genealogic este un exemplu bun de arbore multicai.
+Structura unui nod:
+     informatia
+     numarul de fii
+     vector ce contine adresele fiilor ( de dimensiune acoperitoare)
+#define NMAX_FII 100;
+typedef struct nod{
+    int nr;
+    int nFii;
+    NOD* f[NMAX_FII];
+}NOD;
+
+La  arborii multicai avem ca parcurgeri: preordine, postordine si parcurgerea pe nivel.
+ Nu are sens parcurgerea inordine (srd): daca un nod are de exemplu 4 fii, unde ar veni la mijloc radacina ? Este fara sens.
+
+ Parcurgerea pe orizontala a arborilor multicai (parcurgere nivel cu nivel):
+   se tine o coada
+   se introduce adresa radacinii in coada
+   cat timp coada nu este vida se repeta
+   inceput
+	se extrage primul nod din coada
+	se proceseaza
+	se adauga toti copiii acestui nod in coada
+  sfarsit
+
+Dam in continuare un program C in care construim pentru test, manual ,
+ un arbore multicai simplu, cu 7 noduri ( are 5 frunze notate cu f1,f2,f3,f4,f5 ).
+ Apoi implementam cateva functii de prelucrare uzuale ( au nume sugestive aceste functii).
+
+#include <iostream>
+#include <conio.h>
+#include <math.h>
+using namespace std;
+#define NMAX_FII 20
+//structura nod arbore oarecare
+typedef struct NOD{
+   int nr;
+   int nFii;
+   NOD* f[NMAX_FII];}NOD;
+ //var. globale:
+NOD* rad;
+void parcurgerePeNivel()
+{
+    int prim=0; int ultim=-1;
+    NOD* C[100];//coada liniara, cu dim. acoperitoare
+    ultim++; C[ultim]=rad;
+    while(prim<=ultim){
+        NOD* nodPrim=C[prim]; prim++;
+        cout<<nodPrim->nr<<" ";
+        for(int i=0;i<nodPrim->nFii;i++){
+            ultim++; C[ultim]=nodPrim->f[i];
+        }
+    }
+}
+
+
+void postordine(NOD* nodCrt)
+{
+    if(nodCrt==NULL)return;
+    //se parcurge intai subarborele ce are radacina primul fiu al nodului nodCrt
+    //Apoi, subarborele generat de al dilea fiu, etc
+    int i;
+    for(i=0;i<nodCrt->nFii;i++)
+        postordine(nodCrt->f[i]);
+    //la finalul traversarii postordine: se viziteaza nodul curent
+    cout<<nodCrt->nr<<" ";
+}
+
+void preordine(NOD* nodCrt)
+{
+    if(nodCrt==NULL)return;
+    //la inceputul traversarii preordine: se viziteaza nodul curent
+    cout<<nodCrt->nr<<" ";
+    //se parcurge intai subarborele ce are radacina primul fiu al nodului nodCrt
+    //Apoi, subarborele generat de al dilea fiu, etc
+    int i;
+    for(i=0;i<nodCrt->nFii;i++)
+        preordine(nodCrt->f[i]);
+}
+
+
+void calculMaxim(NOD* nodCrt, int&max)
+{
+  //max a fost initializat in main.
+  //Facem o parcurgere in preordine:
+  if(nodCrt==NULL)return;
+  if(nodCrt->nr>max)max=nodCrt->nr;
+    //parcurgem recursiv fii:
+  for(int i=0;i<nodCrt->nFii;i++)
+        calculMaxim(nodCrt->f[i],max);     
+}
+int main()
+{
+ //Construim pentru test, manual , un arbore multicai simplu,
+ // cu 7 noduri ( are 5 frunze notate cu f1,f2,f3, f4,f5 ).
+ //Construim frunzele, mai intai:
+ NOD* f1=new NOD();f1->nr=5;f1->nFii=0;
+ NOD* f2=new NOD();f2->nr=6;f2->nFii=0;
+ NOD* f3=new NOD();f3->nr=20;f3->nFii=0;
+ NOD* f4=new NOD();f4->nr=100;f4->nFii=0;
+ NOD* f5=new NOD();f5->nr=30;f5->nFii=0;
+ //Nodul urmator are 3 fii:
+ NOD* n1=new NOD();n1->nr=200; n1->nFii=3;n1->f[0]=f1;
+                                           n1->f[1]=f2; n1->f[2]=f3;
+ //Radacina are de asemenea 3 fii:
+ rad=new NOD();rad->nr=10; rad->nFii=3;rad->f[0]=f4; rad->f[1]=n1; rad->f[2]=f5;
+ cout<<"parcurgere pe nivel :\n";
+ parcurgerePeNivel();
+ cout<<"\npostordine:";
+ postordine(rad);
+ cout<<"\npreordine:";
+ preordine(rad);
+ cout<<"\ncalcul maxim:";
+ int maxim=rad->nr;//initializare maxim
+ calculMaxim(rad,maxim);
+ cout<<"maxim="<<maxim;
+ return 0;
+}
+   
+
+SUBIECT DE LA PARTIAL
+
+Scrieti o functie ce returneaza cate numere patrat perfect sunt intr-o 
+lista simplu inlantuita de numere intregi, descrisa prin variabila globala head.
+
+ typedef struct nod{
+     int nr;
+     nod* next;
+ }NOD;
+ //var globala:
+ NOD* head;
+ int patratPerf(int x){
+    int radical=sqrt(x);
+    if(radical*radical==x)return 1;
+    else return 0;
+ }
+ int numarare(){
+   NOD* nodCrt=head;
+   int contor=0;
+   for(;;){
+     if(patratPerf(nodCrt->nr))contor++;
+     nodCrt=nodCrt->next;
+     if(nodCrt==NULL)break;
+   }
+   return contor;
+}
+  
+Pentru o lista simplu inlantuita de numere intregi, descrisa prin variabila globala head,
+ scrieti functia egale() care returneaza 1 daca primul numar din lista este egal cu ultimul din lista. Daca nu sunt egale,
+ va returna 0. Presupunem ca in lista este cel putin un numar.
+
+int egale(){
+ int primulNumar;
+ primulNumar=head->nr;
+ //parcurg lista pt a determina ultimul numar:
+ int ultimulNumar;
+ NOD* nodCrt=head;
+ for(;;){
+   if(nodCrt->next==NULL){//este ultimul nod
+        ultimulNumar=nodCrt->nr;
+        break;}
+   else nodCrt=nodCrt->next;
+ }
+ if(primulNumar==ultimulNumar)return 1;
+ else return 0;
+}

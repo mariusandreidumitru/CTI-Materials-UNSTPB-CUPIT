@@ -1,0 +1,480 @@
+Curs 13 PCLP an 1 
+
+          OPERATORI DE PRELUCRARE LA NIVEL DE BIT
+
+
+ La ce sunt folositi ? Sunt folositi doar pt numere de tip intreg.
+In CodeBlocks: tipul int are 4 octeti , ca si tipul long (32 biti);
+cout<<sizeof(int);//4 octeti
+ - pentru a calcula valoarea unui bit dintr-un numar
+Ex: int x; cin >>x;
+    Ce valoare are bitul 7 din var. x ? este 0 sau este 1 /
+ - pentru a forta in 0 ( " a reseta" ) sau pt a forta in 1 ( " a seta") valoarea 
+unor anumiti biti dintr-o variabila. ex:
+    int x; cin>>x;
+    Sa se forteze bitii 3 si 5 in 1 , si bitul 12 in 0.
+
+Ex. practic:
+ Avem un sistem de paza in care monitorizam ferestrele, usile si , daca e cazul pornim alarma.
+Senzorii (inchis/ deschis) sunt cititi in variabila stare , de tip int astfel:
+usa 1: bit 0 din stare
+usa 2: bit 1 din stare
+....
+
+Se poate comanda alarma, astfel:
+ Avem variabila intreaga comanda, in care :
+bit 0=1 porneste difuzor 1
+bit 0=0 opreste difuzor 1
+etc.
+
+
+Operatorii de nivel de bit se folosesc in algoritmii moderni de criptare !
+
+
+Care sunt operatorii la nivel de bit ?
+&   - SI la nivel de bit (nu este nicio legatura cu operatorul logic &&)
+|     SAU la nivel de bit
+^    - XOR SAU EXCLUSIV
+>>   - shiftare dreapta (deplasare)
+<<   - shiftare stanga
+
+Tabele de adevar:
+0&0=0
+0&1=0
+1&0=0
+1&1=1
+
+0 | 0=0
+0 | 1=1
+1 | 0=1
+1 | 1=1
+
+0^0=0
+0^1=1
+1^0=1
+1^1=0
+
+nr^nr=0
+nrCriptat=nrInitial^cheie;
+Cum obtin din nrCriptat nrInitial?
+nrInitial=brCriptat^cheie
+
+Conversia din baza 2 in baza 10:
+   Suma de puteri ale lui 2
+Ex: 
+1110 (in baza 2)=1*2^3+....=14 (in baza 10)
+
+111 (in baza 2)=7 (in baza 10)
+
+
+Conversia baza 10 in baza 2:
+   Se imparte repetat nr la 2 si se iau resturile in ordine inversa
+SAU daca nr este mic, il scriu ca suma de puteri ale lui 2
+Ex: 14=8+4+2=2^3+2^2+2^1 (am notat 2 la puterea 3: 2^3)
+
+3 2 1 0
+1 1 1 0 Acesta este rezultatul
+
+
+Ex: 70=?(baza 2)
+70=64+4+2=2^6+2^2+2^1
+6 5 4 3 2 1 0
+1 0 0 0 1 1 0
+
+Conversii baza 2 - baza 16
+Baza2  Baza 16
+0000  0 
+0001  1
+0010  2
+0011  3
+0100  4
+0101  5
+...
+1001  9
+1010  A
+1011  B
+....
+1111  F
+
+Un nr in baza 16 se reprezinta in lb. C cu prefixul 0x
+Ex:
+int nr=0xFF;//255
+
+0x38 este egal cu 38 in baza 10 ? NU !!
+0x38: Cat este in baza 10 ? Suma de puteri ale lui 18
+0x38=3*16+8=56 (in baza 10)
+
+Conversia baza 2 in baza 16 ?
+4 cifre binare = o cifra in hexa
+Cifrele in baza 16 sunt?
+0,1,2,...,9,A,B,C,D,E,F
+
+Operatorul SI la nivel de bit ( & )
+  ATENTIE: A NU SE CONFUNDA CU OP. SI-LOGIC &&
+ La ce foloseste ?
+- calculul valorii unui bit de pe o pozitie specificata
+- pt a forta in 0 un anumit bit (resetare bit()
+
+NU se poate folosi pt a forta in 1 un bit !
+
+Calculul valorii unui bit cu &
+Bitii se numara de la dreapta la stanga, primul fiind bitul 0
+Cat este bitul 2 ? (x=0 sau 1, nu conteaza)
+xxxx.xXxx &
+0000.0100
+---------
+0000.0X00
+
+0000.0100=4
+
+Cum se calculeaza valoarea unui bit dintr-un numar  cu op. & ?
+  Se face o operatie & intre numar si o un alt operand numit masca.
+Masca se calculeaza astfel:
+  Se pune 0 pe pozitia bitului de calculat si 1 in rest.
+ Daca rezultatul este 0 , bitul cautat va fi 0.
+  GRESIT !!! Daca rezultatul este 1 atunci bitul cautat va fi 1 . GRESIT
+ Daca rezultatul calculat este diferit de 0 , atunci bitul cautat este 1. (CORECT!)
+
+Mai usor se exprima masca in baza 16 !
+
+ATENTIE LA PRIORITATEA OPERATORILOR DE PRELUCRARE LA NIVEL DE BIT !
+  Operatorul & este mai prioritar decat ^ (XOR).
+  ^ este mai prioritar decat |
+Pentru claritate si cand nu suntem siguri de prioritate, folosim paranteze !
+
+IMPORTANT DE RETINUT: Op. & si ceilati sunt MAI PUTIN prioritari decat operatorii logici (&&, ||)
+  
+
+Obs
+ Lb. C nu are standardizat cati octeti are un int.
+ CodeBlocks: 32 de octeti
+Pe alte compilatoare : 16
+
+Se citeste un numar intreg.
+Ce valoare are bitul 12 ?
+
+Bitul 0, bitul cel mai din dreapta, este bitul cel mai putin semnificativ, 
+este denumit LSB (least significant bit)
+msb=most significant bit
+
+xxxX.xxxx.xxxx.xxxx &
+0001.0000.0000.0000
+
+int main()}{
+ int nr; cin>>nr;
+ //calcul bit 12 =?
+ int bit;
+ int masca=0x1000;
+ int rez=nr&masca;
+ if(rez==0)bit=0;
+ else bit=1;
+ cout<<bit;
+ return 0;
+}
+
+A doua varianta:  
+int main()}{
+ int nr; cin>>nr;
+ //calcul bit 12 =?
+ int bit;
+ if((nr&0x1000)==0)bit=0;
+ else bit=1;
+ cout<<bit;
+ return 0;
+}  
+
+Atentie:
+ Este gresit asa: if(nr&0x1000==0)bit=0; dat.prioritatilor !
+Recomandare:
+ Cand nu sunt sigur asupra prioritatilor, folosesc paranteze
+a+(b*c)
+
+Ex.: sa calculam bitul 9
+xxxx.xxXx.xxxx.xxxx&
+0000.0010.0000.0000
+
+int nr;cin>>nr;
+int masca=0x200;
+int bit9;
+if((nr&masca)==0)bit9=0;
+else bit9=1;
+
+Ex: Citesc de la tastatura un index ( 0..7). Vreau sa calculez 
+valorea bitului de pe pozitia index.
+Ex: daca index=7 calculam bitul 7
+
+int nr; cin>>nr;
+int index; cin>>index;
+//Ideea: tinem un vector de masti
+//xxxx.xxxx Masca pt calcul bitului 0 este:
+//0000.0001
+
+//xxxx.xxxx Masca pt calcul bitului 1 este:
+//0000.0010
+
+//xxxx.xxxx Masca pt bit 4:
+//0001.0000 (0x10)
+
+
+//masca[0]: masca necesara pt a calcula valoarea bitului 0
+int masca[8]={0x1, 0x2, 0x4, 0x8, 0x10,0x20, 0x40,0x80};
+
+int bit;//bitul de pe poz. index (index intre 0 si 7)
+if( (nr & masca[index])==0)bit=0;
+else bit=1;
+cout<<bit;
+
+Ex:
+Sa se scrie o functie ce are ca par. un nr intreg nr si un par. index, valoare cuprinsa intre 0 si 15 (un index  prin care identificam un bit).
+Functia returneaza bitul de pe pozitia index
+int calculBit(int nr, int index){
+ //vector de masti:
+ //masca pt calcul bit de pe poz. 15:
+ //xxxx.xxxx.xxxx.xxxx
+ //1000.0000.0000.0000
+ //0x8000
+ int masca[16]={0x1,0x2,0x4,0x8,
+                0x10,0x20,0x40,0x80,
+                0x100,0x200,0x400,0x800,
+                0x1000,0x2000,0x4000,0x8000};
+ if((nr&masca[index])==0)return 0;
+ else return 1;
+}
+
+Ex:
+Se citeste un numar intreg nr. Sa se afiseze daca bitul 3 este egal cu bitul 8?
+Sol. 1:
+int nr; cin>>nr;
+int bit3;
+//xxxx.xxxx.xxxx.Xxxx
+//0000.0000.0000.1000
+if((nr&0x8)==0)bit3=0;
+else bit3=1;
+
+int bit8;
+//xxxx.xxxX.xxxx.xxxx
+//0000.0001.0000.0000
+if((nr&0x100)==0)bit8=0;
+else bit8=1;
+if(bit3==bit8)cout<<"egali";
+else cout<<"nu";
+
+DE CE ESTE GRESIT ASA ?
+if((nr&0x8)==(nr&0x100)) ...//GRESIT !
+nr:0000.0001.0000.1001 Bit3=Bit8 in acest exemplu
+
+Sol. 2:
+int nr; cin>>nr;
+int bit3=calculBit(nr,3);
+int bit8=calculBit(nr,8);
+if(bit3==bit8)cout<<"da";
+else cout<<"nu";
+
+
+FORTAREA UNUI BIT IN 0, CU OPERATORUL &
+
+ Se va folosi atribuirea:
+    nr=nr&masca;
+xxxx.xxxx Vrem sa fortam bitul 6 in 0, restul bitilor sa ramana neschimbati 
+
+0&x=0
+1&x=x (x=0 sau x=1)
+xXxx.xxxx &
+1011.1111
+------------
+x0xx.xxxx
+
+Acum are importanta pe cati biti este reprezentat un numar intreg !!
+Presupunem ca un int este reprez. pe 32 biti (CodeBlocks)
+ Citesc un nr intreg nr. Sa fortam bitul 9 in 0, restul sa fie neschimbati.
+Cati biti sunt in total, trebuie sa stim ! Sunt 32
+xxxx.xxxx.xxxx.xxxx.xxxx.xxXx.xxxx.xxxx &
+1111.1111.1111.1111.1111.1101.1111.1111
+---------------------------------------
+xxxx.xxxx.xxxx.xxxx.xxxx.xx0x.xxxx.xxxx
+
+masca=0xFFFFFDFF
+
+int main(){
+ int nr; cin>>nr;
+ //bit 9, il facem 0:
+ nr=nr & 0xFFFFFDFF;
+
+ cout<<nr;
+ return 0;
+}
+
+CONCLUZIE
+  Pt a forta in 0 un bit de pe o anumita pozitie (restul bitilor sa ramana neschimbati):
+   facem o operatie & intre numar si o masca ce se calculeaza astfel:
+   se pune 0 pe pozitia respectiva, si 1 in restul pozitiilor
+
+
+          
+ OPERATORUL | ( SAU la nivel de bit)
+- pt calcula val. unui bit (este mai usor cu op. & )
+- pt a forta in 1 valoarea unui bit 
+Vrem sa fortam in 1 bitul 9 dintr-un numar intreg
+Aici nu are importanta pe cati biti este reprezentat numarul intreg !
+
+x|0=x
+x|1=1
+
+xxxx.xxXx.xxxx.xxxx |
+0000.0010.0000.0000
+-------------------
+xxxx.xx1x.xxxx.xxxx
+
+CONCLUZIE
+  Pt a forta in 1 un bit de pe o anumita pozitie (restul bitilor sa ramana neschimbati):
+   facem o operatie | intre numar si o masca ce se calculeaza astfel:
+   se pune 1 pe pozitia respectiva, si 0 in restul pozitiilor
+Ex: Sa se forteze bitul 12 in 1 si restul sa se lase neschimbati:
+xxxX.xxxx.xxxx.xxxx |
+0001.0000.0000.0000
+
+int nr; cin>>nr;
+//fortare bit 12 in 1, restul sa fie neschimbati :
+nr=nr | 0x1000;
+
+
+Ex: Consideram un nr intreg nr reprezentat pe 16 biti.
+Sa se forteze bitii 3 si 11 in 1, si bitii 5 ,8 si 14 in 0.
+xxxx.Xxxx.xxxx.Xxxx bit3, bit 11 : in 1
+
+xxxx.Xxxx.xxxx.Xxxx |
+0000.1000.0000.1000 (masca=0x808)
+
+//bitii 5, 8 si 14 in 0:
+xXxx.xxxX.xxXx.xxxx &
+1011.1110.1101.1111   (masca=0xBEDF)
+
+Programul: Sa se forteze bitii 3 si 11 in 1, si bitii 5,8 si 14 in 0.
+int main(){
+ int nr;
+ cin>>nr;
+ // bitii 3 si 11 in 1:
+ nr=nr|0x808;
+
+ //bitii 5, 8 si 14 in 0:
+ nr=nr&0xBEDF;
+ cout<<nr;
+ return 0;
+}
+
+Se putea si direct:
+ nr=(nr|0x808)&0xBEDF;
+
+EXAMEN
+ Probabil va fi o problema care sa implice:
+- calcul valoare bit cu &
+sau/si
+- fortare bit in 0 cu &
+sau/si
+- fortare bit in 1 cu |
+
+OPERATORUL DE DEPLASARE (SHIFTARE) LA NIVEL DE BIT, SPRE STANGA  <<
+
+int nr=7 <<2;
+Se vor deplasa bitii primului operand ( 7) spre stanga , cu un numar de pozitii
+ specificat de al doilea operand ( cu 2 pozitii) 
+IMPORTANT: Din partea dreapta va intra 0. Msb - se va pierde
+
+nr=7 << 2;
+Reprezint in baza 2 pe 7:
+0000.0111 
+O shiftare cu o pozitie spre stanga:
+0000.1110
+Mai shiftam inca o data, cu o pozitie:
+0001.1100 Acesta este rezultatul
+
+7<<1 : rezultat 14 (in baza 10)
+14<<1 : rezultat 28 
+
+IMPORTANT : Shiftarea spre stanga cu o pozitie, este echivalenta cu inmultirea cu 2.
+
+Aplicatie:
+Citesc de la tastatura un index . Vreau sa calculez 
+valorea bitului de pe pozitia index. Fara vector de masti, dar cu operatorul << 
+Ex: daca index=7 calculam bitul 7
+Ideea:
+Mastile erau:
+0000.0001 =0x1 //masca pt bit 0
+0000.0010 =0x2 //masca pt bit 1
+0000.0100 =0x4 //masca pt bit 2
+
+masca pt bit 2= masca pt bit 0 <<2;
+
+int nr; cin>>nr;
+int index; cin>>index;
+int bit;
+int masca0=0x1;
+int masca_index=masca0<<index;
+if((nr&masca_index)==0)bit=0;
+else bit=1;
+
+OPERATORUL DE DEPLASARE LA NIVEL DE BIT SPRE DREAPTA 
+ Simbol:  >>
+Se va pierde lsb-ul, iar din partea stanga (cel mai semnificativ bit) va intra 0 daca numarul ce se shifteaza este 
+pozitiv, iar daca numarul este negativ, va intra bit de valoare 1 .
+Shiftarea spre dreapta cu o pozitie, este echivalenta cu impartirea cu 2 (impartire prin truncherea rezultatului).
+
+int rez=4>>1; //2
+0000.0100 >> 1 -----> 0000.0010  (2 in baza 10)
+
+int rez=5>>1; //2
+0000.0101 ---> 0000.0010
+
+
+Sa scriem o functie ce are ca parametru un numar intreg (reprezentat 
+pe 32 de biti). Functia returneaza cati biti de 1 sunt in reprezentarea 
+binara a numarului dat.
+Ex: nr=7, va returna 3 ( 0.....0.0111 )
+
+#include <iostream>
+
+using namespace std;
+int nrBiti1(int nr);
+int main()
+{
+    int nr=1024;
+    int rez=nrBiti1(nr);
+    cout<<"rezultat="<<rez;//rezultat=1
+    return 0;
+}
+int nrBiti1(int nr){
+  int contor=0;
+  //nr este pe 32 de biti, deci calculam 32 de biti:
+  int i;
+  int masca=0x1;
+  for(i=0;i<32;i++){
+    //calcul bit_i:
+    if((nr&masca)!=0)contor++;
+    //pt a calcula valoarea urmatorului bit:
+    masca=masca<<1;
+  }
+  return contor;
+}
+
+Octet (byte) = 8 biti
+Cel mai mic octet: 0000.0000=0 in baza 10
+Cel mai mare octet: 1111.1111=255 in baza 10        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

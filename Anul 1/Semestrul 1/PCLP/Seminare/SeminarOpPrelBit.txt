@@ -1,0 +1,192 @@
+SEMINAR OPERATORI PRELUCRARE LA NIVEL DE BIT
+
+A. Calcul valoare bit
+ Folosim operatorul & (SI)
+Ex:
+ Citim un numar intreg. Ce valoare are bitul 12?
+   Care este bitul 12?
+nr:      xxxX.xxxx.xxxx.xxxx 
+masca:   0001.0000.0000.0000  (masca=0x1000)
+         -------------------
+         000X.0000.0000.0000
+Se compara rezultatul cu 0 (nu cu 1 !)
+ int nr; cin>>nr; int bit12;
+ int masca=0x1000;
+ if((nr&masca)==0)bit12=0;
+ else bit12=1;
+ cout<<bit12;
+
+GRESELI FRECVENTE:
+  1) if(nr&masca==0)...
+  2) if((nr&masca)==1)bit12=1;
+   
+2. Calcul valoare bit cand ii stim pozitia
+   Se citeste un nr intreg. Se citeste un index.
+   Sa se calculeze valoarea bitului de pe pozitia index.
+Doua solutii:
+  Calculez masca:
+    - fie cu operator de shiftare << (este mai simplu)
+  Ex:  xxxx.xXxx.xxxx.xxxx  (bit10=?)
+       0000.0100.0000.0000
+Plecam de la:
+       0000.0000.0000.0001 =0x1
+     masca=0x1<<10;
+ 
+    - fie o luam dintr-un vector de masti
+    int masca[32]={0x1,0x2,0x4,0x8,
+                   0x10,0x20,0x40,0x80,
+                   0x100,....
+CONCLUZIE:
+   sau:  masca=0x1<<index;
+   sau: masca[index]
+
+Scriem o functie ce are ca par. un numar intreg (reprezentat pe 32 de biti)
+si un index (numar intreg intre 0 si 31). Returneaza valoarea bitului de pe pozitia index.
+int calculBit(int nr, int index){
+  int masca=0x1<<index;
+  if((nr&masca)==0)return 0;
+  else return 1;
+}
+
+Exemplu de apel:
+   Ce valoare are bitul 20 din numarul 55576 ?
+   int bit20=calculBit(55576,20);
+   cout<<bit20;
+SAU:
+   cout<<calculBit(555756,20);
+
+ESTE GRESIT APELUL: pt ca se pierde rezultatul intors de functie
+   calculBit(55576,20);
+
+B. Fortatare bit in 1 (setare bit)
+Operatie SAU cu o masca ce se calculeaza asa: 1 pe pozitia bitului de setat,
+   0 in rest
+
+Exemplu: Sa se forteze in 1 , bitul 13, restul bitilor sa se lase neschimbati
+xxXx.xxxx.xxxx.xxxx |
+0010.0000.0000.0000
+--------------------
+xx1x.xxxx.xxxx.xxxx
+
+int nr; cin>>nr;
+nr=nr|0x2000;
+
+Exemplu:
+Citesc in variabila pozBit, pozitia unui bit.
+Citesc un numar in variabila nr. Sa se forteze in 1 , bitul de pe 
+pozitia pozBit, restul sa se lase nemodificati.
+
+int nr; cin>>nr;
+int pozBit; cin>>pozBit;
+//Trebuie sa calculam masca:
+int masca=0x1<<pozBit;//la fel ca la calculul val. unui bit cu operatorul &
+nr=nr|masca;
+
+Exemplu:
+ Citim un numar intreg. Sa fortam TOTI cei 8 biti mai putin semnificativi 
+din nr in 1.
+xxxx.xxxx.xxxx.xxxx|
+0000.0000.1111.1111
+------?------------
+xxxx.xxxx.1111.1111
+
+int nr; cin>>nr;
+nr=nr|0xFF;
+
+C. Fortare bit in 0 (resetare bit)
+Operatie & (SI) cu masca: 0 pe pozitia bitului si 1 in rest.
+Aici tb sa stim din start pe cati biti este reprezentat numarul intreg.
+In CodeBlocks: 32 de biti
+Exemplu:
+ Citim un numar. Sa fortam in 0 bitul 17, iar redstul ii lasam neschimbati.
+xxxx.xxxx.xxxx.xxXx.xxxx.xxxx.xxxx.xxxx &
+1111.1111.1111.1101.1111.1111.1111.1111
+Deci masca=0xFFFDFFFF;
+
+Codul in C:
+int nr; cin>>nr;
+nr=nr&0xFFFDFFFF;
+
+Exercitii suplimentare:
+Avem un numar reprezentat pe 32 de biti (4 octeti: octet 0, octet 1 ,
+octet 2 si octet 3, unde octet 0 este cel mai putin semnificativ).
+Sa se calculeze valoarea octetului 1 .
+
+int nr; cin>>nr;
+nr=nr>>8;
+int rezultat=nr&0xFF;
+cout<<rezultat;
+
+EXAMEN
+ Tipic 5 probleme
+1. vectori
+2. matrici
+3. siruri
+4. structuri
+5. op. de prel. la nivel de bit
+
+Optional: fisiere
+Pentru nota 10 va fi o problema (sau un subpunct) mai dificil , ce valoreaza 1 punct
+
+Ex. 1
+Sa se scrie o functie care are ca par. un vector de int, si dimensiunea lui.
+Functia returneaza cate numere patrat perfect sunt in vector.
+Dati si un exemplu de apel.
+int calcul(int a[], int N){
+  int contor=0;
+  //parcurg vector:
+  int i;
+  for(i=0;i<N;i++)
+    //este patrat perfect a[i]?
+    if(estePP(a[i])==1)contor++;
+  return contor;
+}
+
+int estePP(int x){
+  if(x<0)return 0;
+  int radical=sqrt(x);
+  if(radical*radical==x)return 1;
+  else return 0;
+}
+
+Ex. de apel:
+ int a[4]={12,4,8,9};
+ int rez=calcul(a,4);
+SAU:
+ int a[4]={12,4,8,9};
+ cout<<calcul(a,4);
+
+GRESIT:
+ int a[4]={12,4,8,9};
+ calcul(a,4);
+
+GRESIT:
+ int rez=calcul(a,N);//nu am dat valori initiale parametrilor
+
+Ex. 2:
+Citim N. Citim un vector de N numere intregi.
+Care este cel mai mare nuamr par din vector SAU afisam ca 
+nu exista, daca nu sunt numere pare
+int N; cin>>N;
+int a[N];
+int i;
+for(i=0;i<N;i++)cin>>a[i];
+//Cu ce initializez maximul?
+//Cu primul nr par gasit!
+int maximP;
+for(i=0;i<N;i++)
+   if(a[i]%2==0){
+      maximP=a[i];
+      break;}
+if(i==N){
+  cout<<"nu numere pare";
+  return 0;
+}
+//parcurg vectorul in continuare, plecand de la i+1:
+int j;
+for(j=i+1;j<N;j++)
+   if(a[j]%2==0 && a[j]>maximP)maximP=a[j];
+
+cout<<maximP;
+return 0;
+

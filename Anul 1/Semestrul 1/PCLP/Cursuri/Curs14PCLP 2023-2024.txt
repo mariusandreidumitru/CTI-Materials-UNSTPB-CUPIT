@@ -1,0 +1,435 @@
+Curs 14 PCLP an 1 
+         
+           FISIERE 
+Sunt doua tipuri de fisiere:
+-Fisiere text
+-Fisiere binare
+Care-i diferenta ?
+
+Fis. text: create cu Notepad
+Fis. binare: exemple
+  imagine .gif   jpg 
+          .exe
+          .docx
+
+Un fisier contine octeti. Un octet:
+0000.0000 cel mai mic octet
+1111.1111 cel mai mare octet (byte)
+Sunt 256 de octeti distincti: 0,1,2,...,255
+
+Cam ce octeti contine un fisier text ?
+litere mici: 26
+litere mari: 26
+cifre:       10
+semne de punctuatie:  ..
+
+Cam jumatate din cei 256 de octeti.
+
+La servesc fisierele ?
+Pentru stocarea permanenta a informatiei. Ex: o parola
+
+O alta diferenta intre fisiere text si binare:
+  cum se reprezinta informatia
+Fisier txt de numere:
+12 
+Este memorat cu 2 octeti asa:
+49 (codul ASCII al car. 1)
+50 (codul ASCII al car. 2)
+
+Fisier binar de numere intregi (creat prin program)
+12  (aceeasi informatie ca la text)
+Este reprezentata diferit
+Pres. int reprezentat pe 2 octeti:
+12 (in binar: 0000.1100)
+0 (cel mai semnificativ)
+
+
+Alt ex:
+256 txt: 50 (cod Ascii pt cifra 2) ,53,54
+
+Binar:
+0000.0001.1111.1111
+255 (in baza 10)
+1
+
+
+Prelucrare fisiere in limbajul C
+1)
+Mai intai se deschide fisierul
+se foloseste: fopen() functie de bblioteca, ce are semnatura:
+
+FILE * fopen(char* numeFisier, char* modDeDeschidere)
+FILE* fp=fopen("date.txt","rt");
+Obs: cand nu se specifica calea, va cauta fisierul in directorul curent.
+Altfel specific calea:
+FILE* fp=fopen("D:\\FACULTATE\\date.txt","rt");
+Moduri de deschidere: t - text, b- binar
+                      r -citire , w -scriere
+                      a - append (scriu la sfarsitul fisierului)
+Operatia de deschidere pt scriere cu w, este distructiva (daca fisierul exista deja,
+il va sterge si va crea altul nou)
+
+returneaza adresa unei structuri predefinite denumita FILE in care sunt memorate info despre fisier.
+Valoarea returnata (fp) este : numele intern al fisierului
+
+In cazul in care nu se reuseste deschiderea: se returneaza NULL
+
+
+2) inchidere fisiere
+ void fclose(FILE * fp)
+Ex: fclose(fp);
+
+Avem functii diferite pt a citi/ a scrie din fisiere text sau binare
+FISIERE TEXT
+Citire fisier text : caracter cu caracter
+int fgetc(FILE *fP)
+returneaza cod ASCII al caracterului citit sau EOF daca s-a terminat fisier
+
+Scriere fisier caracter cu caracter: fputc()
+void  fputc(char ch, FILE* fp);
+Citire fisier linie cu linie: fgets()
+Scriere linie cu linie: fputs()
+Daca avem un fisier text de numere, separate prin spatii sau ENTER:
+  (Exemplu:
+     12 -8
+     9
+     4 5 -99
+   )
+Citim numerele din fisier text de numere: fscanf()
+Pentru a scrie un fisier text de numere: fprintf()
+
+
+EXEMPLU:
+Citim de la tastatura numele unui fisier text. Sa calculam de cate ori apare caracterul 
+'a' in fisier.
+  Deci vom citi fisierul caracter cu caracter.
+
+#include <stdio.h>
+int main(){
+  char numeF[100];
+  cout<<"nume fisier="; cin.get(numeF,100);
+  int contor=0;
+  //deschid fisier:
+  FILE* fp=fopen(numeF,"rt");
+  if(fp==NULL){
+    cout<<"Nu se poate deschide fisierul";
+    return 0;
+ }
+ //citesc caracter cu caracter:
+ for(;;){
+   int cod=fgetc(fp);
+   if(cod==EOF)break;
+   if(cod=='a')contor++;
+  }
+ fclose(fp);
+ cout<<contor;
+ return 0;
+}
+ 
+Exemplul 2:
+Sa se concateneze fisierele text date1.txt si date2.txt in fisierul date.txt
+
+Citesc date1.txt caracter cau caracter si copiez fiecare caracter in date.txt
+Apoi la fel facem cu date2.txt
+
+int main(){
+ FILE* fp1=fopen("date1.txt","rt");
+ if(fp1==NULL)exit(1);
+ FILE* fp2=fopen("date2.txt","rt");
+ if(fp2==NULL)exit(1);
+ FILE* fp=fopen("date.txt","wt");
+ if(fp==NULL)exit(1);
+ //Copiem primul fisier in date.txt: (il citesc caracter cu caracter)
+ for(;;){
+   int c=fgetc(fp1);
+   if(c==EOF)break;//s-a terminat fisier
+   fputc(c,fp);
+ }
+// Copiez al doilea fisier date2.txt in continuare:
+ for(;;){
+   c=fgetc(fp2);
+   if(c==EOF)break;//s-a terminat 
+   fputc(c,fp);
+ }
+ fclose(fp1); fclose(fp2); fclose(fp);
+ return 0;
+}
+
+Exemplul 3
+Cum as putea sa scriu N fisiere unde N este citit: f1.txt, f2.txt, f3.txt ...
+#include <iostream>
+#include <string.h>
+using namespace std;
+int main()
+{
+    int N;//nr fisiere
+    cout<<"N=";cin>>N;
+    int i;
+// creez pe rand ele N fisiere:
+    for(i=1;i<=N;i++){
+        //calculez numele fisier:
+        char numeF[20]="f";
+        char strNr[10];
+        itoa(i,strNr,10);//converteste numarul intreg i, in baza 10, intr-un string (strNr)
+        strcat(numeF,strNr);
+        strcat(numeF,".txt");
+        //cout<<numeF<<endl;
+        /* Mai departe prelucrarea de fisier:
+        FILE *fp;
+        fp=fopen(numeF,"wt");
+        ....
+        */
+    }
+    return 0;
+}
+
+EXEMPLU
+Să se afle suma numerelor dintr-un fişier text de numere întregi.
+
+Soluţie
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+#define NUME_F   "c:\\temp\\test\\test.txt" //numele fisierului text:
+int main()
+{
+FILE * fp;
+ int rez; //rezultatul intors de functia fscanf
+ int nrCrt;
+ int suma;
+
+ //se deschide fisierul text, pentru citire:
+ fp=fopen(NUME_F,"rt");
+ if(fp==NULL){
+cout<<"Nu se poate deschide fisier !"; return 1;}
+ suma=0;
+ /* SE  REPETA
+           se citesc pe rand,toate numerele din fisier, adaugandu-se
+               fiecare numar la suma totala
+    PANA CAND se atinge sfarsitul de fisier */
+ for(;;){
+  rez=fscanf(fp,"%d",&nrCrt);
+  if(rez==EOF)break; //s-a atins sfarsit de fisier
+  suma=suma+nrCrt;}
+ cout<<"suma="<<suma;
+ return 0;
+}
+
+
+
+
+FISIERE BINARE
+Functii utilizate:
+ fread(), fwrite(), fseek(), ftell()
+
+ Funcţia fwrite
+Prototip:
+	int fwrite(void * adresa, int size, int nrArticole, FILE *fp);
+size=dimensiunea in octeti a unui articol de scris
+Exemplu, pt a scrie continutul variabilei x, de tip intreg, intr-un fisier binar de numere intregi:
+	int x; cin>>x;
+	FILE *fp=fopen("date.bin","wb");
+        ...
+	fwrite(&x,sizeof(int),1,fp);
+Descriere:
+	Scrie la poziţia curentă din fişierul cu numele intern fp, un număr de înregistrări dat de al treilea parametru (nrArticole), fiecare înregistrare  având un număr de octeţi dat de parametrul doi (size). Înregistrările de scris, încep de la adresa specificată de primul parametru. Este o instrucţiune specifică fişierelor binare.
+EXEMPLU:
+Se va crea prin program un fişier binar "numere.bin", ce conţine 20 de numere întregi, citite de la tastatură.
+
+Soluţie
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+#define NUME_F "c:\\numere.bin"
+#define NR_VALORI 20
+int main()
+{
+ FILE * fp;
+ int i;
+ int nrCrt;
+
+
+ fp=fopen(NUME_F,"wb");
+ if(fp==NULL){
+  cout<<"Nu se poate deschide fisier !"; return 1;}
+ //scriem cele NR_VALORI in fisier:
+ for(i=1;i<=NR_VALORI;i++){
+  cout<<"nr=";cin>>nrCrt;
+  fwrite(&nrCrt,sizeof(int),1,fp);
+ }
+ fclose(fp);
+ cout<<"S-a creat fisierul specificat !";
+ return 0;
+}
+
+Pentru a citi fisiere binare: 
+Funcţia fread
+Prototip:
+	int fread(void * adresa, int size, int nrArticole, FILE *fp);
+Exemplu:
+	int x;
+	FILE *fp;
+        ...
+	fread(&x,sizeof(int),1,fp);
+Descriere: 
+	Citeşte în variabila a cărei adresă este dată de primul parametru (adresa), un număr de înregistrări din fişierul fp, începând din poziţia curentă a pointerului de fişier. Numărul de înregistrări ce se citesc, este dat de parametrul trei (nrArticole), fiecare înregistrare având mărimea în octeţi dată de parametrul doi (size). Este o instrucţiune specifică fişierelor binare.
+
+Funcţia fseek
+Prototip:
+	int fseek(FILE *stream,long offset, int whence);
+Exemplu:
+	fseek(fp,0,SEEK_SET);
+Descriere:
+	Mută pointerul de fişier la o nouă poziţie, aflată la un offset în octeţi, dat de parametrul doi, faţă de poziţia specificată de parametrul trei. Offsetul poate fi pozitiv sau negativ. Parametrul trei poate lua una din următoarele valori :
+	- 0 sau constanta simbolică SEEK_SET . Referinţa faţă de care se calculează offsetul, este începutul fişierului.
+	- 2 sau SEEK_END . Referinţa este sfârşitul fişierului.
+	- 1 - referinţa este poziţia curentă a pointerului de fişier.
+Instrucţiunea fseek este o instrucţiune specifică fişierelor binare.
+
+Funcţia ftell
+Prototip:
+	long ftell(FILE * stream);
+Exemplu:
+	L=ftell(fp);
+Descriere:
+	Returnează valoarea în octeţi a poziţiei pointerului de fişier (capul de citire/scriere), faţă de începutul fişierului. Este o instrucţiune specifică fişierelor binare.
+
+
+EXEMPLU
+Să se calculeze şi afişeze numărul de valori nule dintr-un fişier binar de octeţi.
+
+Soluţie
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+#define NUME_F "c:\\numere.bin"
+int main(void)
+{
+ FILE * fp;
+ int i;
+ 
+ int L;
+ int nrNule;
+
+ nrNule=0;
+ fp=fopen(NUME_F,"rb");
+ if(fp==NULL){
+  cout<<"Nu pot deschide fisier !";return 1;}
+ //aflam lungimea fisierului, in octeti:
+ fseek(fp,0,SEEK_END);
+ L=ftell(fp);
+ if(L==0){
+   cout<<"Fisierul este gol !";return 1;}
+ //se readuce pointerul de fisier, la inceputul fisierului:
+ fseek(fp,0,SEEK_SET);
+ //citim toti octetii:
+ for(i=0;i<L;i++){
+    unsigned char octetCrt;//octet
+    fread(&octetCrt,1,1,fp);
+    if(octetCrt == 0) nrNule++;}
+ fclose(fp);
+ cout<<" Sunt "<<nrNule<<" valori nule.";
+ return 0;
+}
+
+EXEMPLU 
+ Sa se calculeze suma numerelor intregi, dintr-un fisier BINAR de numere intregi (numere.dat)
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+
+int main(void)
+{
+ FILE * fp;
+ int i;
+ 
+ int N;//numarul de numere intregi din fisier
+ int suma=0;
+
+ fp=fopen("numere.dat","rb");
+ if(fp==NULL){
+  cout<<"Nu pot deschide fisier !";return 1;}
+ //aflam lungimea fisierului, in octeti:
+ fseek(fp,0,SEEK_END);
+ long N_octeti=ftell(fp);
+ if(N_octeti==0){
+   cout<<"Fisierul este gol !";return 1;}
+ N=(int)N_octeti/sizeof(int);
+ //se readuce pointerul de fisier, la inceputul fisierului:
+ fseek(fp,0,SEEK_SET);
+ //citim toate numerele intregi:
+ for(i=0;i<N;i++){
+    int nrCrt;
+    fread(&nrCrt,sizeof(int),1,fp);
+    suma=suma+nrCrt;}
+ fclose(fp);
+ cout<<suma;
+ return 0;
+}
+
+RECAPITULARE
+ Avem un vector de siruri (nume de elevi) si un vector de note
+Sa afisam numele si notele in ordinea crescatoare a notelor.
+Vom folosi sortarea prin interschimbare.
+NOU: sortarea a doi vectori paraleli
+
+#include ...
+using namespace std;
+typedef char sir[100];
+int main(){
+ int N; cin>>N; cin.get();
+ sir nume[N];
+ int note[N];
+ int i,j;
+ for(i=0;i<N;i++){
+  cout<<"nume=";
+  cin.get(nume[i],100); cin.get();
+  cout<<"nota=";
+  cin>>note[i]; cin.get();
+}
+ //sortare vector note crescator:
+ for(i=0;i<N-1;i++)
+   for(j=i+1;j<N;j++)
+      if(note[i]>note[j]){
+         int aux=note[i]; note[i]=note[j]; note[j]=aux;
+         sir saux; strcpy(saux,nume[i]); strcpy(nume[i],nume[j]); strcpy(nume[j],saux);
+         /* Mai simplu:
+            swap(note[i],note[j]);
+            swap(nume[i],nume[j]);
+         */
+      }
+ //Afisare:
+ for(i=0;i<N;i++)
+   cout<<nume[i]<<"   "<<note[i]<<endl;
+ }
+ return 0;
+}
+
+
+
+  
+
+  
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+

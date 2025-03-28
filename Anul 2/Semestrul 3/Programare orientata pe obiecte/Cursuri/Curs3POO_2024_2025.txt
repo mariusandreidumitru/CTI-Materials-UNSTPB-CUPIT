@@ -1,0 +1,470 @@
+CURS 3
+
+
+Citim un numar intreg. Sa afisam daca este patrat perfect sau nu.
+Vom folosi pe langa main() si o alta metoda ce verifica daca un nr este patrat perfect.
+ 
+ Obs.
+Pentru a extrage radicalul dintr-un numar , se foloseste metoda statica sqrt() , ce face 
+parte din clasa Math.
+Ex. de apel: radical(2) = ?
+ double rezultat=Math.sqrt(2);
+
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int nr;
+		System.out.print("nr=");
+		nr=sc.nextInt();
+		boolean este=patratPerfect(nr);
+		if(este)System.out.println("este");
+		else System.out.println("nu este");
+	}
+	static boolean patratPerfect(int nr) {
+		if(nr<0)return false;
+		int radical=(int)Math.sqrt(nr);//elimin zecimalele, daca are
+		if(radical*radical==nr)return true;
+		else return false;
+	}
+
+}
+
+////////////////////////////////
+Bibliografie
+tutorialspoint  java (Google) etc.
+www.w3schools.com
+...
+
+POLIMORFISM PARAMETRIC (POLIMORFISM LA COMPILARE)
+In aceeasi clasa putem avea mai multe metode care au acelasi nume , dar difera 
+prin parametrii lor (tip sau/si numar de parametrii)
+Ex:
+Citim 3 numere intregi de la tastatura: a, b,c. Sa calculam maximul dintre a si b, folosind o functie.
+Apoi calculam maximul dintre a,b si c folosind o alta functie.
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int a,b,c;
+		System.out.print("a=");
+		a=sc.nextInt();
+		System.out.print("b=");
+		b=sc.nextInt();
+		System.out.print("c=");
+		c=sc.nextInt();
+		int max3=maxim(a,b,c);
+		System.out.println("maxim dintre a, b si c="+max3);
+		int max2=maxim(a,b);
+		System.out.println("maxim dintre a, b = "+max2);
+	}
+	static int maxim(int a, int b, int c) {
+		int rez=a;
+		if(b>rez)rez=b;
+		if(c>rez)rez=c;
+		return rez;
+	}
+	static int maxim(int a, int b) {
+		if(a>=b)return a;
+		else return b;
+	}
+
+}
+
+
+Compilatorul stie ce cod sa lege pe baza parametrilor functiei
+Tema
+ Rescrieti functia maxim cu 3 parametrii, si apelati functia maxim cu 
+ 2 parametrii pt a calcula maximul dintre 3 numere .
+
+Solutie:
+static int maxim(int a, int b) {
+		if(a>=b)return a;
+		else return b;
+	}
+
+static int maxim(int a, int b, int c) {
+		int max_ab=maxim(a,b);//nu este apel recursiv! Este polimoefism parametric 
+		int max_bc=maxim(b,c);
+		int max_abc=maxim(max_ab,max_bc);
+		return max_abc;
+	}
+Exemplul 2:
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("a=");
+		int a = sc.nextInt();
+		System.out.print("b=");
+		int b = sc.nextInt();
+		System.out.print("c=");
+		int c = sc.nextInt();
+		System.out.print("d=");
+		int d = sc.nextInt();
+		afisare(a,b);
+		System.out.println("O alta afisare:");
+		afisare(a,b,c,d);
+	}
+	static void afisare(int a, int b) {
+		System.out.println("nr="+a);
+		System.out.println("nr="+b);
+	}
+	static void afisare(int a, int b, int c, int d) {
+		/*System.out.println("nr="+a);
+		System.out.println("nr="+b);
+		System.out.println("nr="+c);
+		System.out.println("nr="+d);*/
+                //Alta solutie, in afara de cea comentata:
+		afisare(a,b);
+		afisare(c,d);
+	}
+}
+ Alt exemplu de polimorfism parametric:
+
+public class Main {
+
+	public static void main(String[] args) {
+		int a=2;
+		int b=4;
+		int c=5;
+		System.out.println("media dintre a si b : "+medie(a,b));
+		System.out.println("media dintre a, b si c : "+medie(a,b,c));
+	}
+	static double medie(int a, int b) {
+		return (a+b)/2.0;
+	}
+	static double medie(int a, int b, int c) {
+		return (a+b+c)/3.0;
+	}
+
+}
+
+RECAPITULARE FOARTE IMPORTANT:
+APELUL METODELOR care sunt public, dar NU sunt static, din afara clasei:
+se face in 2 pasi:
+ - se creeaza un obiect cu new
+ - apoi apelul obiect.numeMetoda()
+Ex:
+Pt a genera numere aleatoare in Java:
+clasa Random (java.util)
+si metoda:
+public int nextInt(int N) 
+Returneaza un numar aleator in gama 0..N-1
+Cum generez un numar aleator intre 0 si 9 ?
+//Pasul 1: creez obiect din clasa Random ?
+Random r=new Random();
+//Pasul 2: apelez metoda nextInt():
+ int nr=r.nextInt(10);
+
+Pt a genera un nr aleator intre 1 si 6(zar):
+    Random r=new Random();
+		//1..6
+    int nr=1+r.nextInt(6);
+    System.out.println("nr="+nr);
+
+APELUL METODELOR publice si statice
+ Metodele statice ca si variabilele de instanta statice, apartin CLASEI 
+(si nu unei anumite instante, unui anumit obiect)
+Se poate fara sa mai creem obiect, pt ca ele nu apartin unui anumit obiect ci apartin clasei!
+Sintaxa pt apel metode statice: 
+    numeClasa.numeMetoda
+Ex. de metoda publica si statica:
+clasa Math (face parte din pachetul java.lang, deci nu se importa)
+ public static double sqrt(double nr)
+ Ex. de apel din afara clasei Math:
+ double rezultat=Math.sqrt(7); 
+
+Putem genera un nr aleator si folosind metoda statica random() din clasa Math.
+ public static double random() //returneaza nr aleator , real, intre [0,1)
+ Ex. de apel:
+    double nr=Math.random();//[0,1)
+
+ Exercitiu:
+  Folosind metoda random() din Math sa generam un nr aleator INTREG intre 0 si 99.
+class P1{
+ public static void main(String args[]){
+ 	int nr=(int)(100*Math.random()); 
+    System.out.println("nr="+nr);
+ }
+}
+
+ La fel ca si metodele statice, se pot accesa variabilele de instanta 
+sau constantele, care statice, din afara clasei in care sunt definite.
+Ex: in clasa Math este definita constanta statica pi=3.141..
+public static final PI=3.141592653589793
+O accesam asa:
+System.out.println(Math.PI);
+
+
+/////// Algo de nr. prim: //////////////////
+public class Main {
+
+	public static void main(String[] args) {
+		int nr=118;
+		boolean rezultat=estePrim(nr);
+		System.out.println(rezultat);
+	}
+	static boolean estePrim(int nr) {
+		if(nr<=1)return false;
+		int i;
+		for(i=2;i<=(int)Math.sqrt(nr);i++)
+			if(nr%i==0)return false;
+
+		return true;
+	}
+}
+
+CLASE CARE CONTIN DOAR DATE (NU AU METODE) -recapitulare din cursul 2
+  Sunt echivalentul tipului de date struct din lb. C.
+Datele, pentru a putea fi accesate din afara clasei, nu trebuie sa fie private !
+
+class Punct{
+  public int x;
+  public int y;
+}
+ 
+public class AplicatiiCuPuncte {
+
+	public static void main(String[] args) {
+		//vreau sa construiesc un obiect punct cu coordonatele
+		// x=3 si y=5:
+		//x=3; y=5; GRESIT
+		//Punct.x=3; GRESIT pt ca x nu este statica
+		//Singura posibilitate: creez obiect din clasa Punct:
+		Punct p1=new Punct();
+		//accesez variabilele x si y ale punctului, cu sintaxa:
+		// numeObiect.numeVariabila
+		p1.x=3; 
+		p1.y=5;
+		//Calculez distanta punct fata de origine:
+		double d0=distanta(p1);
+		System.out.println("d0="+d0);
+		//Creem un alt punct p2 de coordonate 1 si 10:
+		Punct p2=new Punct();
+		p2.x=1; p2.y=10;
+		//Calcul d12 - distanta intre p1 si p2:
+		double d12=distanta(p1,p2);//am numit-o la fel ca distanta fata de origine (polimorfism param.)
+		System.out.println("d12="+d12);
+	}
+	static double distanta(Punct p) {
+		//distanta lui p fata de origine:
+		return Math.sqrt(p.x*p.x+p.y*p.y);
+	}
+	static double distanta(Punct p1, Punct p2) {
+                //distanta intre p1 si p2:
+		return Math.sqrt((p2.x-p1.x)*(p2.x-p1.x)+(p2.y-p1.y)*(p2.y-p1.y));
+	}
+
+}
+
+CEL MAI IMPORTANT:
+	CLASE CE AU SI DATE SI METODE
+Scriem clasa Patrat ce are si date si metode.
+Are ca atribut (var. deinstanta): latura patratului
+- latura  patratului (a) : var. de instanta
+
+IMPORTANT IN POO:
+    Se recomanda ca var. de instanta sa fie private si accesul la ele sa se faca prin metode publice
+(de tipul set() si get())
+Metode  din clasa Patrat: 
+  arie()
+  
+IMPORTANT:
+ Variabilele de instanta ale clasei sunt ca niste variabile GLOBALE 
+pentru toate metodele clasei ! De aceea este gresit ca sa le dam ca 
+parametrii in metodele clasei !
+ 
+public class Patrat {
+	private int a;//latura
+        
+	/*
+	public void setA(int latura) {
+		 a=latura;
+	}
+	*/
+	public void setA(int a) {
+		this.a=a;//this , cuv. cheie care refgera obiectul curent
+	}
+	//pt a returna valoarea var. private a:
+	//este gresit antetul:
+	//  public int getA(int a)
+	public int getA() {
+		return a;//var. de instanta a, este globala pe clasa Patrat.
+		         //Orice metoda a clasei Patrat are acces direct la ea!
+	}
+	public int arie() {
+		return a*a;
+	}
+
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		//Creez obiect Patrat:
+		Patrat p1=new Patrat();
+		//fixez latura patratului p1 la valoarea 7:
+		//p1.a=7; GRESIT! pt ca a este private in clasa Patrat
+		//public void setA(int a)
+		p1.setA(7);
+		//Apel metoda: public int arie()
+		int rezultat=p1.arie();
+		System.out.println("aria="+rezultat);
+	}
+
+}
+
+
+ 
+CONSTRUCTOR
+Constructor: ma ajuta sa nu uit de initializarea var. de instanta,
+deoarece la instantiere obiect se apeleaza automat constructorul.
+Ce este constructorul ?
+Constructorul este o metoda speciala a unei clase care:
+  -are numele clasei
+  -nu are camp pt tipul de date returnat (nici void nu apare)
+  -este apelat AUTOMAT cand creem cu new un obiect 
+  -in general (nu intotdeauna) este public
+Ce face un constructor?
+  In general da valori initiale variabilelor de instanta (aceste apar ca parametrii 
+    in constructor)
+  IMP:
+   Constructorul ne ajuta ca sa nu uitam de initializarea variabilelor de instanta ! 
+
+
+public class Patrat {
+	private int a;
+	//constructor:
+
+	public Patrat(int a) {
+		this.a = a;
+	}
+
+	public int getA() {
+		return a;
+	}
+
+	public void setA(int a) {
+		this.a = a;
+	}
+	public int arie() {
+		return a*a;
+	}
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		//Creez obiect Patrat:
+		Patrat p1=new Patrat(7);//apel constructor
+		//Apel metoda: public int arie()
+		int rezultat=p1.arie();
+		System.out.println("aria="+rezultat);
+		//modific latura la 5:
+		p1.setA(5);
+		rezultat=p1.arie();
+		System.out.println("aria="+rezultat);
+	}
+
+}
+
+O clasa poate sa aiba:
+ 0, 1 sau mai multi constructori. 
+Daca o clasa are 0 constructori, Java creeaza implicit un constructor, fara parametrii si 
+in care nu am nicio instructiune.
+
+Exemplu de clasa cu doi constructori:
+public class Patrat {
+	private int a;
+	//constructor:
+
+	public Patrat(int a) {
+		this.a = a;
+	}
+        //al doilea constructor:
+        public Patrat() {
+    	        a=1;
+        }
+
+	public int getA() {
+		return a;
+	}
+
+	public void setA(int a) {
+		this.a = a;
+	}
+	public int arie() {
+		return a*a;
+	}
+}
+public class Main {
+
+	public static void main(String[] args) {
+		//Creez obiect Patrat:
+		Patrat p1=new Patrat(7);//apel constructor
+		//Apel metoda: public int arie()
+		int rezultat=p1.arie();
+		System.out.println("aria="+rezultat);
+		//modific latura la 5:
+		p1.setA(5);
+		rezultat=p1.arie();
+		System.out.println("aria="+rezultat);
+		//Creez obiectul p2:
+		Patrat p2=new Patrat();
+		rezultat=p2.arie();
+		System.out.println("aria="+rezultat);
+	}
+
+}
+
+
+Scriem clasa Dretunghi ce are 2 variabile instanta: a-lungime, b-latime
+
+public class Dreptunghi {
+	private int a;//lungime
+	private int b; //latime
+	public Dreptunghi(int a, int b) {
+		this.a = a;
+		this.b = b;
+	}
+	public int getA() {
+		return a;
+	}
+	public void setA(int a) {
+		this.a = a;
+	}
+	public int getB() {
+		return b;
+	}
+	public void setB(int b) {
+		this.b = b;
+	}
+	public int arie() {
+		return a*b;
+	}
+	public double diagonala() {
+		return Math.sqrt(a*a+b*b);
+	}
+
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Dreptunghi d=new Dreptunghi(1,2);
+		int ariaD=d.arie();
+		System.out.println("aria="+ariaD);
+		//public double diagonala()
+		System.out.println("diagonala dreptunghi = "+d.diagonala());
+	}
+
+}

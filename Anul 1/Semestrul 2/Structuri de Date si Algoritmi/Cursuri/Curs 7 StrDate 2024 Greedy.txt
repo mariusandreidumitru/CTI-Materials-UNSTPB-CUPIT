@@ -1,0 +1,226 @@
+CURS 7 STRUCTURI DE DATE AN 1 CALC. 2024
+
+DIVIDAE ET IMPERA -continuare
+ALGORITMUL DE SORTARE QuickSort
+ - este tot algo. dividae et impera
+Timpul mediu de executie: O(logN * N) (mai bun decat O(N*N) !)
+
+Presupune calculul unui pivot (index in vector)
+
+a={ 7,6,8,3,1,20,25,23,24} //vector nesortat
+a={ 1,3,6,7,8,20,23,24,25} sortat cresc.
+Ne uitam la val. 20 din primul vector.
+Inainte de el , toate sunt mai mici (desi nu sunt in ordine),
+  iar toate dupa el, sunt mai mari.
+In vectorul sortat , el (20) va ramane pe aceeasi pozitie. El are indexul 5
+
+Pivot=index pt un element fata de care toate elementele dinaintea lui sunt mai mici, iar 
+toate de dupa el sunt mai mari.
+
+void quickSort(int a[],int s, int d){
+ //caz limita:
+ if(s>=d)return;
+ //calculam p, pivotul:
+ int p=calculPivot(a,s,d);
+ quickSort(a,s,p-1);
+ quickSort(a,p+1,d);
+}
+
+ Pentru calculul pivotului, parcurgem vectorul de la ambele capete,
+si comparam el. crt. din dreapta cu el. crt din stanga. Daca nu sunt ordonate (daca el. din stanga este mai mare decat el. din dreapta),
+le interschimbam (swap).
+ In parcurgerea vectorului, plecam mai intai de la capatul din dreapta.
+
+In C++, pt a interschimba doua elemente x si y, putem folosi functia de biblioteca swap(), astfel:
+swap(x,y);
+
+Sau putem folosi algo elementar:
+aux=x;
+x=y;
+y=aux;
+
+int calculPivot(int a[], int s, int d){
+  int is=s;//indexul capatului din stanga. Va creste cu deltaS.
+  int id=d;//indexul capatului din drepta. Va scadea cu deltaD
+  int deltaS=0;
+  int deltaD=1;
+  //Parcurgand de la cele doua capete vectorul, cand is devine egal cu id, acela va fi pivotul cautat !
+  while(is<id){
+    if(a[is]>a[id]){
+       swap(a[is],a[id]);
+       swap(deltaS,deltaD);
+    }
+    is=is+deltaS;
+    id=id-deltaD;
+  }
+  return is;
+}
+/*
+Exemplu de calcul pivot:
+Fie vectorul:
+7 6 8 2 1 20
+*          *
+
+1 6 8 2 7 20
+  *     *
+
+1 6 7 2 8 20
+    * *
+
+1 6 2 7 8 20
+      *
+      
+Pivotul este indexul 3, si elementul de pe pozitia 3 (numarul 7) este mai mare decat toate de la 
+stanga lui si mai mic decat toate de la dreapta lui.
+*/
+
+//Programul principal:
+int main(){
+  int N; cout<<"N="; cin>>N;
+  int a[N];
+  int i;
+  for(i=0;i<N;i++)cin>>a[i];
+  quickSort(a,0,N-1);
+  //afisare vector sortat:
+  for(i=0;i<N;i++)
+    cout<<a[i]<<" ";
+  return 0;
+}
+
+Algoritmi "clasici" dividae et impera, studiati:
+- cautare binara
+- sortare prin interclasare (mergesort)
+- turnurile din Hanoi
+- quick sort (complexitate: O(N*log(N))
+
+
+      ALGORITMY GREEDY
+greedy= lacom (engl)
+Se folosesc in general in probleme de optimizare. Solutia problemei prin metoda Greedy se 
+construieste pas cu pas, si la fiecare pas se alege cea mai buna solutie pt pasul respectiv.
+
+Avem Greedy optimal, atunci cand luand cea mai buna solutie pt pasul curent, per ansamblu va rezulta 
+cea mai buna solutie (ex: problema clasica a rucsacului).
+Avem si Greedy suboptimal atunci cand strategia alegerii maximului la fiecare pas (strategia lacomului) ,
+nu va conduce in final la cea mai buna solutie (problema monezilor si problema comis voiajorului). Pt anumite date
+ne va da cea mai buna solutie, pt alte date, nu ne va da cea mai buna solutie.
+
+PROBLEMA RUCSACULUI
+Avem un rucsac ce poate transporta o greutate maxima Gmax.
+Avem N obiecte de greutati g_i cunoscute (le memoram intr-un vector: g[0],g[1],...,g[N-1]).
+Sa se determine ce obiecte trebuie luate in rucsac, a.i. sa luam un numar MAXIM de obiecte si sa nu se 
+depaseasca gereutatea maxima pe care o poate duce rucsacul: Gmax
+
+Strategia Greedy: ca sa luam cat mai multe , mai intai le luam in rucsac pe cele mai usoare ! (Greedy optimal)
+
+Mai intai vom sorta vectorul g[], crescator.
+
+int main(){
+ int Gmax; cin>>Gmax;
+ int N; cout<<"N="; cin>>N;
+ int g[N];
+ int i;
+ for(i=0;i<N;i++)cin>>g[i];
+ //Algo Greedy:
+ //sortare vector g[]: (folosim functia anterioara quicksort())
+  quickSort(g,0,N-1);
+  //Ce obiecte luam ?
+  cout<<"OBIECTELE LUATE AU GREUTATILE:"<<endl;
+  int gCrt=0;//greutatea obiectelor luate pana in prezent, in rucsac
+  for(i=0;i<N;i++)
+    //putem lua si obiectul g[i] ?
+    if(gCrt+g[i]<=gMax){
+        //iau pe g[i]:
+        cout<<g[i]<<endl;
+        gCrt=gCrt+g[i];
+    }else break;
+  return 0;
+}
+
+PROBLEMA MONEZILOR (Greedy suboptimal)
+ Se da o suma de bani S.
+ Avem la dispozitie N tipuri de monezi , pt a putea plati suma S.
+ Se cere sa se plateasca suma S folosind un numar total minim de monezi.
+
+Ex:
+S=101
+tipMonezi={1,10,30, 50}
+Ce strategie Greedy vom avea?
+  Mai intai platim suma S folosind cea mai mare moneda.
+ 101/50=2 monezi de cate 50
+ Restul ramas=1 Il platim cu moneda de 1
+ In total : 3 monezi Este rezultatul cel mai bun pt acest exemplu.
+
+Ex:
+S=14
+tipMonezi={1,7,10}
+
+Strategia Greedy:
+ mai intai platim cu cea mai mare moneda
+ S=14=1x10+4x1  Total: 5 monezi
+Nu e cea mai buna solutie !
+ Cea mai buna solutie: S=14=2x7  Total: 2 monezi
+
+Solutia problemei monezilor cu algo Greedy:
+int main(){
+ int S; cin>>S;
+ int N; cin>>N;
+ int tipMonezi[N];
+ int i;
+ for(i=0;i<N;i++)
+   cin>>tipMonezi[i];
+ //ordonam descrescator vectorul tipMonezi[]:
+ sortareDescrescatoare(tipMonezi,N);
+ int nrMonezi[N];//nrMonezi[i]: nr de monezi din tipul tipMonezi[i], folosite in plata sumei S
+ for(i=0;i<N;i++)
+   nrMonezi[i]=0;
+ //Calcul vector nrMonezi[]:
+ for(i=0;i<N;i++){
+   nrMonezi[i]=S/tipMonezi[i];
+   S=S-nrMonezi[i]*tipMonezi[i];
+   if(S==0)break;
+ }
+ //afisare vector nrMonezi[]:
+ for(i=0;i<N;i++)
+   cout<<nrMonezi[i]<<" ";
+ return 0;
+}
+
+
+
+PROBLEMA COMIS VOIAJORULUI (implementarea in lb. C, in cursul urmator!)
+Se dau N orase. Vanzatorul trebue sa faca un turneu: pleaca din orasul 0
+si trece prin fiecare oras o singura data, si se intoarce de unde a plecat.
+Care este ruta optima (ordinea de vizitare) a.i. distanta totala sa fie cea mai mica.
+Toate orasele sunt interconectate si se cunosc distantele dintre ele.
+
+N=4
+0,1,2,3
+Ordini de vizitare posibile:
+0,1,2,3,0
+0,3,2,1,0
+etc.
+Daca sunt N localitati cate variante distincte avem ?
+
+1,2,3,4 
+1,3,2,1
+...
+4!
+
+Sunt (N-1)!/2
+DE ce se imparte la 2? Nu conteaza sensul de parcurgere
+0,1,2,3,0
+0,3,2,1,0
+
+Tema optionala: in limbajul C calculati 60!
+
+Greedy pentru comis voiajor:
+Din oras 0 pleaca in orasul cel mai apropiat. Apoi din acesta pleaca in
+cel mai apropiat din cele ramase nevizitate.
+Per ansamblu obtine o solutie buna dar nu cea mai buna.
+
+Nu doar Greedy este singura posibilitate de a gasi o solutie mai buna.
+Si tehnici de IA pot fi folosite.
+Este un sablon pt alte probleme:
+Avem N localitati care trebuie interconectate ( o retea in inel).
+Care este ordinea de interconectare a.i. lungime totala a cablului folosit sa fie minima?

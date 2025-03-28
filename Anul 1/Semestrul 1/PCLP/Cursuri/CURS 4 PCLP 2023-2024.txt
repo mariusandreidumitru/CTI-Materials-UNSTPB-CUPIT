@@ -1,0 +1,318 @@
+CURS 4
+A. Instructiunea if multiplu
+Avem mai multe expresii de test ce se evalueaza
+Sintaxa 1:
+
+ if(exp_t1)instr_1;
+ else if(exp_t2)instr_2;
+ ...
+ else if(exp_tn)instr_n;
+Daca exp_t1 este adeva. executa instr_1 si trece mai departe (DUPA IF)
+Daca exp_t1 este falsa, verifica exp_t2 ....
+
+Se poate intampl ca sa nu execute nicio instructiune din if-uri (cand toate 
+exp_t sunt false) 
+
+
+Sintaxa 2:
+ if(exp_t1)instr_1;
+ else if(exp_t2)instr_2;
+ ...
+ else if(exp_tn)instr_n;
+ else instr;
+
+Aici oblig. va executa o instructiune, inainte de a executa instructiunea ce 
+ vine dupa if multiplu
+
+
+Citim un numar intreg. Sa se afiseze la ce zi din saptamana corespunde.
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int nr; cout<<"nr="; cin>>nr;
+    if(nr==1)cout<<"duminica";
+    else if(nr==2)cout<<"luni";
+    else if(nr==3)cout<<"marti";
+    else if(nr==4)cout<<"miercuri";
+    else if(nr==5)cout<<"joi";
+    else if(nr==6)cout<<"vineri";
+    else if(nr==7)cout<<"sambata";
+    else cout<<"numar gresit!";
+    return 0;
+}
+
+Exemplu:
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int a,b;
+    cin>>a>>b;
+    cout<<"x=";
+    int x; cin>>x;
+    //unde se afla x fata de [a,b] ?
+    if(x<a)cout<<"la stanga";
+    //else if(x>=a&&x<=b)
+    else if(x<=b)cout<<"in interval";
+    else cout<<"la dreapta";
+    return 0;
+}
+
+Varianta la if multiplu: instructiunea switch
+Sintaxa:
+switch(expresie){//expresia este evaluata la o valoare
+   case val_1: instr1;
+               break;
+   case val_2: instr2;
+               break;
+   ...
+   case val_n: instrn;
+               break;
+   //optional:
+   default:    instr;
+}
+Daca nu exista pe o ramura break, va trece sa execute case-ul urmator.
+
+Programul cu zilele saptamanii transpus cu switch:
+int main()
+{     
+    int nr; cout<<"nr="; cin>>nr;
+    switch(nr){
+      case 1:cout<<"duminica";
+             break;
+      case 2:cout<<"luni";
+             break;
+  ............
+      default:cout<<"numar gresit!";
+             break;
+             
+    }
+    return 0;
+}
+
+B. INSTRUCTIUNEA DE REPETARE
+E folosita pt a repeta executia unui grup de instructiuni.
+
+Trei tipuri de instr. de repetare:
+- for
+- while
+- do .. while
+Se pot folosi una in locul alteia.
+Pt a vedea ca putem folosi o instr. de repetare trebuie sa exprimam algoritmul  
+astfel:
+
+1)SE REPETA DE n ORI
+    ...
+2)CAT TIMP o conditie este adevarata REPETA
+    .....
+3)SE REPETA
+    ....
+  CAT TIMP o conditie este adevarata
+
+Antrenor catre sportiv: executa 10 ture de stadion
+ SE REPETA DE 10 ORI
+     alearga o tura de stadion
+
+Antrenor catre sportiv: fa mai multe ture de stadion , pana cand eu ridic mana 
+CAT TIMP nu a ridicat mana REPETA
+     alearga o tura de stadion
+
+Exemplu:
+  Citesc N numere . Sa calculam suma lor.
+Se vede ca este o repetare?
+suma <--- 0
+SE REPETA DE N ORI
+inceput
+    citesc numar in variabila nr
+    il adaug la suma
+sfarsit
+
+
+INSTRUCTIUNEA for
+Sintaxa:
+for(exp_init;exp_test;exp_calcul){
+   grup instructiuni
+}
+
+In general la for se foloseste un contor, care numara 
+repetarile facute. Tipic il vom nota cu i
+Exp_init : da valoare initiala contorului Ex:
+for(i=1;...
+
+Exp_test: verifica daca contorul  atins valoarea finala (nr cerut de repetari)
+Ex:
+for(i=1;i<=10;...)
+
+Exp_calcul: calculeaza valoarea contorului la urmatoarea repetare (iteratie)
+In mod tipic , contorul la urmatoarea repetare este crescut cu 1.
+Ex:
+for(i=1;i<=10;i++)  sau for(i=1;i<=10;i=i+1) 
+Ex:
+for(i=10;i>=1;i--)
+
+IMP: ordine de executie
+- inaintea oricarei repetari se face exp_init
+- conditia de continuare a repetarilor (exp_test) este verificata LA INCEPUTUL 
+fiecarei repetari !
+Obs: la fel este si la while
+Dar, la do..while se verifica LA SFARSITUL fiecarei repetari.
+
+Deci la for, ca si la while, grupul de instructiuni pot sa NU se repete niciodata !
+(nr de retari=0). Ex:
+
+for(i=5;i<=1;i++)
+   cout<<"abc"<<endl;
+Aici, nu va afisa nimic.
+
+Aplicatii cu for:
+1) Citim N, un numar natural. Sa afisam pe o linie N stelute (*).
+Ex: N=3
+***
+SE REPETA de N ori
+   afisez o steluta
+#include <iostream>
+using namespace std;
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int i;
+    for(i=1;i<=N;i++)
+        cout<<"*";
+    return 0;
+}
+
+
+In mod tipic in grupul de instructiuni care se repeta, apare si variabila contor.
+Citim a si b. Sa afisam toate numerele pare, in ordine, din [a,b]
+Ex1: a=10 b=15
+10
+12
+14
+
+Ex. 2: a=11 b=16
+12
+14
+16
+int main()
+{
+    int a,b;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    int start;
+    if(a%2==0)start=a;
+    else start=a+1;
+    int i;
+    for(i=start;i<=b;i=i+2)
+        cout<<i<<endl;
+    return 0;
+}
+
+
+2) Citim N. Sa afisam pe liniile impare (1,3,...) cate o steluta, iar pe liniile pare (2,4,..) sa afisam #.
+pentru i=1,N repeta
+   daca i este impar atunci afisare *
+   altfel afisare #
+
+Instructiunea continue; 
+ Este folosita pentru a trece la urmatoarea iteratie ( fara sa o mai termine pe cea curenta)
+
+Citim N.
+Se repeta de N ori
+   citim doua numere intregi a si b
+   calculam a/b si afisam
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int i;
+    int a,b;
+    double rezultat;
+    for(i=1;i<=N;i++){
+        cout<<"a=";cin>>a;
+        cout<<"b="; cin>>b;
+        if(b==0){
+            cout<<"nu poate face impartirea !"<<endl;
+            continue;
+        }
+        rezultat=a/(double)b;
+        cout<<rezultat<<endl;
+    }
+    return 0;
+}
+
+4) Afisare divizori ai unui numar
+citire nr
+pentru i=1,nr se repeta
+   verific daca i divide pe nr
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int nr; cout<<"nr="; cin>>nr;
+    int i;
+    for(i=1;i<=nr;i++)
+        if(nr%i==0)cout<<i<<"  ";
+
+    return 0;
+}
+
+OPTIMIZARE:
+int main()
+{
+    int nr;
+    cout<<"nr="; cin>>nr;
+    int i;
+    cout<<"1"<<endl;
+    for(i=2;i<=nr/2;i++)
+        if(nr%i==0)cout<<i<<endl;
+    cout<<nr;
+    return 0;
+}
+
+Cati divizori are un numar?
+int main()
+{
+    int nr;
+    cout<<"nr="; cin>>nr;
+    int i;
+    int contor=0;
+    for(i=1;i<=nr;i++)
+        if(nr%i==0)contor++;
+    cout<<"contor="<<contor;
+    return 0;
+}
+
+Citim N numere. Sa calculam suma lor.
+Se vede ca este o repetare?
+suma <--- 0
+SE REPETA DE N ORI
+inceput
+    citesc numar in variabila nr
+    il adaug la suma
+sfarsit
+
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int nr;
+    int suma=0;
+    for(int i=1;i<=N;i++){
+        cout<<"nr="; cin>>nr;
+        suma+=nr;
+    }
+    cout<<"suma="<<suma;
+    return 0;
+}
+

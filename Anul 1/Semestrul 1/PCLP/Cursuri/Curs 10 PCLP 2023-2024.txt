@@ -1,0 +1,349 @@
+Curs 11
+Matrici. Alti algoritmi.
+1. Cate numere pare sunt intr-o matrice ?
+Algo:
+ initializam contor cu 0
+ parcurgem matrice
+   daca elem. crt. este par, crestem contor
+int nL, nC;
+cin>>nL>>nC;
+int i,j;
+for(i=0;i<nL;i++)
+  for(j=0;j<nC;j++)
+    cin>>a[i][j];
+int contor=0;
+//parcurg matrice:
+for(i=0;i<nL;i++)
+  for(j=0;j<nC;j++)
+    if(a[i][j]%2==0)contor++;
+cout<<contor;
+
+2. Maxim dintr-o matrice
+ -initializam maxim cu primul element
+ parcurgem matricea
+   daca elem. crt > maxim atunci
+       maxim=elem. crt
+int maxim=a[0][0];
+//parcurg matrice:
+for(i=0;i<nL;i++)
+  for(j=0;j<nC;j++)
+    if(a[i][j]>maxim)maxim=a[i][j];
+cout<<maxim;
+
+3. Are matricea toate elementele egale ?
+Le vom compara cu primul.
+int main(){
+ ....
+int toateEgale=1;
+//parcurg matricea:
+for(i=0;i<nL;i++){
+  for(j=0;j<nC;j++)
+     if(a[i][j]!=a[0][0]){
+       toateEgale=0;
+       break;
+     }
+  if(toateEgale==0)break;
+}
+
+if(toateEgale==1)cout<<"da, sunt toate egale";
+else cout<<"nu";
+
+Mai usor, fara semafor, daca scriem o functie
+Atunci cand se transmite o matrice ca parametru, trebuie neaparat sa-i 
+specificam nr. de coloane
+#define NL 3
+#define NC 2
+int areToateElemEgale(int a[][NC], int nL, int nC){
+ int i,j;
+ for(i=0;i<nL;i++){
+  for(j=0;j<nC;j++)
+     if(a[i][j]!=a[0][0])return 0;
+ return 1;
+}
+
+int main(){
+  int a[NL][NC];
+  int i,j;
+  for(i=0;i<NL;i++)
+    for(j=0;j<NC;j++)
+      cin>>a[i][j];
+  int rez=areToateElemEgale(a,NL,NC);
+  if(rez==1)cout<<"toate egale";
+  else cout<<"nu";
+  return 0;
+}
+
+}
+
+4. copiere matrice in vector
+
+int nL,nC;
+cin>>nL>>nC;
+int a[nL][nC];
+//citire matrice:
+int i,j;
+for(i=0;i<nL;i++)
+  for(j=0;j<nC;j++)
+    cin>>a[i][j];
+int v[nL*nC];
+int k=0;//index in vector
+//parcurg matricea:
+for(i=0;i<nL;i++)
+  for(j=0;j<nC;j++){
+    v[k]=a[i][j];
+    k++;
+  }
+//afisare vector:
+for(i=0;i<nL*nC;i++)
+  cout<<v[i]<<" ";
+Tema:
+  In loc de indexul k, puteam sa gasim pe baza lui i si j,
+indexul unde se va copia in vector
+
+5. Sa verificam daca doua linii din matrice 
+specificate prin indecsii lor: lin1, lin2 sunt
+egale intre ele.
+int nL,nC;
+cin>>nL>>nC;
+int a[nL][nC];
+//citire matrice:
+int i,j;
+for(i=0;i<nL;i++)
+  for(j=0;j<nC;j++)
+    cin>>a[i][j];
+int lin1, lin2;
+cin>>lin1>>lin2;
+//Comparam cele doua linii intre ele:
+int egale=1;
+for(j=0;j<nC;j++)
+  if(a[lin1][j]!=a[lin2][j]){
+    egale=0;
+    break;
+  }
+if(egale)cout<<"sunt egale";
+else cout<<"nu";'
+
+MATRICI PATRATICE
+ O matrice in care numarul de linii este egal cu 
+nr de coloane
+La matrice patratica , identificam 
+diagonala principala si diagonala secundara.
+Ex:
+1 2 3 4
+0 0 0 0
+4 3 2 1
+5 6 7 8
+
+Diag. principala: {1,0,2,8}
+Diag. secundara: {4,0,3,5}
+
+Sa calculam suma elem. de pe diagonala principala
+a unei matrici patratice.
+int N;//nr linii=nr coloane
+cin>>N;
+int i,j;
+for(i=0;i<N;i++)
+  for(j=0;j<N;j++)
+    cin>>a[i][j];
+//Diag. princ: a[0][0], a[1][1],a[2][2],...a[i][i]..
+int suma=0;
+for(i=0;i<N;i++)
+  suma=suma+a[i][i];
+cout<<suma;
+
+Sa calculam suma elementelor de pe diagonala secundara.
+ Diagonala secundara:
+a[0][N-1], a[1][N-2], ..., a[i][N-i-1], ...a[N-1][0] 
+
+suma=0;
+for(i=0;i<N;i++)
+  suma=suma+a[i][N-i-1];
+
+Sa calculam suma elementelor de deasupra diagonalei principale.
+
+Cum incepem?
+ Nu cod imediat, ci scriem care sunt elem. de deasupra diag. principale:
+a[0][1], a[0][2]....a[0][N-1]
+a[1][2], a[1][3],... a[1][N-1]
+a[2][3],.....
+....
+a[N-2][N-1]
+
+suma=0;
+for(i=0;i<N-1;i++)
+  for(j=i+1;j<N;j++)
+    suma=suma+a[i][j];
+
+REPET:
+Unei matrici ce apare ca parametru intr-o functie, trebuie sa i se 
+specifice numarul de coloane.
+Deci NU se declara asa:
+  int a[][]
+
+Ex. de declaratie corecta:
+ int a[][10]  daca are 10 coloane
+
+TEMA DE CASA pana pe 19.12
+pe moodle
+Citim N. Citim o matrice patratica de dimensiune N, de numere intregi.
+Sa construim doua matrici b si c. In b se copiaza liniile pare din a, in c se 
+copiaza liniile impare.
+Ex: Dasca a este:
+0 0 0 0
+1 2 3 4
+1 1 1 1
+4 4 5 7
+
+Atentie: prima linie este linia 0
+Va rezulta b:
+0 0 0 0
+1 1 1 1
+
+si c:
+1 2 3 4
+4 4 5 7
+
+
+
+                     SIRURI DE CARACTERE
+(String-uri)
+
+Definitie:
+ Un sir de caractere este un vector de caractere,ce are pe ultima 
+pozitie, ca si marcaj de sfasit de sir, valoarea 0.
+Ex. de declarare:
+char sir[100];
+L-am declarat exact ca un vector de caractere!
+
+O constanta sir de caractere se reprezinta cu ghilimele "   "
+Exemplu:
+char s1[10]="abc";
+
+Ce diferenta este intre caracterul A, si sirul "A" ?
+char ch='A';//avem in memorie octetul 65
+char sir[10]="A";//avem in memorie 2 octeti: 65 si 0.
+Alt exemplu:
+Sirul "ABC" este echivalent cu:
+{'A','B','C','\0'}
+'\0' este o notatie pt caracterul  ce are codul ASCII 0.
+ORA 2
+Citirea de la tastatura:
+ se face cu metoda get() a obiectului cin,astfel:
+char sir[20];//poate avea maxim 19 caractere.
+           //Trebuie pastrat un caracter pt 0 final
+cin.get(sir,20);
+
+In lb. C, un sir se citeste cu functia scanf() si specificatia de format %s:
+scanf("%s",sir);
+
+Afisarea stringurilor se face cu cout.
+Spre deosebire de vectori, pentru siruri avem mai multe functii de biblioteca.
+ 
+Functii de biblioteca pentru siruri:
+1. strlen() returneaza nr de caractere al unui sir dat ca parametru
+Semnatura:
+int strlen(char* sir)
+(pointer catre primul caracter din sir)
+
+Exemplu:
+Citim de la tastatura un sir. Cate vocale are ?
+int main(){
+ char s[100];//dimensiune acoperitoare
+ cout<<"sir = "; cin.get(s,100);
+ int nVoc=0;
+ //parcurg sir:
+ int i;
+ for(i=0;i<strlen(s);i++)
+   if(s[i]=='a'||s[i]=='A'||s[i]=='e'||s[i]=='E'||s[i]=='i'||
+      s[i]=='I'||s[i]=='o'||s[i]=='O'||s[i]=='u'||s[i]=='U') 
+     nVoc++;
+ cout<<nVoc;
+
+
+Se putea folosi o functie separata care verifica daca un caractere este vocala:
+int este vocala(char ch){
+ if(ch=='a'||ch=='A'......)return 1;
+ else return 0;
+}
+
+
+Exemplu de functie ce ca parametru un sir:
+ Sa scriem o functie ce are ca  param. un sir de caractere.
+Functia returneaza 1, daca toate caracterele sunt egale intre ele.
+
+#include <iostream>
+#include <string.h>
+using namespace std;
+int egale(char* sir);
+int main()
+{
+    char sir [20];
+    cout<<"sir=";
+    cin.get(sir, 20);
+    int rez=egale(sir);
+    if(rez==1)cout<<"da";
+    else cout<<"nu";
+    return 0;
+}
+int egale(char* sir){
+   int i;
+   for(i=1;i<strlen(sir);i++)
+      if(sir[i]!=sir[0])return 0;
+   return 1;
+}
+
+La seminar: o functie ce verifica daca toate caracterele sunt diferite intre ele
+(cu 2 for-uri)
+
+Exemplu:
+Sa scriem o functie in care verificam daca un string este palindrom (simetric fata 
+de mijloc)
+EX: "COJOC" este
+    "ABC" nu este
+
+int palindrom(char* s){
+  int L=strlen(s);
+  for(int i=0;i<L/2;i++)
+     if(s[i]!=s[L-i-1])return 0;
+  return 1;
+}
+
+Mod de apel:
+int rez=palindrom("COJoc");
+
+EXEMPLU
+  Citim de la tastatura un sir s1. Sa construim sirul s2 ce contine doar literele 
+mari din s1.
+Exemplu:
+s1="Ana ArE Mere."
+Atunci s2="AAEM"
+
+int main(){
+  char s1[200];
+  cout<<"s1="; cin.get(s1,200);
+  char s2[200];
+  int i; //index in s1
+  int j=0;//index s2
+  for(i=0;i<strlen(s1);i++)
+     if(s1[i]>='A' && s1[i]<='Z'){
+         s2[j]=s1[i];
+         j++;
+     }
+  //facem pe s2 sir:
+ s2[j]=0;//'\0'
+ cout<<s2;
+ return 0;
+}
+  
+
+
+
+
+
+
+
+
+
+
+
+

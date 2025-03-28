@@ -1,0 +1,451 @@
+Curs 6 PCLP an 1 Calc
+ATENTIE:
+ Partial, saptamana 9, la curs, 1 ora
+Subiecte: atribuire, decizie, repetare, modularizare
+//////////////////////////////////
+INSTRUCTIUNEA while
+ Sintaxa:
+ while(exp_test){
+   grup instructiuni
+ }
+Se citeste:
+ CAT TIMP exp_test este adevarata  REPETA
+    grup instructiuni
+Daca exp_test nu este adevarata de la inceput, nu face nicio repetare.
+
+Ex:
+  S=1^3+2^3+...+N^3
+Sa o calculam cu while
+
+int N; cin>>N;
+int i;
+int S=0;
+i=1;
+while(i<=N){
+  S=S+i*i*i;
+  i++;
+}
+cout<<S;
+
+Cu instructiunea for, este mai simplu:
+int S=0;
+for(i=1;i<=N;i++)
+  S=S+i*i*i;
+cout<<S;
+
+Alt exemplu cu while (exemplul  tipic):
+Calcul cmmdc(a,b)
+Prin scaderi repetate!
+Mate: cmmdc(12,18)=cmmdc(max-min,min)
+cmmdc(12,18)=cmmdc(18-12,12)=cmmdc(12,6)=
+cmmdc(12-6,6)=cmmdc(6,6)=6
+
+int a,b; cin>>a>>b;
+while(a!=b)
+  if(a>b)a=a-b;
+  else b=b-a;
+cout<<"cmmdc="<<a;
+
+Observatie:
+  Se poate folosi in loc de while() instructiunea for(;;)
+int a,b; cin>>a>>b;
+for(;;)
+  if(a>b)a=a-b;
+  else if(b>a) b=b-a;
+  else break;
+cout<<"cmmdc="<<a;
+
+INSTRUCTIUNEA do..while    
+Sintaxa:
+do{
+ grup instructiuni
+}while(exp_test);
+
+SE REPETA
+  execut grup instructiuni
+CAT TIMP exp_test este adevarata
+
+Obs:
+Pt ca verificarea expresiei de test se face la sfarsit,
+instructiunile se repeta CEL PUȚIN O DATA
+Exemplu:
+Citim repetat un numar de la tastatura pana cand se da un numar pozitiv (>=0).
+Ex:
+-2
+-3
+7
+STOP
+
+int nr;
+do{
+ cout<<"nr=";
+ cin>>nr;
+}while(nr<0);
+
+Acelasi exercitiu cu for(;;):
+
+int nr;
+for(;;){
+  cout<<"nr=";
+  cin>>nr;
+  if(nr>=0)break;
+}
+Exercitiu:
+SE REPETA
+  SE REPETA
+    citire a
+  CAT TIMP a<0
+  citire b
+CAT TIMP b<a
+afisare a,b
+
+int a,b;
+do{
+  do{
+    cout<<"a="; cin>>a;
+  }while(a<0);
+  cout<<"b="; cin>>b;
+}while(b<a);
+cout<<a<<" "<<b;
+
+Codata cu for infinit:
+for(;;){
+  for(;;){
+    cout<<"a="; cin>>a;
+    if(a>=0)break;
+  }
+  cout<<"b="; cin>>b;
+  if(b>=a)break;
+}
+ 
+MODULARIZARE. FUNCTII.
+
+Pana acum toate programele scrise aveau o singura functie (subprogram): main().
+Scriem un program modular (constituit din mai multe functii -subrograme) deorece:
+ - este mai usor de depanat
+ - poate fi refolosit codul in alte programe 
+ - se poate lucra in echipa
+ - programul modular este mai usor de urmarit ( de inteles)
+
+
+Orice functie (inclusiv functia main() ) consta din:
+- antet (head)
+- corp
+Antet, exemple:
+ int main()
+ double medie(int a, int b)
+ void afisareDivizori(int nr)
+
+Corpul functiei: ce este cuprins intre { si }.
+La main:
+int main(){
+.....
+  return 0;
+}
+
+Structura antetului:
+ tipValoareReturnata numeFunctie(lista de parametrii)
+Exemple:
+O functie ce returneaza maximul dintre doua numere reale a si b,
+ce antet are ?
+double maxim(double a, double b)
+
+O functie ce afiseaza pe ecran  maximul dintre doua numere reale a si b,
+ce antet are ?
+void maxim(double a, double b)
+
+O functie ce afiseaza daca un numar intreg este prim sau nu:
+void afisarePrim(int nr)
+O functie ce returneaza un rezultat prin care specifica daca un numar este 
+  prim sau nu:
+ int estePrim(int nr) //returneaza 0 dac nu este prim si 1, daca este
+
+Iesirea dintr-o functie se poate face prin instructiunea return, ce are sintaxa:
+  return valoare;
+sau
+  return(valoare);
+sau
+  return;
+Daca intr-o functie nu exista return ( e o functie de tipul void f(...))
+se iese din functie la intalnirea acoladei } finale.
+
+return valoare;
+Valoarea este rezultatul calculat in functie, ce se va transmite programului ce a APELAT functia.
+
+Ex:
+ int main(){
+   ...
+   return 0; //sau: return(0);
+ }
+
+
+
+Al doilea camp din antet: numele functie
+  - aceleasi reguli ca si pt numele unei variabile
+  - numele se recomanda sa fie sugestiv
+
+Al treilea camp: lista de parametrii. Lista este vida daca nu are niciun parametru - ca main().
+Parametrii folositi in antetul functiei sunt denumiti: PARAMETRII FORMALI. 
+double medie(int a, int b)
+Parametrii formali sunt a si b. Puteau fi notati oricum voiam - cu regulile de la numele de variabile.
+Parametrii cu care APELAM functia sunt denumiti parametrii ACTUALI ( argumentele functiei).
+(Programul consta dintr-un main() care apeleaza alte functii)
+Exemplu: 
+void afisare(int a) 
+//a este prametrul formal
+Apelam aceasta functie astfel:
+int x; cin>>x;
+afisare(x); //x este par. actual (argumentul functiei)
+
+Dar, in mod tipic, se noteaza la fel:
+int a; cin>>a;
+afisare(a); 
+
+Obs: O functie poate apela la randul ei alte functii.
+
+Parametrii functiei pot fi de 3 tipuri:
+- par. de intrare ( sunt transmisi cu valori de programul ce apeleaza functia, si aceste valori nu se transmit inapoi 
+    modificate de catre functie)
+- par. de iesire : sunt creati de catre functie ( nu primeste valori pt ei de la programul ce o apeleaza) si valorile lor vor fi
+                   transmise programului apelant
+   Ex: O functie in care se genereaza doua numere alatoare x1 si x2 , 
+in intervalul [a,b] va avea 4 parametrii:
+  a si b : parametrii de intrare 
+  x1 si x2 : parametrii de iesire
+
+- par. de intrare/iesire  sunt transmisi cu valori de programul ce apeleaza functia, sunt modificati in functie si valorile modificate
+                   sunt treansmise programului apelant
+   Ex: o functie in care se interschimba continutul a doua variabile a si b, date ca parametrii
+
+Observatii:
+ Orice functie (cu exceptia lui main)  se recomanda sa fie declarata la inceput
+ Declaratia (sau prototipul functiei) consta din:
+    antet;
+Ex: declaratia (prototip) pt functia medie:
+   double medie(int a, int b, int c);
+ -Variabilele declarate in interiorul unei functii sunt denumite VARIABILE LOCALE. 
+  Ele sunt cunoscute (DOMENIUL DE VIZIBILITATE scope-engl.) din momentul declararii, pana la sfarsitul functiei
+- Variabilele declarate in afara oricarei functii (deci si in afara lui main) sunt denumite VARIABILE GLOBALE.
+  Ele au ca domeniu de vizibilitate tot programul.
+  Se recomanda EVITAREA folosirii variabilelor globale . De ce ?
+   - program mai dificil de depanat 
+   - nu mai putem refolosi in alte programe codul functiei cu var. globale 
+Singurul avantaj:
+   antetul functiei devene mai simplu ( are mai putini parametrii)
+
+FUNCTII CE AU DOAR PARAMETRII DE INTRARE
+Modul de apel:
+In functie de antet, sunt doua moduri de apel :
+A.  pt antete de tipul:
+   void numeFunctie(...)
+Se apeleaza:
+   numeFunctie(...);
+
+B. pt functii care returneaza un rezultat, antete de forma:
+   tip numeFunctie(...)
+Se apeleaza :
+   tip rezultat=numeFunctie(...);
+
+Ex:
+  double medie(int a, int b, int c)
+Un exemplu de apel:
+  double rez=medie(10,6,7);
+
+
+Mai intai functii care nu scot nici un rezultat si nu au nici un parametru
+
+Programul fara functie, doar cu main():
+#include ...
+using namespace std;
+int main(){
+  cout<<"Cautati mai intai Imparatia lui Dumnezeu !";
+  return 0;
+}
+
+Vom face o functie separata ce afiseaza mesajul.
+#include <iostream>
+using namespace std;
+//declaratia functiei (semnatura, prototip ):
+void afisare();
+int main(){
+ afisare();//apelare
+ return 0;
+}
+//definitia functiei:
+void afisare(){
+ cout<<"Cautati mai intai Imparatia lui Dumnezeu !";
+}
+
+Se poate evita declararea functiilor, daca le dam definitiile inainte de main, astfel:
+
+#include <iostream>
+using namespace std;
+//definitia functiei:
+void afisare(){
+ cout<<"Cautati mai intai Imparatia lui Dumnezeu !";
+}
+int main(){
+ afisare();//apelare 
+ return 0;
+}
+Nu se recomanda acest stil ! 
+ 
+FUNCTII CE NU RETURNEAZA UN REZULTAT, DAR AU PARAMETRII DE INTRARE:
+
+Ex: o functie ce afiseaza  N stelute pe orizontala
+
+void afisare(int N){
+ int i;
+ for(i=1;i<=N;i++)
+   cout<<"*";
+ cout<<endl;
+}
+
+varianta recomandata:
+#include <iostream>
+using namespace std;
+void afisareLinie(int N);
+int main(){
+   int N;
+    cout<<"N="; cin>>N;
+    afisareLinie(N);
+    afisareLinie(10);
+   return 0;
+}
+void afisareLinie(int N){
+    int i;
+    for(i=1;i<=N;i++)
+       cout<<"*";
+    cout<<endl;
+}
+
+Sa scriem o functie ce are 2 parametrii : n ( numar de linii) si m (numar de coloane).
+In functie se afiseaza n linii a cate m stelute fiecare.
+SOLUTIA 1:
+#include <iostream>
+using namespace std;
+void afisareLinieNM(int n, int m);//declaratie functie
+int main(){
+   int n,m;
+    cout<<"n="; cin>>n;
+    cout<<"m="; cin>>m;
+    afisareLinieNM(n,m);
+   return 0;
+}
+
+//definitia functiei:
+void afisareLinieNM(int n, int m){
+    //int n, m; Eroare de sintaxa ! n si m sunt parametrii functiei,
+    // care sunt vazuti ca niste variabile locale !
+    int i,j;//var. locale
+    for(i=1;i<=n;i++){
+      //afisare linia i ce are m stelute:
+      for(j=1;j<=m;j++)
+       cout<<"*";
+      cout<<endl;
+   }
+}
+
+
+Afisare n linii a cate m stelute:SOLUTIA 2
+#include <iostream>
+using namespace std;
+void afisareLinie(int N);
+void afisareLinieNM(int n, int m);
+int main(){
+   int N;
+    cout<<"N="; cin>>N;
+    afisareLinie(N);
+    afisareLinie(10);
+   return 0;
+}
+void afisareLinie(int N){
+    int i;
+    for(i=1;i<=N;i++)
+       cout<<"*";
+    cout<<endl;
+}
+void afisareLinieNM(int n, int m){
+  int i;
+  for(i=1;i<=n;i++)
+     //afisare linia i ce are m stelute:
+     afisareLinie(m);
+}
+
+Sa scriem o functie ce are 3 parametrii : n ( numar de linii) si m (numar de coloane) si ch, un caracter.
+In functie se afiseaza n linii a cate m caractere , unde caracterul ce se afiseaza este 
+dat ca parametru in functie.
+#include <iostream>
+using namespace std;
+void afisareLinieNM(int n, int m, char ch);//declaratie functie
+int main(){
+   int n,m;
+    cout<<"n="; cin>>n;
+        cout<<"m="; cin>>m;
+  
+    afisareLinieNM(n,m,'$');
+   return 0;
+}
+
+//definitia functiei:
+void afisareLinieNM(int n, int m, char ch){
+    //int n, m; Eroare de sintaxa ! n si m sunt parametrii functiei,
+    // care sunt vazuti ca niste variabile locale !
+    int i,j;//var. locale
+    for(i=1;i<=n;i++){
+      //afisare linia i ce are m stelute:
+      for(j=1;j<=m;j++)
+       cout<<ch;
+      cout<<endl;
+   }
+}
+
+Afisare divizori numar:
+#include <iostream>
+
+using namespace std;
+void afisareDivizori(int nr);
+int main()
+{
+    int nr; cout<<"nr="; cin>>nr;
+    afisareDivizori(nr);
+    return 0;
+}
+void afisareDivizori(int nr){
+    int i;
+    for(i=1;i<=nr;i++)
+        if(nr%i==0)
+          cout<<i<<" ";
+}
+
+FUNCTII CU PAR. DE INTRARE CARE SCOT UN REZULTAT
+O functie ce returneaza numarul de divizori ai unui numar
+#include <iostream>
+
+using namespace std;
+int nrDivizori(int nr);
+int main()
+{
+    int nr; cout<<"nr="; cin>>nr;
+    int rezultat=nrDivizori(nr);
+    cout<<"nr div ="<<rezultat;
+    return 0;
+}
+int nrDivizori(int nr){
+    int i;
+    int contor=0;
+    for(i=1;i<=nr;i++)
+        if(nr%i==0)contor++;
+    return contor;
+}
+
+
+
+
+
+
+   
+
+
+
+

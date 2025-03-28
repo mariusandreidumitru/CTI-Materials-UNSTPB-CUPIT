@@ -1,0 +1,386 @@
+CURS 7
+ FUNCTII CU PAR. DE INTRARE CARE SCOT UN REZULTAT
+ In programul ce apeleaza functia, trebuie sa avem o variabila ce va 
+"prinde" rezultatul returnat de functie.
+Ex: functia ce are ca par. 3 numere intrewi a,b, c si scoate ca rezultat media lor aritmetica
+Antet:
+double medie(int a, int b, int c);//parametrii formali : a, b, c
+int main(){
+ int x,y,z;
+ cin>>x>>y>>z;
+ //mod de apel:
+ double m=medie(x,y,z);//parametrii actuali, argumentele functiei: x,y,z
+ cout <<m;
+ return 0;
+}
+double medie(int a, int b, int c){
+  double m=(a+b+c)/3.0;
+  return m;
+}
+
+sau:
+double medie(int a, int b, int c){
+  return (a+b+c)/3.0;
+}
+
+O functie ce scoate un rezultat prin return se apeleaza astfel:
+rezultat=numeFunctie(parametrii actuali);
+
+Scriem sub forma de functie algo. de numar prim.
+
+#include <iostream>
+#include <math.h>
+using namespace std;
+int prim(int nr);
+int main()
+{
+    int rez=prim(12);
+    if(rez==1)cout<<"este prim";
+    else cout<<"nu este";
+    return 0;
+}
+int prim(int nr){
+  if(nr<=1)return 0;
+  int i;
+  for(i=2;i<=sqrt(nr);i++)
+    if(nr%i==0)return 0;
+  return 1;
+}
+
+O functie poate apela la randul ei alte functii scrise de programator.
+Citim a, b, capetele intervalului [a,b].
+Folosind o functie separata sa calculam cate numere prime sunt in [a,b].
+#include <iostream>
+#include <math.h>
+using namespace std;
+int nPrime(int a, int b);
+int prim(int nr);
+
+int main()
+{
+    int a,b;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    int rezultat=nPrime(a,b);
+    cout<<"nr="<<rezultat;
+    return 0;
+}
+int nPrime(int a, int b){
+   int contor=0;
+   int i;
+   for(i=a;i<=b;i++)
+      //este i numar prim?
+      if(prim(i)==1)contor++;
+   return contor;
+}
+
+int prim(int nr){
+  if(nr<=1)return 0;
+  int i;
+  for(i=2;i<=sqrt(nr);i++)
+    if(nr%i==0)return 0;
+  return 1;
+}
+
+
+FUNCTIE CE ARE VAR. GLOBALE.
+Variabilele globale sunt variabile cunoscute in tot programul.
+Ele sunt declarate in afara oricarei functii, deci si in afara lui main().
+Ce avantaje avem daca declaram variabile globale ?
+ - antetele functiilor se simplifica (au mai putini parametrii)
+Ce dezavantaje sunt daca folosim var. globale ?
+  - mai greu de depanat programul 
+  - functia cu var. gobale nu este portabila (sunt obligat sa folosesc acelasi nume de var. globala )
+
+CONCLUZIE:
+ In general se recomanda evitarea folosirii variabilelor globale !
+
+ Vom rescrie cu var. globale functia medie():
+Anterior, fara globale: double medie(int a, int b, int c)
+#include <iostream>
+
+using namespace std;
+//Declar variabilele globale:
+
+int a,b,c;
+double medieArit;
+void medie();
+int main()
+{
+    //GRESIT: int a,b,c;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    cout<<"c="; cin>>c;
+    medie();
+    cout<<"medie aritmetica = "<<medieArit;
+    return 0;
+}
+void medie(){
+  medieArit=(a+b+c)/3.0;
+}
+
+  
+LUCRURI IMPORTANTE DE LA FUNCTII:
+ Plecand de la semnatura functiei trebuie sa stim sa o apelam.
+Ex:
+ void f(int a, int b)
+Corect: f(3,5);
+GRESIT: f(3);
+GRESIT:   f(3,5.5); //gresit ca al doilea par. trebuia sa fie tot int
+GRESIT:  int x,y; f(x,y);  //Gresit: x si y nu au valori initiale
+CORECT: int x,y; cin>>x>>y; f(x,y);
+
+Ex: int f(int a, int b)
+     int rez=f(3,5);
+
+
+int minim(int a, int b){
+ if(a<=b)return a;
+ else return b;
+}
+
+FUNCTII CU PARAMETRII DE IESIRE SAU DE INTRARE/IESIRE
+
+Ex. de functie ce are parametrii de intrare/iesire: functia ce realizeaza interchimbarea 
+a doua numere:
+Sa scriem functia comuta() care interschimba doua numere a si b date ca parametrii
+Ex: 
+Inainte de apel functie:
+ a=3 si b=5
+Dupa apel:
+ a=5 b=3
+
+Rezulta a si b: sunt parametrii de intrare / iesire (sunt si transmisi functiei, dar 
+si modificati in functie).
+
+VARIANTA GRESITA:
+using namespace std;
+void comuta(int a, int b);
+int main()
+{
+    int a=3;
+    int b=5;
+    comuta(a,b);
+    cout<<"Dupa comutare: a="<<a<<" b="<<b;
+    //Dupa comutare: a=3 b=5
+    return 0;
+}
+void comuta(int a, int b){
+ int aux;
+ //regula paharelor:
+ aux=a;
+ a=b;
+ b=aux;
+}
+
+De ce nu a facut comutarea ?
+Raspuns: in lb. C, argumentele functiei sunt transmise functiei de catre programul ce o 
+apeleaza (in ex. este main) PRIN VALOARE . Adica, se face o COPIE a valorii argumentului intr-o 
+zona de memore (STIVA) alocata functiei.
+In main, avem cele 2 locatii de memorie:
+a: 3
+b: 5
+
+La apelul comuta(a,b): in alta zona de memorie (stiva asociata functiei)
+se vor face 3 salvari:
+- adresa de revenire (unde se va intoarce programul la iesirea din functie)
+- valoarea lui a (sa zicem in locatia ca)
+- valoarea lui b (locatia cb)
+Functia va opera nu direct asupra locatiilor a si b din main, ci va opera cu ca si cb.
+ Deci functia va interschimba copiile ca si cb !!
+
+SOLUTIA: vom transmite nu valorile, ci ADRESELE variabilelor a si b.
+POINTERI
+ O variabila ce contine adresa altei variabile se chema pointer;
+O var. pointer se declara cu * astfel:
+int a=3;
+int* adresa_a;
+
+double b=1.2;
+double* pb;
+Obtin adresa unei variabile, plecand de la numele variabilei, cu operatorul &.
+ Obs: am folosit la scanf(): scanf("%d",&nr);
+adresa_a=&a; //Operator & furnizeaza adresa unei variabile
+
+Ex:
+double b; cin>>b;
+double* adresa_b=&b; cout<<adresa_b;
+
+Daca stiu adresa unei variabile pot accesa continutul ei (ADRESARE INDIRECTA) , 
+ cu operatorul * astfel:
+        valoare=*adresa;
+Ex:
+int a=3;
+int* adresa_a=&a;
+//Vreau sa scriu in a valoarea 4:
+//Direct:
+ a=4;
+
+sau indirect:
+int a=3;
+int* adresa_a=&a;
+*adresa_a=4;//adresare indirecta
+
+Vom transmite functiei comuta ADRESELE variabilelor de comutat
+VARIANTA CORECTA A FUNCTIEI comuta()
+void comuta(int* pa, int* pb);
+int main(){
+ int a,b;
+ cout<<"a="; cin>>a;
+ cout<<"b="; cin>>b;
+ comuta(&a, &b);
+ cout<<"Dupa comutare: a="<<a<<" b="<<b;
+ return 0;
+}
+
+void comuta(int* pa, int* pb){
+  int aux;
+  aux=*pa;//in aux copiem pe a
+  *pa=*pb;
+  *pb=aux;
+}
+
+Varianta a doua de scriere de functii cu par. de iesire sau de 
+intrare/iesire: folosim pentru acesti parametrii o notatie speciala:
+ii notam ca fiind variabile REFERINȚĂ ( notatia cu & )
+
+void comuta(int& a, int& b);
+int main(){
+int main(){
+ int a,b;
+ cout<<"a="; cin>>a;
+ cout<<"b="; cin>>b;
+ comuta(a, b);
+ cout<<"Dupa comutare: a="<<a<<" b="<<b;
+ return 0;
+}
+
+int comuta(int& a, int& b){
+ int aux=a;
+ a=b;
+ b=aux;
+}
+
+Sa scriem o functie ce are 2 parametrii de intrare: a si b de tipul int.
+Functia scoate 3 rezultate:
+-minimul dintre a si b
+-maximul
+-media aritmetica
+ 
+using namespace std;
+#include <iostream>
+void calcule(int a, int b, int& minim, int& maxim, double& medie);
+int main(){
+ int a,b;
+ cout<<"a="; cin>>a;
+ cout<<"b="; cin>>b;
+ int minim, maxim;
+ double ma;
+ calcule(a,b,minim,maxim,ma);
+ cout<<"minim="<<minim<<" maxim="<<maxim<<" medie="<<ma;
+ return 0;
+}
+
+void calcule(int a, int b, int& minim, int& maxim, double& medie){
+   if(a<=b){minim=a; maxim=b;}
+   else{ minim=b; maxim=a;}
+   medie=(a+b)/2.0;
+}
+
+
+TEMA DE CASA
+1. Scrieti o functie ce are ca parametru de intrare un numar intreg nr.
+Functia scoate 3 rezultate: u,z si s ( cifra unit, zeci si sute)
+
+2. Scrieti o functie ce are ca parametru de intrare un numar intreg nr.
+Functia scoate 3 rezultate: cifra minima, cifra maxima si media aritmetica a cifrelor 
+numarului.
+
+3. Scrieti o functie ce are ca parametru un numar natural N.
+In functie se afiseaza primele N numere prime, cate un numar pe fiecare linie.
+Ex: N=5
+2
+3
+5
+7
+11
+
+La fiecare functie veti scrie si main() ce o apeleaza.
+Termen: 2 saptamani
+De postat pe moodle, un singur fisier TEXT, cu cele 3 solutii
+
+GENERAREA DE NR ALEATOARE
+ Se folosesc functiile srand() (pt a initializa generatorul de numere aleatoare)
+si functia rand()
+#include <stdlib.h>
+#include <time.h>
+ srand(time(0));
+ int nr1=rand()%10;//0,1,..,9
+ int nr2=rand()%10;
+
+Sa simulam aruncarea unui zar: 1...6
+#include <stdlib.h>
+ #include <time.h>
+#include <iostream>
+using namespace std;
+int main(){
+ srand(time(0));
+ int nr=1+rand()%6;
+ cout<<nr;
+ return 0;
+} 
+
+VECTORI
+VECTORI (TABLOURI UNIDIMENSIONALE)
+engl:  arrays
+Sunt cea mai utilizata structura de date. 
+Folositi pentru a memora mai multe date de acelasi tip.
+Declarare:
+
+tipDate nume[nrMaximDeElemente];
+Ex:
+int a[10];
+Accesam elementele vector prin indexare.
+a[0], a[1],...,a[9]
+
+IMP:
+ O data stabilita dimensiunea , ea NU poate fi depasita.
+int a[10];
+
+a[20]=7; //EROARE !!
+CITIRE vector de la tastatura: 
+   se citeste element cu element
+
+int N; cin>>N;
+int a[N];
+//citire de la tastatura:
+int i;
+for(i=0;i<N;i++)
+  cin>>a[i];
+
+AFISARE VECTORi
+ SE afiseaza componenta cu componenta, nu se afiseaza global !
+for(i=0;i<N;i++)
+  cout<<a[i]<<" ";
+Observatie:
+  Numele vectorului ( in cazul nostru: a) este pt compilator, adresa de 
+inceput (&a[0])
+
+INITIALIZAREA UNUI VECTOR se poate face:
+- prin citire de la tastatura
+- cu numere aleatoare
+  int N; cin>>N;
+  int a[N];
+  srand(time(0));
+  for(i=0;i<N;i++)
+    a[i]=rand()%100;//0..99
+
+  
+- dand valori initiale fiecarui element, astfel:
+   int a[3];
+    a[0]=0; a[1]=3;
+    a[2]=-1;
+- Se poate initializa si direct, astfel:
+  int a[3]={0,3,-1};
+
+

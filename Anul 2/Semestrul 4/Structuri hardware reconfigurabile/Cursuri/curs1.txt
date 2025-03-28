@@ -1,0 +1,25 @@
+Sistem programabil vs. Sistem reconfigurabil
+
+Sistemul programabil
+
+- se bazeaza pe o unitate centrala de procesare (CPU)
+- CPU preia instructiuni din memoria de program. Executa instructiune cu instructiune (secvential) 
+- Ca urmare a executarii instructiunilor sunt efectuate urmatoarele operatii:
+-- citiri date de la echipamentele periferice
+-- citiri/scrieri date in memoria de date
+-- operatii aritmetice, logice, deplasare etc efectuate asupra unor operanzi (datele citite)
+-- stocare rezultate in memoria de date si transmitere rezultate catre echipamentele periferice pentru a ajunge mai departe la dispozitivele de iesire
+
+PRO:
+- flexibilitate in programare - se schimba doar continutul memoriei de program
+- versatilitate - au o gama foarte mare de aplicatii
+CON:
+- centrarea pe o arhitectura secventiala si pe o memorie de program
+
+Sistemul reconfigurabil
+
+-se bazeaza pe un circuit reconfigurabil (FPGA)
+- blocurile logice realizate in acest circuit pot efectua operatiile:
+-- citiri date din una sau mai multe memorii in paralel, scriere date in paralel in una sau mai multe memorii
+-- citiri date IO de la unul sau mai multe circuite periferice in paralel, scrieri de asemenea in paralel.
+

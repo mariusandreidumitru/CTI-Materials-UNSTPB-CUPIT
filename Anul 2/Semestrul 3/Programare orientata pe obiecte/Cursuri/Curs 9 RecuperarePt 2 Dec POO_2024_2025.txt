@@ -1,0 +1,386 @@
+Curs 9 POO Calc. 2 (recuperare pt 2 decembrie)
+MOSTENIRE. CLASE DERIVATE
+
+Cuvantul cheie protected:
+  - putem accesa un membru protected al clasei de baza, din orice clasa ce face parte din 
+acelasi package cu clasa de baza (ca si la accesul implicit) DAR  SI din orice clasa derivata din clasa de baza ( chiar daca 
+nu este in acelasi package cu clasa de baza )
+In ordinea descrescatoare a permisivitatii accesului ,
+specificatorii de acces se claseaza astfel:
+public
+protected
+accesul default
+private
+
+Putem impiedica mostenirea cu cuvantul cheie final, astfel:
+final class NuSePoateMosteni {
+  ...
+}
+
+In Java nu exista mostenire multipla, asa cum exista in C++.
+In Java o clasa derivata poate avea un singur parinte.
+De asemenea, o clasa derivata poate fi clasa de baza (parinte) pentru o 
+clasa ce o derivez din ea.
+
+Clasa Object: este stramosul tuturor claselor din Java.
+Daca o clasa nu este derivata explicit din alta clasa, ea implicit mosteneste clasa Object.
+
+In clasa Object sunt definite mai multe metode care in general sunt redefinite 
+(@Override) in alte clase. Ex:
+definitia din clasa Object a metodei equals() este:
+public boolean equals(Object obj){
+  if(this==obj)return true;
+  else return false;
+}
+
+De ex. clasa String redefineste metoda equals() a.i. compara nu referintele ci continutul a doua stringuri
+Pt a specifica in clasa derivata ca modific o metoda din clasa de baza, pastrandu-i semnatura, folosesc marcajul:
+@Overrride
+
+Exemplu:
+Scriem clasa Punct in care redefinim metoda equals() din clasa Object:
+
+
+public class Punct {
+	private int x;
+	private int y;
+	public Punct(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	public int getX() {
+		return x;
+	}
+	public void setX(int x) {
+		this.x = x;
+	}
+	public int getY() {
+		return y;
+	}
+	public void setY(int y) {
+		this.y = y;
+	}
+	public double distanta() {
+		return Math.sqrt(x*x+y*y);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		Punct p=(Punct)obj;
+		if(this.x==p.x&&this.y==p.y)return true;
+		else return false;	
+		
+	}
+}
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Punct p1=new Punct(2,3);
+		Punct p2=new Punct(20,3);
+		if(p1.equals(p2))System.out.println("egale");
+		else System.out.println("nu egale");
+	}
+
+}
+
+Alta metoda din Object care este de obicei redefinita in alte clase este metoda toString():
+public String toString()
+ returneaza o reprezentare ca String a unui obiect
+ 
+Ex: clasa de baza Patrat
+clasa derivata  PatratColor
+Are sens mostenirea ? Probam relatia "este_un" sau "este_o":
+PatratColor este_un Patrat ?
+Da.
+
+Clasa de baza Patrat:
+
+
+public class Patrat {
+	private int a;
+
+	public Patrat(int a) {
+		this.a = a;
+	}
+
+	public int getA() {
+		return a;
+	}
+
+	public void setA(int a) {
+		this.a = a;
+	}
+	 public int arie() {
+		 return a*a;
+	 }
+	 public void afisare() {
+		 System.out.println("latura="+a);
+	 }
+	 @Override
+	 public String toString() {
+		 return "latura="+a;
+	 }
+}
+
+Clasa derivata PatratColor:
+ Constructorul clasei de baza Patrat NU se poate mosteni.
+Dar, din constructorul clasei derivate putem apela constructorul clasei de baza,
+pt a initializa variabilele de instanta declarate in clasa de baza.
+Apelul se face cu cuvantul cheie super() si acesta are ca parametrii, parametrii ce apar 
+in constructorul clasei de baza.
+In cazul in care se apeleaza din constructorul clasei derivate constructorul clasei de baza cu 
+instructiunea super(parametrii necesari); aceasta instructiune trebuie sa fie PRIMA instructiune 
+din constructorul clasei derivate.
+
+Sunt doua proprietati in clasa PatratColor: latura si culoarea.
+
+
+public class PatratColor extends Patrat{
+	private String culoare;
+
+	public PatratColor(int a, String culoare) {
+		super(a);//apel constructor clasa de baza
+                //Obligatoriu trebuie ca acest apel sa fie prima instructiune din constructorul clasei PatratColor
+		this.culoare = culoare;
+	}
+
+	public String getCuloare() {
+		return culoare;
+	}
+
+	public void setCuloare(String culoare) {
+		this.culoare = culoare;
+	}
+	@Override
+	public void afisare() {
+		System.out.println("latura="+getA());
+		System.out.println("culoare="+culoare);
+	}
+	@Override
+	 public String toString() {
+		 return "latura="+getA()+" culoare="+culoare;
+	 }
+}
+
+
+Ex de folosire:
+
+public class Main {
+
+	public static void main(String[] args) {
+		Patrat p=new Patrat(7);
+		System.out.println(p.toString());
+		PatratColor pc=new PatratColor(2,"red");
+		System.out.println("arie="+pc.arie());
+		pc.afisare();
+		System.out.println(pc.toString());
+	}
+
+}
+
+Alt EXEMPLU:
+Scriem clasa Punct, clasa de baza, ce modeleaza un punct in plan.
+class Punct{
+ private int x;
+ private int y;
+ public Punct(int x, int y){
+  this.x=x;
+  this.y=y;
+ }
+ public void setX(int x){ this.x=x;}
+  public void setY(int y){ this.y=y;}
+ public int getX(){return x;}
+  public int getY(){return y;}
+ public double dist0(){
+   return Math.sqrt(x*x+y*y);
+ }
+ public double distanta(Punct p){
+  return Math.sqrt((p.x-this.x)*(p.x-this.x)+(p.y-this.y)*(p.y-this.y));
+ }
+ @Override
+//este redefinita metoda equals() din clasa Object
+ public boolean equals(Object obj){
+  //coordonatele x si y , respectiv egale:
+  Punct p=(Punct)obj;
+  if(p.x==this.x && p.y==this.y)return true;
+  else return false;
+ }
+ public void afisare(){
+  System.out.println("x="+x+"y="+y);
+ }
+}
+ Din clasa Punct derivam clasa PunctColor:
+class PunctColor extends Punct{
+ private String culoare;
+ public PunctColor(int x, int y, String culoare){
+   super(x,y);//apel constructor clasa de baza
+   this.culoare=culoare;
+ }
+ public void setCuloare(String culoare){
+  this.culoare=culoare;
+ }
+public String getCuloare(){ return culoare;}
+@Override
+ public boolean equals(Object obj){
+  //coordonatele x si y , respectiv egale, si culorile egale:
+  PunctColor pc=(PunctColor)obj;
+  //if(pc.x==this.x && pc.y==this.y && culoare.equals(obj.culoare)) return true; GRESIT pt ca pc este PunctColor si 
+//nu are acces la x si y, private in clasa Punct
+  if(p.getX()==this.getX() && p.getY()==this.getY() && this.culoare.equals(pc.culoare)) return true;
+  else return false;
+ }
+@Override
+public void afisare(){
+  //System.out.println("x="+getX()+"y="+getY()); Da, corect!
+  super.afisare();//apelul metodei afisare() din clasa de baza
+  System.out.println("culoare="+culoare);
+ }
+}
+   
+class Test{
+ public static void main(String args[]){
+   PunctColor p1=new PunctColor(1,2,"red");
+   PunctColor p2=new PunctColor(1,2,"white");
+   double d12=p1.distanta(p2);
+   System.out.println("distanta="+d12);
+   p1.afisare();
+   if(p1.equals(p2))System.out.println("p1 si p2 sunt egale");
+   else System.out.println("p1 si p2 NU sunt egale");
+
+ }
+}
+
+INLANTUIREA CONSTRUCTORILOR
+(constructor chaining)
+Crearea unui obiect dintr-o clasa (cu new) implica apelul implicit al constructorilor
+tuturor superclaselor, de-alungul lantului de mostenire.
+Atentie: se vor apela implicit, chiar daca lipseste apelul explicit cu super() !
+class F extends T
+...
+
+class T extends B
+...
+
+Constructor chaining:
+F obj=new F();// Cand se apeleaza new , se va intra in constructor clasa F si primul lucru pe care-l va face: va apela 
+ //constructorul tatalui lui F, deci constructorul lui T (constructorul fara parametrii).
+ //Primul lucru pe care-l va face constructorul lui T: va apela constructorul tatalui lui,
+ // deci va apela constructorul lui B.
+
+Intr-o clasa putem avea 0, 1 sau mai multi constructori (mai multi constructori: polimorfism parametric)
+In cazul in care nu are niciun constructor definit explicit, Java 
+va crea implicit un constructor fara parametrii si care nu face nimic.
+Exemplu:
+class Patrat{
+ private int a;
+ public void set(int a){this.a=a;}
+ public int get(){return a;}
+ public int arie(){return a*a;}
+}
+Se observa ca nu are constructor explicit.
+Java construieste automat constructorul:
+public Patrat(){
+}
+
+Exemplu concret de inlantuire constructori:
+//clasa stramos pt celelalte din lantul de derivare:
+class A{ //clasa bunic
+  public A(){
+    System.out.println("Sunt stramosul A");
+  }
+}
+
+class AA extends A{ //clasa tata
+  public AA(){
+    System.out.println("Sunt AA, fiul lui A");
+  }
+  //al doilea constructor:
+  public AA(int x){
+    System.out.println("Sunt AA, al doilea constructor, cu x="+x);
+  }
+}
+
+class AAA extends AA{ //clasa fiu
+ public AAA(){
+  System.out.println("Sunt AAA, fiul lui AA");
+  } 
+}
+
+class TestInlantuireConstructori{
+ public static void main(String args[]){
+   
+   new AAA();//obiect anonim
+   /* Va afisa:
+    Sunt stramosul A
+    Sunt AA, fiul lui A
+    Sunt AAA, fiul lui AA
+   */
+}
+
+Modificam programul astfel:
+class A{
+  public A(){
+    System.out.println("Sunt stramosul A");
+  }
+}
+class AA extends A{
+  public AA(){
+    System.out.println("Sunt AA, fiul lui A");
+  }
+  public AA(int x){
+    System.out.println("Sunt AA, al doilea constructor, cu x="+x);
+  }
+}
+class AAA extends AA{
+ public AAA(){
+  super();//apelez EXPLICIT un constructor din clasa de baza (AA)
+  System.out.println("Sunt AAA, fiul lui AA");
+  } 
+}
+//NU SE VA MODIFICA CE SE AFISEAZA IN main ! (la fel ca in exemplul anterior)
+
+class TestInlantuireConstructori{
+ public static void main(String args[]){
+   new AAA();//obiect anonim
+   /* Va afisa:
+    Sunt stramosul A
+    Sunt AA, fiul lui A
+    Sunt AAA, fiul lui AA
+   */
+}
+
+/////////////
+MOdificam din nou programul astfel:
+class A{
+  public A(){
+    System.out.println("Sunt stramosul A");
+  }
+}
+class AA extends A{
+  public AA(){
+    System.out.println("Sunt AA, fiul lui A");
+  }
+  public AA(int x){
+    System.out.println("Sunt AA, al doilea constructor, cu x="+x);
+  }
+}
+class AAA extends AA{
+ public AAA(){
+  super(12);//apelez explicit un constructor din clasa de baza (AA)
+  System.out.println("Sunt AAA, fiul lui AA");
+  } 
+}
+
+class TestInlantuireConstructori{
+ public static void main(String args[]){
+   new AAA();//obiect anonim
+   /* Va afisa:
+    Sunt stramosul A
+        Sunt AA, al doilea constructor, cu x=12
+    Sunt AAA, fiul lui AA
+   */
+}
+
+

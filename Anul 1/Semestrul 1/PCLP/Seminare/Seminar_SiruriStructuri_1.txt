@@ -1,0 +1,197 @@
+SEMINAR
+ SIRURI (continuare)
+
+1. Citim N. Citim N cuvinte. Sa calculam cate cuvinte incep cu litere A.
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    cin.get();
+    int contor=0;
+    char cuvant[31];
+    for(int i=1;i<=N;i++){
+        cout<<"cuvant="; cin.get(cuvant,30);
+        cin.get();
+        if(cuvant[0]=='A')contor++;
+    }
+    cout<<"rezultat="<<contor;
+    return 0;
+}
+
+2. Exemplu de folosire functia atoi() : transforma sir numeric in int
+Citim sub forma de sir, doua numere intregi. 
+Care numar este mai mare?
+
+Ex: a="12345"
+    b="765"
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    char s1[31],s2[31];
+    cout<<"nr1="; cin.get(s1,31);cin.get();
+    cout<<"nr2="; cin.get(s2,31);
+    int a,b;
+    a=atoi(s1); b=atoi(s2);
+    if(a>b)cout<<s1<<" mai mare";
+    else if(a==b)cout<<"egale";
+    else cout<<s2<<" mai mare";
+
+    return 0;
+}
+
+3. Citim un sir. Care este cea mai mare cifra din sir.
+Ex: s="abc7cd  8 nnn" Rezulta max=8
+     s="abc" Rezulta: nu sunt cifre
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+    char s[31];
+    int cifMax=-1;
+    cout<<"Sirul este:";
+    cin.get(s,31);
+    for(int i=0; i<strlen(s); i++)
+    {
+        if((s[i]>='0')&&(s[i]<='9'))
+        {
+            int cifra=s[i]-'0';
+            if(cifra>cifMax)
+                cifMax=cifra;
+        }
+    }
+    if(cifMax==-1)
+        cout<<"Nu are cifre.";
+    else
+        cout<<"Cifra maxima este:"<<cifMax;
+    return 0;
+}
+
+4. Criptarea prin transpozitie cu matrice
+
+s="ABCDEF123"
+L=9 lungime sir
+Rezulta matrice 3x3
+A B C
+D E F
+1 2 3
+
+Criptat:
+AD1BE2CF3
+
+Daca L nu este patrat perfect?
+s="ABC12"
+L=5
+Dim. matricii: N=3
+Locurile neocupate le completam cu spatii
+A B C
+1 2 _
+_ _ _
+
+Rezulta: 
+A1_B2_C__
+
+#include <iostream>
+#include <string.h>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    char s[100];
+    cout<<"Sirul este:";
+    cin.get(s,100);
+    int L=strlen(s);
+    int N;//dimensiune matrice
+    int radical=sqrt(L);
+    if(radical*radical==L)N=radical;
+    else N=radical+1;
+    char sCriptat[N*N+1];
+    int a[N][N];
+    int i,j;
+    //copiez sir in matrice
+    int k=0;//index in sir
+    for(i=0;i<N;i++)
+        for(j=0;j<N;j++)
+           if(k==L)a[i][j]='_';//s-a terminat sirul
+           else{
+                a[i][j]=s[k];
+                k++;
+           }
+    //Citim pe coloane:
+    int t=0;//index in sCriptat:
+    for(i=0;i<N;i++)
+      for(j=0;j<N;j++){
+        sCriptat[t]=a[j][i];
+        t++;
+    }
+    sCriptat[t]=0;
+    //afisare rezultat:
+    cout<<sCriptat;
+    return 0;
+}
+
+
+STRUCTURI
+ex. tipic de problema de examen:
+Definim structura triplet ce are 3 campuri: a, b, c, numere intregi
+Citim doua triplete t1 si t2. Sunt egale intre ele ?
+
+#include <iostream>
+
+using namespace std;
+typedef struct{int a; int b; int c;} triplet;
+int main()
+{
+    triplet t1, t2;
+    cout << "t1 = "; cin >> t1.a; cin >> t1.b; cin >> t1.c;
+    cout << "t2 = "; cin >> t2.a; cin >> t2.b; cin >> t2.c;
+    if (t1.a == t2.a && t1.b == t2.b && t1.c == t2.c)
+        cout << "Sunt egale";
+    else
+        cout << "Nu sunt";
+    return 0;
+}
+
+
+Exemplu:
+Sa scriem o functie ce are ca parametru o structura de tip triplet.
+Functia returneza maximul din triplet.
+
+#include <iostream>
+
+using namespace std;
+typedef struct{int a; int b; int c;} triplet;
+int maxim(triplet t);
+int main()
+{
+    triplet t1;
+    cout << "t1: a= "; cin >> t1.a;
+    cout << "t1: b= "; cin >> t1.b;
+    cout << "t1: c= "; cin >> t1.c;
+    int rezultat=maxim(t1);
+    cout<<"maxim="<<rezultat;
+    return 0;
+}
+int maxim(triplet t){
+   int rezultat=t.a;
+   if(t.b>rezultat)rezultat=t.b;
+   if(t.c>rezultat)rezultat=t.c;
+   return rezultat;
+}
+
+
+
+
+
+
+

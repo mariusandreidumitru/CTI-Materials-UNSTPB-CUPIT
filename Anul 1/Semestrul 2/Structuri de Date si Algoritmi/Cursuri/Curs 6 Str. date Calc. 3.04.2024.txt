@@ -1,0 +1,105 @@
+CURS 6 (am dat si partialul!)
+SORTAREA PRIN INTERCLASARE (MERGESORT)
+
+Avem doi vectori SORTATI cresc.
+Sa obtinem prin concatenarea lor un al treilea vector SORTAT
+a={1,7,8,90}
+b={2,7,10,11, 91,122}
+Rezulta:
+c={1,2,7,7,8,10,11,90,91,122}
+NU se face asa interclasarea: concatenarea celor 2 doi vectori si apoi sortare .
+Nu este eficient ca timp de exec.
+
+ia=0;//index in vector a de dim na
+ib=0;//index in b de dim. nb
+ic=0;//index in c
+while(ia<na && ib<nb)
+  //compar el. corespondente:
+  if(a[ia]<=b[ib]){
+    //voi lua din a pt vector c:
+    c[ic]=a[ia];
+    ic++; ia++;
+  }else{
+    //voi lua din b:
+    c[ic]=b[ib];
+    ic++;ib++;
+  }
+//care vector s-a terminat ? a sau b?
+if(ib==nb){//s-a terminat b
+  //copiez tot restul din a:
+  for(i=ia;i<na;i++){
+     c[ic]=a[i]; ic++;}
+else //s-a terminat a:
+//copiez tot restul din b:
+  for(i=ib;i<nb;i++){
+     c[ic]=b[i]; ic++;}
+
+
+
+În cazul sortării merge sort, împărțim vectorul în două jumătăți, sortăm fiecare jumătate, 
+apoi în etapa de combinare a soluțiilor, vom interclasa cele două jumătăți.
+
+#include <iostream>
+using namespace std;
+void sortInterclas(int a[], int s, int d);
+void interclasare(int a[],int s, int d);//inteclaseaza cele două jumătăți ale regiunii din vector 
+// cuprinse între s și d , inclusiv
+
+
+int main()
+{
+    const int N=7;
+    int a[N]={1,0,-2,7,4,3,4};
+    sortInterclas(a,0,N-1);
+    //afisare vector sortat:
+    for(int i=0;i<N;i++)
+        cout<<a[i]<<" ";
+    return 0;
+}
+
+
+
+void sortInterclas(int a[], int s, int d)
+{
+    if(s==d)return;//cazul limita. Are un singur element, deci este deja sortat.
+    int m=(s+d)/2;
+    sortInterclas(a,s,m);//prima jumatate , intre s si m, inclusiv
+    sortInterclas(a,m+1,d);
+    //combinam solutiile:
+    interclasare(a,s,d);
+}
+void interclasare(int a[],int s, int d)
+{
+    int m=(s+d)/2;
+    //Vectorul 1: {a[s],a[s+1],...,a[m]} este crescator
+    //Vectorul 2: {a[m+1],...,a[d]} este crescator
+    //Interclasam cei doi vectori, in vectorul c[]:
+    
+    int c[d-s+1];
+    int i1=s;//index in vectorul 1
+    int i2=m+1;//index in vectorul 2
+    int i=0;//index in vectorul c[]
+    while((i1<=m)&&(i2<=d)){
+        if(a[i1]<=a[i2]){
+            c[i]=a[i1];i1++;i++;
+        }else {c[i]=a[i2];i2++;i++;}
+    }
+    int j;
+    //S-a terminat vectorul 1?
+    if(i1>m)
+        //copiem ce a ramas din vectorul 2 in continuarea vectorului c[]:
+        for(j=i2;j<=d;j++){
+            c[i]=a[j];i++;
+        }
+    else
+        //copiem ce a ramas din vectorul 1 in continuarea vectorului c[]:
+        for(j=i1;j<=m;j++){
+            c[i]=a[j];i++;
+        }
+    //Copiem tot vectorul c[] in vectorul a ( in zona indecsilor s, d):
+    j=0;//indexul de start in vectorul c[] .
+    for(i=s;i<=d;i++){
+        a[i]=c[j]; j++;
+    }
+}
+

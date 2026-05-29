@@ -1,0 +1,282 @@
+CURS 1
+
+Modul de notare curs PCLP:
+10% prezenta activa la curs 
+20% lab
+10% teme de casa 
+10% examen partial
+50% examen
+
+BIBLIOGRAFIE PE NET
+1. www.tutorialspoint.com
+2. www.w3schools.com
+
+
+CUPRINS
+Limbaj C 
+1. Program. Algoritmi. Tipuri de date. Variabile. Constante. 
+   Afisare date. Citire date
+2. Instr. de atribuire
+3. Instr. de decizie (if)
+4. Instr. de repetare (for, ...)
+5. Functii (scriere modulara)
+        program principal (main) si functii (subprograme)
+6. Vectori
+7. Matrici
+8. Siruri (string)
+9. Structuri ( tipul de date struct)
+9. Operatori de prelucrare la nivel de bit ( &, ...)
+10. Fisiere ( tratare C : fprintf(), fread(), ...)
+
+Program: 
+  citeste date ( tastatura, fisier, generate aleator, net,...)
+  le prelucreaza (algoritmi)
+  afiseaza rezultate
+
+N. Wirth: program= structuri de date + algoritmi
+Alte structuri de date : grafuri, arbori, liste inlantuite, ... (se studiaza pe sem. 2)
+
+Algoritm= secventa FINITA de pasi pt a executa o anumita prelucrare ( Ex: interschimbare,
+  max dintre N numere, sortare elevi dupa medie, recunoastere nr masina dintr-o fotografie, ... )
+Teorema: 
+  Orice algoritm poATE FI SCRIS CU  3 tipuri de instructiuni:
+     a. atribuire Ex: a=5;
+     b. decizie (if)
+     c. repetare (for)
+
+Variabile.
+Container ( sertar) Se aloca unul sau mai multi octeti (byte)
+Orice var are un nume si un tip.
+Reguli pt nume:
+ -litere (mici, mari) cifre car de subliniere _
+   C face diferenta intre litere mic si cele mari.
+nr este o variabila, NR este alta variabila.
+   nrElevi DA
+   nr elevi NU
+ -nu incepe cu o cifra
+   x1
+   1x NU
+ -nu cuvinte cheie din C
+     if NU
+     main NU
+REcomandare:
+  programele se modifica Terbuie scrise a.i. sa fie usor de inteles !
+  nume sugestive pentru variabile !
+  x  nu e un nume prea sugestiv
+  nrElevi
+  nr_elevi
+Tipuri de baza de date:
+int intregi cu semn, 
+  Orice var tb declarata
+  tip nume;
+Exemple:
+  int nr;
+  int a;
+  int b;
+  int a,b;
+  a=3.12; //eroare 
+  a=10;
+  a=100000000000000000000;//NU. Eroare de sintaxa (la compilare) Numar prea mare pt a fi memorat intr-un int !
+  Cel mai mare nr intreg, depinde de Compilator !
+  CodeBlocks : tipul int are 32 biti (4 octeti)
+  Borland c: tipul int are 16 biti 
+Pentru numere reale avem doua tipuri de date:
+float //mai putin precis ca double, dar mai putina memorie
+double
+x=1/3.0;//0.3333333
+double x;
+x=1.2;
+double y=-0.45;
+double z=13;//13.0
+int w=13.1;//NU
+char //character
+char ch;
+ch=A; //NU
+ch='A';//un octet cod ASCII A : 65 
+ch='#';
+ch=' ';//32
+ch='a';
+'a'-'A'
+ch="A";//NU
+
+Modificator de tip
+  unsigned 
+char x;//reprezentat ca nr intregi in intervalul [-128,+127]
+unsigned char y;//0..255
+unsigned float ;//NU EXISTA
+
+long
+int a;//2 octeti BorlandC
+long int b; //4 octeti
+
+CONSTANTE
+variabile cu continut fix
+int a=3;
+a=5;//a este o variabila. O pot modifica !
+Cum declar constante ?
+Doua posibilitati:
+#define MAX 30
+const int MAX=30;
+...
+MAX=31; //EROARE DE SINTAXA (la compilare)
+
+Altfel:
+int MAX=30; ///nu mai este constanta
+MAX=31;//DA
+Rolul constantelor:
+ programul este mai usor de inteles, daca dam constantelor nume simbolice
+const int NR_MAX_ELEVI=30;
+
+Recomandare importanta:
+  sa scriem numele constantelor cu litere mari
+
+Constante predefinite in lb. C:
+INT_MAX - cel mai mare nr intreg (2147483647 - in CodeBlocks)
+INT_MIN
+Sunt declarate in headerul limits.h
+
+M_PI - valoarea lui pi. Declarata in math.h
+cout<<"valoarea lui pi: "<<M_PI;
+    //valoarea lui pi: 3.14159
+////////////////////
+Afisare date
+C++: cout
+cout<<"Afara este cald";
+mar
+para 
+gutuie
+
+cout<<"mar"<<endl;
+cout<<"para"<<endl;
+...
+
+trec cursor pe linia urmatoare folosind car newline \n
+cout<<"mar\npara\ngutuie";
+\n 
+\\
+\"
+"ION"
+cout<<"\"ION\"";
+secventa ESC
+cout<<"\\10\\20";
+*****
+*****
+*****
+Primul program in C:
+#include <iostream>
+using namespace std; 
+int main(){
+  cout<<"Cautati mai intai Imparatia lui Dumnezeu !";
+  return 0;
+}
+****
+*  *
+*  *
+****
+
+cout<<"****"<<endl;
+cout<<"*   *"<<endl; 
+cout<<"*   *"<<endl; 
+cout<<"****"<<endl;
+
+
+cout<<INT_MAX;
+
+
+/////////////////////////
+
+-Afisare: printf (functie) S-a studiat la seminar!
+           cout (obiect)
+-Comentarii :
+   //   la nivel de linie, sau la nivel de bloc /* ...*/
+-variabile
+ Tipuri de date de baza in C:
+int - nr intregi cu semn
+char - caractere
+     O constanta caracter se scrie astfel:
+  char ch='A';
+   In memorie intra codul ASCII al caracterului
+   Ex: 'A' --- 65
+       'B' --- 66
+        caracterul spatiu: ' ' are codul 32
+        '0' --- 48
+        '1' --- 49
+Pentru numere reale:
+float 
+double
+Ex: 
+ double x=3.23;
+Numarul de octeti rezervat unui tip de date, in lb. C, nu este standardizat.
+Astfel in CodeBlocks, tipul int ocupa 4 octeti (bytes)
+In BorlandC, int ocupa 2 octeti
+Exista si modificatori de tip:
+unsigned
+signed
+long
+
+Putem avea : 
+unsigned int
+unsigned char , nr pozitiv intre 0 si 255
+
+long : pentru numere intregi se aloca mai multi octeti
+Putem avea si long double
+
+In C exista operatorul sizeof care returneaza nr de octeti alocat de catre 
+compilator unei variabile sau unui tip de date.
+Exemplu:
+cout<<"tipul int are un nr de octeti = "<<sizeof(int);
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    cout<<"nr octeti pt int: "<<sizeof(int)<<endl;
+    //nr octeti pt int: 4
+    cout<<"nr octeti pt char: "<<sizeof(char)<<endl;
+    cout<<"nr octeti pt long: "<<sizeof(long)<<endl;
+    cout<<"nr octeti pt float: "<<sizeof(float)<<endl;
+    cout<<"nr octeti pt double: "<<sizeof(double)<<endl;
+    cout<<"nr octeti pt long double: "<<sizeof(long double)<<endl;
+/*
+nr octeti pt int: 4
+nr octeti pt char: 1
+nr octeti pt long: 4
+nr octeti pt float: 4
+nr octeti pt double: 8
+nr octeti pt long double: 16
+*/
+    return 0;
+}
+
+
+CITIREA DE LA TASTATURA
+Varianta C:
+ functia de biblioteca scanf()
+ Sintaxa:
+ scanf(sirul de formate de citire, adresele variabilelor in care memoram ce citim);
+ Obs:
+ Operatorul & aplicat numelui unei variabile furnizeaza adresa variabilei.
+Ex:
+ Pentru a citi un numar intreg in variabila nr, de tipul int:
+ int nr;
+ scanf("%d",&nr);
+Ex:
+ Pentru a citi in variabila x un numar intreg si in y un numar real:
+ int x;
+ double y;
+ scanf("%d%lf",&x,&y);
+
+Varianta C++:
+ cu obiectul cin
+Exemplu:
+ int nr; cin>>nr;
+ int a; double d;
+ cin>>a>>d;//separ numerele cand le introduc prin ENTER  sau SPACE
+Exemplu:
+int a,b;
+    cout<<"a=";cin>>a;
+    cout<<"b=";cin>>b;
+    cout<<"suma="<<a+b;
+
+  

@@ -1,0 +1,191 @@
+CURS 9 
+
+MATRICI (TABLOURI BIDIMENSIONALE)
+
+matrice=tabel cu mai multe linii si mai multe coloane
+Declarare:
+tipDate numeMatrice[nrLinii][nrColoane];
+Ex:
+int a[3][2];
+Elementele se obtin prin indexare, ca la vectori:
+a[0][0],a[0][1],a[1][0], a[1][1], a[2][0], a[2][1].
+
+Putem initializa direct o matrice:
+int a[3][2]={ 1,0,
+              2,4,
+              3,7};
+Recomandare, modul mai nou de initializare:
+int a[3][2]={ {1,0},
+               {2,4},
+               {3,7} };
+CITIREA UNEI MATRICI DE LA TASTATURA:
+Se parcurge cu doua for-uri matricea pe linii si pe coloane:
+int nL;//nr linii
+cin>>nL;
+int nC;//nr coloane
+cin>>nC;
+int a[nL][nC];
+int i,j;
+//Citire matrice:
+//parcurg toate liniile:
+for(i=0;i<nL;i++)
+  //la linia i, ii parcurg toate coloanele:
+  for(j=0;j<nC;j++)
+     cin>>a[i][j];
+
+AFISAREA UNEI MATRICI CA TABEL:
+//afisez toate liniile, fiecvare linie pe un rand separat:
+for(i=0;i<nL;i++){
+  //afisez linia i: (este afisarea unui vector!)
+  for(j=0;j<nC;j++)
+    cout<<a[i][j]<<" ";
+  //trec pe linia urmatoare:
+  cout<<endl;
+}
+
+ALGO. CU MATRICI
+1. SUMA ELEMENTELOR UNEI MATRICI
+int suma=0;
+//parcurgem matricea:
+for(i=0;i<nL;i++)
+  for(j=0;j<nC;j++)
+     suma=suma+a[i][j];
+
+2. Maximul din matrice
+-initializam maxim cu primul element: a[0][0]
+-parcurg matricea
+    compar element crt a[i][j] cu maxim
+
+int maxim=a[0][0];
+for(i=0;i<nL;i++)
+   for(j=0;j<nC;j++)
+       if(a[i][j]>maxim)maxim=a[i][j];
+cout<<maxim;
+
+3. Cate numere pare sunt intr-o matrice
+-initializez contor cu 0
+-parcurg matricea
+    daca elementul crt a[i][j] este par, incrementez contor
+
+int contor=0;
+for(i=0;i<nL;i++)
+   for(j=0;j<nC;j++)
+       if(a[i][j]%2==0)contor++;
+cout<<contor;
+
+4. Cautare liniara in matrice 
+.....
+int nL;//nr linii
+cin>>nL;
+int nC;//nr coloane
+cin>>nC;
+int a[nL][nC];
+int i,j;
+//Citire matrice:
+//parcurg toate liniile:
+for(i=0;i<nL;i++)
+  //la linia i, ii parcurg toate coloanele:
+  for(j=0;j<nC;j++)
+     cin>>a[i][j];
+int x; cout<<"x="; cin>>x;
+//este x prezent in matricea a?
+int estePrezent=0;
+for(i=0;i<nL;i++){
+  for(j=0;j<nC;j++)
+     if(a[i][j]==x){
+        estePrezent=1;
+        break;
+     }
+  if(estePrezent==1)break;
+}
+if(estePrezent==1)cout<<"da";
+else cout<<"nu";
+
+5. Copiere numere pare din matrice, intr-un vector
+int nL;//nr linii
+cin>>nL;
+int nC;//nr coloane
+cin>>nC;
+int a[nL][nC];
+int i,j;
+//Citire matrice:
+//parcurg toate liniile:
+for(i=0;i<nL;i++)
+  //la linia i, ii parcurg toate coloanele:
+  for(j=0;j<nC;j++)
+     cin>>a[i][j];
+int k=0; //index in vector
+int v[nL*nC];//dimensiune acoperitoare
+for(i=0;i<nL;i++)
+  for(j=0;j<nC;j++)
+     if(a[i][j]%2==0){
+         v[k]=a[i][j];
+         k++;
+     }
+
+//afisare vector:
+for(i=0;i<k;i++)cout<<v[i]<<endl;
+//////////////////////////////////////
+SUBIECTELE DATE LA PARTIAL:
+A.
+1a. Dati un exemplu de apel pentru functia calcul() ce are semnatura:
+ double calcul(int a, int b)
+1b. Dati un exemplu de apel pentru functia afisare() ce are semnatura:
+ void afisare(double x)
+ 
+2. Sa se scrie o functie ce are 4 parametrii: coordonatele x1 , y1  si x2, y2 a doua puncte.
+Functia returneaza  valoarea 1 daca punctul 1 este mai departat de origine decat punctul 2, 
+returneaza  valoarea 2 daca punctul 2 este mai departat de origine decat punctul 1, si 
+returneaza 0 daca cele doua puncte sunt la aceeasi distanta fata de origine.
+Obs: distanta punctulul (x,y) fata de origine=radical(x*x+y*y)
+
+3. Se citesc doua numere intregi a, si b.
+Afisati primul numar prim din [a,b]. Daca nu exista niciun 
+numar prim afisati ca nu exista.
+
+////////////
+B.
+1a. Dati un exemplu de apel pentru functia calcul() ce are semnatura:
+ int calcul(double x)
+1b. Dati un exemplu de apel pentru functia afisare() ce are semnatura:
+ void afisare(char c1, char c2)
+ 
+2. Sa se scrie o functie ce are ca parametru un numar intreg x. Functia returneaza 1 daca cifra unitatilor este egala cu cifra zecilor, si 0 daca nu sunt egale cele doua cifre.
+
+3. Se citeste un numar intreg x. Afisati daca are toate cifrele egale intre ele sau nu.
+/////////////////
+C.
+1a. Dati un exemplu de apel pentru functia calcul() ce are semnatura:
+  int calcul(int a, int b, int c)
+1b. Dati un exemplu de apel pentru functia afisare() ce are semnatura:
+ void afisare(int a, int b)
+
+2. Sa se scrie o functie ce are ca parametru un numar intreg x. Functia returneaza media aritmetica 
+ dintre cifra unitatilor si cifra sutelor.
+
+3. Se citesc repetat numere intregi de la tastatura, pana se tasteaza numarul 0. 
+Calculati media aritmetica a numerelor tastate (se include si 0, in calculul mediei).
+Ex:
+2
+-1
+3
+0
+Suma = 4, sunt 4 numere tastate, deci media aritmetica a lor este 1.0
+//////////////////////
+D.
+1a. Dati un exemplu de apel pentru functia calcul() ce are semnatura:
+ int calcul(int a, int b)
+1b. Dati un exemplu de apel pentru functia afisare() ce are semnatura:
+ void afisare(double a, double b)
+
+2. Sa se scrie o functie Sa se scrie o functie ce are ca parametru un numar intreg x. Functia returneaza maximul  
+ dintre cifra zecilor si cifra sutelor.
+
+3. Se citesc repetat numere intregi de la tastatura, pana cand se tasteaza un numar par.
+Calculati cate numere prime s-au introdus.
+Ex:
+7
+9
+5
+4
+rezultat= 2 (7 si 5)

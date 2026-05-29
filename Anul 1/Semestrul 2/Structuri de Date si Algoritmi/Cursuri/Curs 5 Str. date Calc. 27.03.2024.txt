@@ -1,0 +1,315 @@
+Curs 5
+Implementarea structurii de tip stivă  folosind liste inlanţuite:
+STIVA este o structura LIFO
+ultimul inserat este primul extras
+O implementam cu o lista inlantuita
+Daca am insera fiecare nod nou la sfarsitul listei, extragerea acestuia ar fi O(N) - parcurg toata lista.
+Implementam stiva:
+ push(x) - inserareInceput(x)
+ pop()  - va extrage primul nod
+
+
+typedef struct nod{
+   int nr;
+   nod* next;} NOD;
+NOD* head;
+void init()
+{
+ head=NULL;//lista este vida la inceput
+}
+int esteVida(){
+ if(head==NULL)return 1;
+ else return 0;
+}
+
+void push(int x)
+{
+//discernem doua cazuri:
+ //primul caz: lista este vida, nu a fost creata:
+ if(head==NULL){
+   head=new NOD;  //cu malloc procedam asa: head=(NOD*)malloc(sizeof(NOD));
+   head->nr=x;
+   head->next=NULL;
+   return;}
+ //al doilea caz: lista exista deja. Trebuie sa inserez un nou nod la inceputul ei
+/* Lista existenta:
+       head:(-1 , --->) (22 , --->) (7 , --->) (3 ,NULL)
+ Vrem sa inseram valoarea 10, la inceput:
+  
+ NOD* nodNou; 
+ nodNou=new NOD;//(   , )
+ nodNou->nr=x;  //(10, )
+ nodNou->next=head;// (10, ---> )head:(-1 , --->) (22 , --->) (7 , --->) (3 , NULL) 
+ head=nodNou;//  head:(10, ---> ) (-1 , --->) (22 , --->) (7 , --->) (3 , NULL) 
+}
+
+int pop(){
+  //presupunem ca lista (stiva) nu e vida
+  //stergerea primului element din lista:
+  int x=head->nr;
+  NOD* headNou=head->next;
+  delete head;
+  head=headNou;
+  return x;
+}
+
+int main(){
+ init();
+ push(12);
+ push(5);
+ push(-1);
+ int extras=pop();
+ cout<<extras;//-1
+ return 0;
+}
+  
+LISTA DUBLU INLANTUITA
+
+Ce avantaj are fata de lista simplu inlantuita ?
+ Inserare la sfarsit se face in O(1) (la LSI: in O(N))
+Dezav:
+ mai multa memorie
+
+typedef struct nod{
+  int nr;
+  nod* next;
+  nod* prev;//adresa nod anterior (previous=precedent)
+}NOD;
+//memoram ca variabile globale si adresa primului nod si cea a ultimului nod din lista:
+NOD* head;
+NOD* last;
+void init(){
+ head=NULL;
+ last=NULL;
+}
+void inserareInceput(int x){
+ //cazul 1: lista este vida
+ if(head==NULL){
+   head=new NOD;
+   head->nr=x;
+   head->next=NULL;
+   head->prev=NULL; 
+   last=head;
+   return;}
+ //cazul 2: lista nu este vida
+ NOD* nodNou; 
+ nodNou=new NOD;//(   , )
+ nodNou->nr=x;  //(10, )
+ nodNou->next=head;// (10, ---> )head:(-1 , --->) (22 , --->) (7 , --->) (3 , NULL) 
+ nodNou->prev=NULL;
+ head->prev=nodNou;
+ head=nodNou;
+//last nu se modifica
+}
+void inserareSfarsit(int x){
+  //cazul 1: lista este vida
+  if(head==NULL){
+   head=new NOD;
+   head->nr=x;
+   head->next=NULL;
+   head->prev=NULL; 
+   last=head;
+   return;}
+ //cazul 2: lista nu este vida
+  NOD* nodNou=new NOD;
+  nodNou->nr=x;
+  nodNou->next=NULL;
+  nodNou->prev=last; 
+  last->next=nodNou;
+  last=nodNou;
+}
+
+void afisareInversa(){
+ //plec de la last
+ if(head==NULL){
+   cout<<"lista este vida.";
+   return;
+ }
+ NOD* nodCrt=last;
+ for(;;){
+  cout<<nodCrt->nr<<" ";
+  //"avansam" spre head:
+  nodCrt=nodCrt->prev;
+  if(nodCrt==NULL)break;
+}
+
+
+DIVIDAE ET IMPERA
+   
+	Este o tehnică de programare în care, problema de rezolvat se împarte în două sau mai multe subprobleme.
+ Fiecare subproblemă se rezolvă separat, apoi se combină soluțiile. 
+Pentru rezolvarea unei subprobleme, se va diviza și ea, la rândul ei, în subprobleme, până la atingerea unui caz limită,
+ care se poate rezolva direct, fără divizare.
+	Exemple tipice de aplicare a metodei dividae et impera: 
+căutarea binară, sortarea prin interclasare (merge sort), problema turnurilor din Hanoi (v. curs 6).
+
+Exemple didactice, pentru a înțelege modul de aplicare a metodei:
+ calculul sumei elementelor dintr-un vector de numere întregi și calculul maximului dintr-un vector.
+Începem cu exemplele didactice:
+
+Suma elementelor unui vector (prin dividae et impera)
+Impart vector in doua jumatati. 
+Calculez suma elementelor din prima jumatate (S1)
+Calculez suma elementelor din a doua jumatate (S2)
+rezultatul va fi S=S1+S2
+xxxxxx xxxxxx xxxxxxxxxxxxx
+#include <iostream>
+using namespace std;
+int suma(int a[], int s, int d);
+//Impartind vectorul a în portiuni (de fecare portiune se ocupă o subproblemă), 
+// delimităm porțiunea din vector, cu doi indecs:
+//s= indexul din stanga, d=indexul din dreapta
+int main()
+{
+    const int N=5;//dimensiune vector
+    int a[N]={0,-1,7,5,6};
+    int rezultat=suma(a,0,N-1);//pentru tot vectorul calculăm suma,
+      //deci index s=0 și index d=N-1
+    cout<<rezultat;
+    return 0;
+}
+int suma(int a[], int s, int d)
+{
+
+    //caz limita (când nu se mai continuă divizarea):
+    if(s==d)return a[s];
+    //Cazul general, divizam problema, în două subprobleme:
+   // (portiune din vector cuprinsă între indecșii s și d, o împărțin în două jumătăți)
+   //Calculăm indexul de la mijloc, dintre s și d:
+    int m=(s+d)/2;
+    //Rezolvam fiecare subproblema separat:
+    int S1=suma(a,s,m);// prima jumătate, între s și m, inclusiv. Apel recursiv
+    int S2=suma(a,m+1,d);// a doua jumătate, între m+1 și d, inclusiv
+    //Combinam solutiile:
+    int S=S1+S2;
+    return S;
+}
+
+Maximul dintr-un vector, prin dividae et impera
+
+C. Calcul cmmdc din vector, prin dividae et impera
+int cmmdc(int a[], int s, int d){
+   //caz limita:
+   if(s==d)return a[s];
+   //caz general:
+   int m=(s+d)/2;
+   int cmmdc1=cmmdc(a,s,m);
+   int cmmdc2=cmmdc(a,m+1,d);
+   //combin solutiile:
+   int rezultat=cmmdc_2(cmmdc1, cmmdc2);
+   return rezultat;
+}
+
+int cmmdc_2(int x,int y){
+ while(x!=y)
+   if(x>y)x=x-y;
+   else y=y-x;
+ return x;
+}
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int a[N];
+    
+    for(int i=0;i<N;i++){
+        cout<<"nr=";
+        cin>>a[i];
+    }
+    
+    int rez=cmmdc(a,0,N-1);
+    cout<<"cmmdc din vector = "<<rez;
+    return 0;
+}
+
+PROBLEME TIPICE CE SE REZOLVA CU DIVIDAE ET IMPERA
+A. Cautarea binara prin dividae et impera
+
+Cautare liniara a prezentei unui element intr-un vector de dimensiune N:
+  parcurgem vectorul de la index 0 la N-1
+  Timp de executie: O(N)
+
+Cautarea binara are sens doar daca vectorul este SORTAT !
+Este cautarea tipica a unui cuvant intr-un dictionar
+La fiecare pas se elimina jumatate din posibilitati
+Pas 1: elimin N/2 cuvinte
+Pas 2: elimin jumatate din cele ramase: N/4
+Pas 3: elimin N/8
+ Cati pasi facem pt a da un raspuns:
+ N: N/2+N/4+N/8+...
+Timp de executie: O(log_2(N))
+Ex: 
+N=20.000.000
+Cautarea liniara: in maxim 20.000.000 comparatii gasim raspunsul (in medie: 10.000.000)
+Cautarea binara: in log_2(20000000)= 25 comparatii
+
+Daca vectorul nu este sortat, aplicam cautarea liniara!
+Nu este eficient sa-l sortez si apoi sa caut binar !
+
+#include <iostream>
+
+using namespace std;
+
+int cautBin(int a[],int s, int d, int x){
+   //vectorul este deja sortat crescator.
+   //caz limita:
+   if(s==d){
+     if(a[s]==x)return 1;
+     else return 0;
+   }
+   //daca s=3, si d=4, atunci m=3
+   //daca este cazul x<a[m] si sa o luam pe ramura:
+   // apelam cautBin(a,s,m-1,x) Deci avem s=3 si d=2 ! Nu se poate
+   if(d<s)return 0;// verificare pt x=0, ca trebuie si acest caz!
+   //cazul general:
+   int m=(s+d)/2;
+   if(a[m]==x)return 1;
+   else if(x<a[m])return cautBin(a,s,m-1,x);
+   else return cautBin(a,m+1,d,x);
+}
+int main(){
+    int a[6]={1,2,30,40,50,70};
+    int x; cout<<"x="; cin>>x;
+    int rez=cautBin(a,0,5,x);
+    if(rez==1)cout<<"da";
+    else cout<<"nu";
+    return 0;
+}
+
+B. Problema turnurilor din Hanoi
+Se dau N discuri, toate de diametre diferite.
+Se dau 3 tije: tI (tija initiala)
+               tF (tija finala)
+               tM (tija de manevra)
+Cele N discuri, in ordinea descrescatoare a diametrelor se gasesc pe tI
+La un moment dat doar un disc  se poate muta.
+Nu se poate pune un disc mare peste unul mic.
+Problema:
+ Sa se mute cele N discuri, de pe tI pe tF, prin intermediul lui tM.
+Dividae et impera:
+A muta N discuri de pe tI pe tF :
+ - mut N-1 discuri de pe tI pe tM (folosind pe tF ca tija de manevra)
+ - mut discul ramas de pe tI pe tF
+ - mut N-1 discuri de pe tM pe tF (folosind tI ca manevra)
+
+Caz limita: N=1
+#include <iostream>
+
+using namespace std;
+
+void hanoi(int N, char tI, char tM, char tF){
+  //caz limita:
+  if(N==1){
+     cout<<tI<<"--->"<<tF<<endl;
+     return;
+  }
+  hanoi(N-1,tI,tF,tM);
+  cout<<tI<<"--->"<<tF<<endl;
+  hanoi(N-1,tM,tI,tF);
+}
+int main(){
+    hanoi(7,'I','M','F');
+    return 0;
+}
+
+
+/////////////////////////////////////////////////////

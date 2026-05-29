@@ -1,0 +1,229 @@
+SEMINAR SIRURI. STRUCTURI 
+1. functia atoi() convertesteste un sir numeric la int
+Exemplu:
+ int nr=atoi("4456");// nr=4456
+Ex simplu:
+Citim ca sir un numar intreg . Sa calculam suma cifrelor lui.
+Consideram ca sirul contine doar cifre !
+SOLUTIA 1
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    cout << "sir numeric pozitiv= ";
+    char s[30];
+    cin.get(s,30);
+    int nr=atoi(s);
+    int suma=0;
+    for(;;){
+        int cifra=nr%10;
+        suma+=cifra;
+        nr=nr/10;
+        if(nr==0)break;
+    }
+    cout<<"suma="<<suma;
+    return 0;
+}
+
+SOLUTIA 2
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int main()
+{
+    cout << "sir numeric pozitiv= ";
+    char s[30];
+    cin.get(s,30);
+    int suma=0;
+    for(int i=0;i<strlen(s);i++){
+        int cifraCrt=s[i]-'0';
+        suma=suma+cifraCrt;
+    }
+    cout<<"suma="<<suma;
+    return 0;
+}
+
+2. Citim N. Citim N siruri numerice pozitive.
+Sa calculam suma lor.
+Consideram ca nu se depaseste capacitatea de memorare a unui int
+Ex: N=3 
+nr="12"
+nr="5"
+nr="880"
+suma=897
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int main()
+{
+    int N, suma = 0;
+    cout << "N = ";
+    cin >> N;
+    cin.get();
+    for (int i = 1; i <= N; i++) {
+        char s[11];
+        cout << "Nr = ";
+        //cin.getline(s, 11); - corect
+        cin.get(s, 11);
+        cin.get();
+        int nrCrt = atoi(s);
+        suma += nrCrt;
+    }
+    cout << "Suma = " << suma;
+    return 0;
+}
+
+3. Citim un sir de caractere. Sa-l rotim spre dreapta, cu o pozitie.
+s="ABCDE"
+Va rezulta:
+s="EABCD"
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int main()
+{
+    //s="ABCDE"
+    //Va rezulta:
+    //s="EABCD"
+    char p, s[100];
+    cin.get(s,100);
+    int n=strlen(s);
+    p=s[n-1];//salvam ultimul caracter din sir
+// ca la algo de inserare intr-un vector:
+    for(int i=n-2;i>=0;i--)
+        s[i+1]=s[i];
+    s[0]=p;
+    cout<<s;
+    return 0;
+}
+
+4. Sa scriem o functie ce are ca parametrii un vector de siruri si 
+dimensiunea lui. Functia returneaza 1 daca toate sirurile au aceeasi lungime 
+si 0 daca nu au.
+#include <iostream>
+#include <string.h>
+using namespace std;
+typedef char sir[100];// sir este un tip de date ce reprezinta un string de max. 99 car.
+int lungimi_egale(sir v[], int n);
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    cin.get();
+    sir v[N];
+    int i;
+    for(i=0;i<N;i++){
+        cout<<"cuvant=";
+        cin.get(v[i],100);
+        cin.get();
+    }
+    int rezultat=lungimi_egale(v,N);
+    if(rezultat==0)
+        cout<<"NU";
+    else
+        cout<<"DA";
+    return 0;
+}
+int lungimi_egale(sir v[], int n)
+{
+    for(int i=0; i<n-1; i++)
+    {
+        if(strlen(v[i])!=strlen(v[i+1]))
+            return 0;
+    }
+        return 1;
+}
+
+STRUCTURI
+
+Definim structura punct3D:
+typdef struct{
+   int x; int y; int z;} punct3D;
+Citim un punc3D in variabila p.
+Sa calculam distanta lui fata de origine.
+
+#include <iostream>
+#include <math.h>
+typedef struct
+{
+    int x;
+    int y;
+    int z;
+} punct3D;
+using namespace std;
+int main()
+{
+    punct3D p;
+    //citire camp cu camp:
+    cout<<"x=";
+    cin>>p.x;
+    cout<<"y=";
+    cin>>p.y;
+    cout<<"z=";
+    cin>>p.z;
+    double d=sqrt(p.x*p.x+p.y*p.y+p.z*p.z );
+    cout<<d;
+    return 0;
+}
+
+Definim structura dreptunghi ce are doua campuri: a si b, 
+de tipul int, lungimea si latimea dreptunghiului.
+Citim in variabila d o structura de tipul dreptunghi.
+Sa-i calculam aria.
+
+#include <iostream>
+#include <math.h>
+typedef struct
+{
+    int a;
+    int b;
+} dreptunghi;
+using namespace std;
+int main()
+{
+    dreptunghi d;
+    cout<<"lungime=";cin>>d.a;
+    cout<<"latime=";cin>>d.b;
+    int arie=d.a*d.b;
+    cout<<"arie="<<arie;
+    return 0;
+}
+
+Definim structura lider, ce are 4 campuri:
+nume: sir de caractere
+notaCaracter: int
+notaCompetenta: int
+
+Citim datele despre doi lideri. Care este mai bun?
+(vom face media aritmetica a celor doua note)
+#include <iostream>
+#include <math.h>
+typedef struct
+{
+    char nume[50];
+    int notaCaracter;
+    int notaCompetenta;
+} lider;
+using namespace std;
+int main()
+{
+    lider a, b;
+    cout<<"nume a=";cin.get(a.nume,50); cin.get();
+    cout<<"nota caracter a="; cin>>a.notaCaracter;cin.get();
+    cout<<"nota competenta a="; cin>>a.notaCompetenta;cin.get();
+    cout<<"nume b=";cin.get(b.nume,50); cin.get();
+    cout<<"nota caracter b="; cin>>b.notaCaracter;cin.get();
+    cout<<"nota competenta b="; cin>>b.notaCompetenta;
+    double medie_a=(a.notaCaracter+a.notaCompetenta)/2.0;
+    double medie_b=(b.notaCaracter+b.notaCompetenta)/2.0;
+    if(medie_a>medie_b)cout<<a.nume;
+    else if(medie_a==medie_b)cout<<"egalitate";
+    else cout<<b.nume;
+    return 0;
+}
+
+

@@ -1,0 +1,216 @@
+Seminar 2 PCLP
+
+Instr. de atribuire
+Algo de interschimbare
+ int a, b; 
+ cin>>a>>b;
+ int aux;
+ //regula paharelor:
+ aux=a;
+ a=b;
+ b=aux;
+
+Exercitiu:
+ int a=7;
+ int b=5;
+ a=b;//a=5
+ b=a;//b=5
+
+CodeBlocks
+Operatorul /
+ Regula: intre doua numere de tip intreg, impartirea se face prin
+          trunchiere
+ex:
+   media aritmetica a 3 numere intregi:
+int a,b,c;
+cin>>a>>b>>c;
+double medie=(a+b+c)/3.0;
+
+Ex. 1
+ Citim a si b coefic. ec. de gradul 1:
+ ax+b=0
+a, b: int
+Presupunem a diferit de 0 (nu verificam aceasta !)
+Sa calculam pe x.
+
+int a, b; 
+cin>>a>>b;
+double x;
+x=-b/(double)a;
+
+
+Ex. 2
+Citim a,b, c, coeficientii ec. de gradul 2
+ax^2+bx+c=0
+a,b,c: int
+Sa calculam solutiile x1 si x2.
+Presupunem (fara sa mai verificam):
+- a este diferit de 0
+- delta >=0
+
+#include <iostream>
+#include <math.h>
+using namespace std;
+int main () {
+    int a, b, c;
+    cout << "a="; cin >> a;
+    cout << "b="; cin >> b;
+    cout << "c="; cin >> c;
+    double x1, x2;
+    int delta;
+    //ax^2+bx+c=0
+    delta =b*b - 4 * a * c;
+    x1 = (-b + sqrt(delta))/(2*a);
+    x2 = (-b - sqrt(delta))/(2*a);
+    cout << "x1 este egal cu " << x1 << endl;
+    cout << "x2 este egal cu " << x2 << endl;
+}
+
+
+Calculul cifrelor u,z, s ale unui numar intreg
+int main()
+{
+    int nr;
+    cout<<"nr=";
+    cin>>nr;
+    int u=nr%10;
+    int z=(nr/10)%10;
+    int s=(nr/100)%10;
+    cout<<"u="<<u<<" z="<<z<<" s="<<s;
+    //nr NU se modifica !
+    return 0;
+}
+Solutia 2:
+int main()
+{
+    int nr;
+    cout<<"nr=";
+    cin>>nr;
+    int u=nr%10;
+    nr=nr/10;
+    int z=nr%10;
+    nr=nr/10;
+    int s=nr%10;
+    cout<<"u="<<u<<" z="<<z<<" s="<<s;
+    //nr se modifica !
+    return 0;
+}
+
+Ex. 3:
+ Citim un numar natural nr. Sa comutam in nr cifra unitatilor 
+cu cifra zecilor.
+Ex: nr=1234
+ Dupa comutare: nr=1243
+int main()
+{
+    int nr;
+    cout<<"nr=";
+    cin>>nr;
+    int u=nr%10;
+    int z=(nr/10)%10;
+    int nrSup=nr/100;
+    //Construiesc noul nr:
+    nr=nrSup*100+u*10+z;
+    cout<<"nr="<<nr;
+    return 0;
+}
+
+Tema 1 pt seminarul urmator:
+ Citim un numar natural nr. Sa comutam in nr cifra zecilor
+cu cifra miilor.
+Ex: nr=71234
+ Dupa comutare: nr=73214
+
+Tema 2:
+
+Citesc doua numere intregi naturale a si b.
+Sa le comutam cifrele unitatilor intre ele.
+Ex:
+a=173
+b=12
+Dupa comutare:
+a=172
+b=13
+
+
+Bibliografie
+Tutoriale despre lb. C:
+  www.tutorialspoint.com
+  www.w3schools.com
+  etc.
+
+Care este cel mai mare numar intreg, in C (CodeBlocks) ?
+constanta INT_MAX , definita in fisierul limits.h
+
+#include <stdio.h>
+#include <limits.h>
+
+int main() {
+    printf("valoarea maxima pentru int: %d\n", INT_MAX);
+    printf("Valoarea minima pentru int: %d\n", INT_MIN);
+    //Maximum Integer Value: 2147483647
+    //Minimum Integer Value: -2147483648
+    return 0;
+}
+
+OPERATORUL DE INCREMENTARE ++
+int a=7;
+//Cresc pe a cu 1 (incrementare)
+a=a+1;
+Operatie f. des intalnita , este un operator special in lb. C: ++
+In loc de: a=a+1; 
+  putem scrie:
+a++;//a primeste vechiul a + 1
+Similar: -- pt decrementare
+a=a-1;
+a--;
+
+Operatorul ++ se poate aplica la dreapta operandului (a++;)
+sau la stanga operandului (++a;).
+In anumite cazuri, rezultatele sunt diferite !!
+Exemplu:
+int a=7;
+a++;//a=8
+
+int a=7;
+++a;//a=8
+
+In acest exemplu nu am obtinut rezultate diferite!
+
+Cand se obtin rezultate diferite?
+int x;
+int a=7;
+x=a++;
+//x=? a=?
+//x=8 a=7 GRESIT
+//x=7 a=8 DA
+
+int x;
+int a=7;
+x=++a;
+//a=8 x=8
+
+NU se recomanda asa, pt claritate !
+int x;
+int a=7;
+//Doi pasi:
+a++;
+x=8;
+//a=8,x=8
+
+ sau, daca vrem ca in primul exemplu x=7, a=8:
+int x;
+int a=7;
+x=a;
+a++;
+
+
+
+
+
+
+
+   
+
+
+

@@ -1,0 +1,400 @@
+Curs 3 PCLP
+
+Cum calculam toate cifrele unui numar intreg ?
+nr=9127
+unitati = nr modulo 10 ( rest impartire numar la 10)
+Cifra zeci ?
+Daca trunchiez nr: 9127 ---> 912 Acum cifra zeci devine cifra unitatilor in nr trunchiat
+
+int nr; cin>>nr;
+int u,z,s;
+u=nr%10;
+//trunchiez nr prin impartire la 10:
+nr=nr/10;
+z=nr%10;
+//Calcul s:
+nr=nr/10;
+s=nr%10;
+
+Care este diferenta daca facem asa ?
+int nr; cin>>nr;
+int u,z,s;
+u=nr%10;
+z=(nr/10)%10;//pt claritate punem paranteze
+s=(nr/100)%10;
+
+Diferenta este ca aici nr nu-si schimba valorea !
+
+ATENTIE
+ Avem si atribuiri de aceasta forma:
+int nr;
+ nr=7;
+ nr=nr+ 5;//NU ESTE ALGEBRA ! NU SE SIMPLIFICA nr cu nr !!
+ //nr=12
+Se citeste: nr primeste vechiul nr + 5
+
+  OPERATORI DE ATRIBUIRE COMPUSI
+int a=7;
+//Cresc pe a cu 1 (incrementare)
+a=a+1;
+Operatie f. des intalnita , este un operator special: ++
+a++;//a primeste vechiul a + 1
+Similar: --
+a=a-1;
+a--;
+
+Operatorul ++ se poate aplica la dreapta operandului (a++;)
+sau la stanga operandului (++a;).
+In anumite cazuri, rezultatele sunt diferite !!
+
+int a=7;
+a++;//a=8
+
+int a=7;
+++a;//a=8
+
+Cand se obtin rezultate diferite?
+int x;
+int a=7;
+x=a++;
+//x=? a=?
+//x=8 a=7 GRESIT
+//x=7 a=8 DA
+
+int x;
+int a=7;
+x=++a;
+//a=8 x=8
+
+NU se recomanda asa, pt claritate !
+int x;
+int a=7;
+//Doi pasi:
+a++;
+x=8;
+//a=8,x=8
+
+ sau, daca vrem ca in primul exemplu x=7, a=8:
+int x;
+int a=7;
+x=a;
+a++;
+
+
+Alti op. de atribuire compusi
+a=a+3;
+a+=3;//a=a+3
++=
+-=
+*=
+/=
+%=
+
+
+Ex:
+a+=x;
+Inseamna:
+a=a+x;
+nrEleviDinClasa=nrEleviDinClasa+3;
+nrEleviDinClasa+=3;
+
+a*=3;
+a=a*3;
+
+Ex:
+rezultat %= 3;
+Este echiv. cu:
+rezultat=rezultat%3;
+
+    int nrEleviDinClasa;
+    cout<<"nr elevi="; cin>>nrEleviDinClasa;
+    nrEleviDinClasa+=5;
+    cout<<nrEleviDinClasa;
+Motivatie pt a studia (proverbe din Biblie):
+"Un om este pretuit dupa masura priceperii lui."
+
+"Daca vezi un om iscusit in lucrul lui, acesta poate
+sta langa imparati, nu langa oameni de rand."
+
+
+            INSTRUCTIUNEA DE DECIZIE (if)
+Deciziile se iau prin evaluarea unor expresii de test.
+O expresie de test poate fi adevarata (true) sau falsa (false).
+In lb. C false este reprezentat prin 0, iar true prin orice valoare
+intreaga diferita de 0 ( tipic 1, dar nu intotdeauna)
+
+O expresie de test (o conditie) se construieste cu operatorii de relatie si cu operatorii logici.
+OPERATORI DE RELATIE (DE COMPARATIE):
+  <
+  <=
+  >
+  >=
+  == (pt egalitate)
+  != ("este diferit")
+Ex. de expresii de test cu op. de relatie:
+  a>b
+  nota>=5
+  nota==10
+Expresiile de test nu sunt instructiuni separate. Ele apar in cadrul instructiunii
+de decizie.
+OPERATORI LOGICI
+&&  (SI LOGIC, AND)
+||  (SAU LOGIC, OR)
+!   (NEGARE, NOT)
+
+Exemple:
+ Pt a vedea daca 3 numere a,b, c, sunt egale intre ele, expresia de test este:
+a==b==c GRESIT !
+a==b && b==c && a!=c
+
+ Pt a vedea daca 3 numere a,b, c, sunt diferite intre ele, expresia de test este:
+a!=b && b!=c && c!=a
+1,2,1 (fals)
+
+ Pt a verifica daca un numar intreg nr reprezinta o nota (1,2,...,10) ,
+expresia de test este:
+ nr>=1 && nr<=10
+Tabela de adevar pt operatorii logici:
+E1     E2     E1&&E2  E1||E2
+false  false   false   false
+false  true    false   true
+true   false   false   true
+true   true    true    true
+
+
+E     !E
+false true
+true  false
+
+IMPORTANT:
+Operatorii logici && si || sunt mai putini prioritari decat operatorii de 
+relatie
+
+(a==b) && (b==c)
+este echiv. cu
+a==b && b==c
+
+Pentru claritate sau, pt schimbarea ordinii de evaluare, folosim paranteze.
+
+Evaluarea expresiilor de test in scurtcircuit ?
+Compilatorul opreste evaluarea unei expresii de test atunci cand are un rezultat clar.
+a=7
+b=20
+Exp. de test:
+ a<0 && b>15
+  F 
+
+In alte limbaje avem tipuri de date speciale pt true si false:
+C++:  bool (true/false)
+Java: boolean (true/false)
+
+Prioritatea acestor operatori este:
+ - not se executa primul (cel mai prioritar)
+ - si logic && se executa al doilea
+ - sau logic de executa ultimul (cel mai putin prioritar)
+Pt claritate se recomanda paranteze!
+
+Cum verific ca 3 numere intregi a,b,c >0 sunt unghiurile unui triunghi dreptunghic ?
+Expresia de test:
+ a==90||b==90||c==90 && a+b+c==180  NU este Corect
+  Ex: a=10,b=90, c=70 Se vede ca NU sunt unghiuri in triunghi pt ca nu au suma 180 !
+   Va evalua intai c==90 && a+b+c==180
+                    FALSE && FALSE va da FALSE
+    Apoi evalueaza a==90 (FALSE) || b==90 (TRUE) || FALSE si va rezulta TRUE , 
+     deci (10,90,70) e triunghi dreptunghic ( gresit !)
+
+Expresia corecta de test este: 
+   (a==90||b==90||c==90) && a+b+c==180
+ Am adaugat paranteze !
+Tema: de rulat acest exemplu !
+Exemple
+Cum verificam daca x este in intervalul [1,10] ?
+Expresia de test este:
+  x>=1 && x<=10  
+
+Operatorii && si || au prioritati mai mici decat operatorii de comparatie
+Se putea scrie si asa (de preferat !):
+  ( x>=1 )&&( x<=10 )
+
+Care este expresia de test prin care verificam daca un numar natural nr 
+are exact doua cifre ?
+(nr>=10) && (nr<=99)
+
+Care este expresia de test prin care verificam daca un numar INTREG (pozitiv sau 
+negativ) nr , are exact doua cifre ?
+((nr>=10) && (nr<=99))||((nr>=-99)&&(nr<=-10))
+
+INSTRUCTIUNEA IF
+Sunt 3 tipuri de instructiuni if: if simplu, if cu 2 alternative, if multiplu
+A. IF SIMPLU
+Sintaxa:
+ if(expresie_de_test)instructiune;
+ 
+ sau:
+ if(expresie_de_test){ 
+    grup instructiuni
+ }
+ Daca exp de test este adevarata atunci:
+    -se executa instructiune (grup instructiuni)
+    -trece mai departe, la urmatoarea instr. din program, dupa if simplu
+ ALTFEL, daca exp de test NU este adevarata atunci:
+    -trece mai departe, la urmatoarea instr. din program, dupa if simplu
+
+EXEMPLU
+ Algo calcul maxim dintre 3 numere a,b,c.
+ Initializam maxim cu primul numar (maxim=a)
+ compar apoi fiecare numar cu maxim
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int a,b,c;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    cout<<"c="; cin>>c;
+    int maxim;
+    maxim=a;
+    if(b>maxim)maxim=b;
+    if(c>maxim)maxim=c;
+    cout<<"max="<<maxim;
+    return 0;
+}
+
+La fel pentru minim.
+IMP: Trebuie sa fim capabili sa combinam algoritmi
+Ex: Citesc un numar natural a. 
+Sa calculam MINIMUL dintre u, z, s ale lui a.
+
+a=1427
+u=7, z=2,s=4
+minim=2
+
+int nr; cin>>nr;
+int u,z,s;
+u=nr%10;
+z=(nr/10)%10;
+s=(nr/100)%10;
+//algo de minim:
+int minim=u,
+if(z<minim)minim=z;
+if(s<minim)minim=s;
+
+ALGO DE CALCUL CATE NUMERE PARE AM INTRODUS DE LA TASTATURA
+ Cum verific ca un numar x este par?
+   if(x%2==0)...
+
+
+Citim 3 numere intregi a,b,c. Cate numere pare am introdus ?
+Ex: a=12,b=3, c=10 Rezulta: 2 numere pare
+
+int a,b,c;
+cin>>a>>b>>c;
+//ALGO: tinem un contor care pleaca de la 0.
+//Daca un numar este par , incrementam contorul
+int contor=0;
+//analizam fiecare numar:
+if(a%2==0)contor++;
+if(b%2==0)contor++;
+if(c%2==0)contor++;
+cout<<contor;
+
+Observatie:
+  Putem scrie: 
+contor++;
+  sau:
+contor=contor+1;
+  sau:
+contor+=1;
+
+B. IF CU DOUA ALTERNATIVE
+Sintaxa:
+ if(expresie_de_test)instructiune_1;
+ else instructiune_2;
+
+Cel mai simplu exemplu:
+Citesc un numar intreg. Este nr par su nu ?
+int nr; cin>>nr;
+if(nr%2==0)cout<<"este par";
+else cout <<"nu este par";
+
+Ex2:
+ Fie ec. de gradul 1: ax+b=0;
+ Citesc a si b numere intregi, sa calculam solutia x.
+  x=-b/a 
+Cele doua alternative : a diferit de 0 si a=0:
+
+int a, b;
+cin>>a>>b;
+if(a==0)cout<<"nu se poate rezolva ";
+else{
+  double x;
+  x=-b/(double)a;
+  cout<<"x="<<x;
+}
+
+Ex. 3
+Citim 3 nr intregi . Sa afisam daca sunt egale intre ele sau nu.
+int a,b,c; cin>>a>>b>>c;
+
+if(a==b && b==c)cout<<"da, egale";
+else cout<<"nu";
+
+Ex. 4
+Maximul dintre doua numere a si b.
+
+Solutia 1: cu if cu 2 alternative 
+int a,b;
+int maxim;
+cin>>a>>b;
+if(a>=b)maxim=a;
+else maxim=b;
+
+Solutia 2: cu if simplu
+int a,b;
+cin>>a>>b;
+int maxim;
+//ALGO:
+maxim=a;
+if(b>maxim)maxim=b; 
+
+cout<<maxim;
+
+Ex. 5
+ Citim un numar intreg pozitiv. Vrem sa afisam daca este patrat
+ perfect sau nu.
+ Ex: nr=16  DA
+     nr=17  NU
+
+#include <math.h>
+...
+int nr; cin>>nr;
+int radical=(int)sqrt(nr);//eliminam zecimalele, daca sunt, din radical(nr)
+if(radical*radical==nr)cout<<"da";
+else cout<<"nu"; 
+
+Putem avea in grupul de instructiuni care tine de if, alte if-uri.
+Exemplu:
+Citim un numar intreg, pozitiv sau negativ. Vrem sa afisam daca este patrat
+ perfect sau nu. Daca numarul este negativ, afisam mesajul ca este nr negativ.
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+int main()
+{
+    int nr; cout<<"nr="; cin>>nr;
+    //nr poate fi pozitiv sau negativ
+    if(nr>=0){
+       //este patrat perfect nr?
+       int radical=sqrt(nr);//pierde zecimalele daca sunt
+       if(radical*radical==nr)
+            cout<<"este patrat perfect";
+       else cout<<"nu este patrat perfect";
+    }else cout<<"Este numar negativ. NU este patrat perfect";
+    return 0;
+}
+

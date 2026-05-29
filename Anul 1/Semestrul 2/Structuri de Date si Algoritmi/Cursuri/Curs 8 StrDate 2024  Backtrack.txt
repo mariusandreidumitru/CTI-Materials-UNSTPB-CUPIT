@@ -1,0 +1,337 @@
+CURS 8
+
+
+PROBLEMA COMIS VOIAJORULUI
+Se dau N orase. Vanzatorul trebue sa faca un turneu: pleaca din orasul 0
+si trece prin fiecare oras o singura data, si se intoarce de unde a plecat.
+Care este ruta optima (ordinea de vizitare) a.i. distanta totala sa fie cea mai mica.
+Toate orasele sunt interconectate si se cunosc distantele dintre ele.
+
+N=4
+0,1,2,3
+Ordini de vizitare posibile:
+0,1,2,3,0
+0,3,2,1,0
+etc.
+Daca sunt N localitati cate variante distincte avem ?
+
+1,2,3,4 
+1,3,2,1
+...
+4!
+
+Sunt (N-1)!/2
+DE ce se imparte la 2? Nu conteaza sensul de parcurgere
+0,1,2,3,0
+0,3,2,1,0
+
+Tema optionala: in C calculati 60!
+
+Greedy pentru comis voiajor:
+Din oras 0 pleaca in orasul cel mai apropiat. Apoi din acesta pleaca in
+cel mai apropiat din cele ramase nevizitate.
+Per ansamblu obtine o solutie buna dar nu cea mai buna.
+
+Nu doar Greedy este singura posibilitate de a gasi o solutie mai buna.
+Si tehnici de IA pot fi folosite.
+Este un sablon pt alte probleme:
+Avem N localitati care trebuie interconectate ( o retea in inel).
+Care este ordinea de interconectare a.i. lungime totala a cablului folosit sa fie minima?
+
+const int N=4;
+int main(){
+ int dist[N][N];//dist[i][j]=distanta dintre localitatile i si j
+//orasele sunt: 0,1,2,...,N-1
+ int i,j;
+ int distMax=0;
+ for(i=0;i<N-1;i++)
+    for(j=i+1;j<N;j++){
+      cin>>dist[i][j];
+      dist[j][i]=dist[i][j];
+      if(dist[i][j]>distMax)distMax=dist[i][j];}
+
+ for(i=0;i<N;i++)dist[i][i]=0;
+ 
+ int vizitat[N];//vizitat[i]: orasul i afost deja vizitat
+ for(i=0;i<N;i++)vizitat[i]=0;
+ int ordineOrase[N];
+ //Putem pleca dintr-un oras de start, nu neaparat 0
+ int start;//oras de start
+ cin>>start;
+ vizitat[start]=1;
+ ordineOrase[0]=start;
+ int orasCrt=start;
+ int orasNext;
+ //Completam vectorul ordineOrase[] folosind Greedy:
+ for(i=1;i<N;i++){
+   //ne deplasam din orasCrt in orasul nevizitat, care este cel mai aproape de orasCrt.
+   //Vom calcula distantele fata de orasCrt, vom calcula un minim:
+   int distMin=distMax+1;
+   //parcurg orasele:
+   for(j=0;j<N;j++)
+      if(vizitat[j]==0 && dist[orasCrt][j]<distMin){
+        //am gasit un minim mai bun, un oras mai apropiat de orasCrt:
+        distMin=dist[orasCrt][j];
+        orasNext=j;}
+   //Se va deplasa din orasCrt in orasNext:
+   ordineOrase[i]=orasNext;
+   vizitat[orasNext]=1;
+   orasCrt=orasNext;
+ }
+ //afisare ordine de vizitare:
+ for(i=0;i<N;i++)
+  cout<<ordineVizitare[i]<<" ";
+ //se va intoarce in orasul start:
+ cout<<start;
+ return 0;
+}
+
+
+///////////////////////
+C++ Standard Library furnizeaza functia sort() pt sortarea unui vector de elemente ( de fapt 
+se poate sorta doar o portiune specificata din vector).
+Prototip pt a sorta crescator:
+template 
+void sort(T first, T last);
+
+Pt a sorta dupa o ordine specificata de functia comp:
+
+template
+void sort(T first, T last, Compare comp);
+
+Observatie: este definita in headerul algorithm
+Parametrii lui sort():
+adresa din vector a primului element, adresa din vector a ultimului,
+ optional, al treilea parametru: o functie de comparare
+
+Implicit: sortare crescatoare
+Combinatie de quicksort, heapsort si insertion sort
+Exemplul 1:
+Citim N numere intregi intr-un vector.
+Sa-l sortam crescator cu functia sort().
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+    int N;
+    cout<<"N="; cin>>N;
+    int a[N];
+
+    for(int i=0;i<N;i++){
+        cout<<"nr=";
+        cin>>a[i];
+    }
+    //numele vectorului: adresa primului element
+    sort(a,a+N);
+    for(int i=0;i<N;i++)
+        cout<<a[i]<<" ";
+  
+    return 0;
+}
+
+
+Exemplul 2
+Sortare descrescatoare a unuiu vector de numere intregi:
+#include <iostream>
+#include<algorithm>
+using namespace std;
+bool compara(int a, int b){
+  if(a>=b)return true;
+  else return false;
+}
+int main()
+{
+    int N=5;//dimensiune vector
+    int a[N]={1,8,7,4,6};
+
+    sort(a, a+N,compara);
+    for(int i=0; i<N; i++)
+        cout<<a[i]<<" ";
+    return 0;
+}
+
+
+Exemplul 3:
+ Sortam un vector de puncte (structura punct), crescator dupa distanta fata de origine:
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+using namespace std;
+typedef struct{
+  int x;
+  int y;
+  }punct;
+
+bool comparare(punct a, punct b){
+  double dist_a=sqrt(a.x*a.x+a.y*a.y);
+  double dist_b=sqrt(b.x*b.x+b.y*b.y);
+  if(dist_a<=dist_b)return true;
+  else return false;
+}
+int main()
+{
+    int N;
+    cout<<"N="; cin>>N;
+    punct p[N];
+    for(int i=0;i<N;i++){
+        cout<<"x="; cin>>p[i].x;
+        cout<<"y="; cin>>p[i].y;
+    }
+
+    sort(p,p+N,comparare);
+    for(int i=0;i<N;i++)
+        cout<<p[i].x<<" "<<p[i].y<<endl;
+
+    return 0;
+}
+
+
+METODA BACKTRACKING
+Metoda se aplica atunci cand solutia se poate pune sub forma unui vector
+(ex: cand se cer toate permutarile unei multimi, sau ordinea de vizitare a oraselor- la
+problema comis voiajor, etc)
+Notam vectorul solutie cu X (X[0],X[1],.., X[N-1]).
+In general se cer toate solutiile posibile (ex: toate permutarile unei multimi)
+sau, se cere cea mai buna solutie( comis voiajor: cea mai buna ordine de vizitare).
+In cazul cand se cere cea mai buna solutie, prin backtracking le vom genera pe toate (ca la permutari),
+si vom alege pe cea mai buna.
+Care este pretul platit ca trebuie calculate toate solutiile ? Timpul de executie.
+Putem aplica backtracking pt a rezolva exact problema comis voiajor, doar daca N (nr e orase) este mic.
+Alte exemple de probleme ce se rezolva prin backtracking:
+-generare aranjamente
+-generare combinari
+-multimea partilor unei multimi (taote submultimile unei multim de N elemente - sunt 2^N submultimi)
+-problema colorarii hartii
+-problema monezilor
+ ...
+La problema rucsacului, desi se poate aplica backtracking, este ineficient (Greedy da totdeauna cea mai buna
+solutie si nu are rost sa calculam toate variantele posibile )
+
+Sunt doua variante de implementare:
+- varianta iterativa
+- varianta recursiva (mai usor de implementat)
+
+MET. BACKTRACKING - varianta recursiva
+ Vectorul sol. este construit progresiv, componenta cu componenta, incepand cu X[0], 
+apoi X[1],...
+Se fac reveniri la componentele anterioare.
+IMPORTANT:
+   Pentru fiecare componenta X[k] trebuie cunoscuta multimea  in care poate sa ia valori .
+Ex: permutarea lui a={1,7,4}
+Solutia: X[0],X[1],X[2]
+Aici, multime de valori posibile este aceeasi pt fiecare componenta X[k]: {1,7,4}
+
+Sunt probleme in care comp. au multimi diferite in care pot lua valori.
+Ex: problema monezilor.
+S=121
+tipMonezi={1,20,50}
+X[k]=nr monezi pe care le folosim din moneda tipMonezi[k]
+X[k] apartine multimii S_k
+X[0] apartine {0,1,..121}
+X[1] apartine {0,1,2,..,6}
+X[2]: {0,1,2}
+ALgo pt bactracking:
+Se da lui X[k] o valoare disponibila din multime S_k
+Nu trecem la atribuirea urmatoarei componente X[k+1] valoarea, pana nu verificam
+ daca cu X[k] atribuit, solutia partiala este corecta.
+Ex. permutari: permutarea lui a={1,2,3}
+Dam lui X[0] prima val. disponibila: X[0]=1
+  Este corecta aceasta solutie partiala ? Da
+
+Trecem la X[1] si-i dam prima valoare disponibila: X[1]=1
+Este corecta acesta sol. partiala ? X[0]=1, X[1]=1 
+NU este corecta. Atunci ii dam lui X[1] urm. valoare disponibila: X[1]=2
+Este corecta aceasta sol. partiala ? X[0]=1, X[1]=2
+DA.
+Trecem la X[2]. Ii dam prima val. disponibila: X[2]=1
+Este corect: X[0]=1,X[1]=2,X[2]=1  ?
+NU
+Dam pt X[2]=2
+Este corect : 1,2,2 ?
+NU
+Facem pe X[2]=3
+Este corect 1,2,3 ? 
+DA
+Afisam prima permutare 1, 2, 3
+
+Trebuie sa le afisam pe toate, deci continuam:
+Dam urm. val. disponibila pt X[2].
+NU mai sunt valori disponibile.
+Facem deci pasul inapoi (backtracking). Mergem la X[1] si dam urm. val disponibila:
+X[1]=3 (X[0] a ramas 1)
+
+
+Dam valoare lui X[2]:
+X[2]=1 
+1,3, 1 NU e bine
+Urm. valoare pt X[2]:
+X[2]=2
+1,3, 2
+Da, este corect
+Recap:
+a={1,2,3}  Avem 6 permutari.
+Ordinea de generare a permutarilor este urmatoarea:
+
+   X[0]           X[1]            X[2]
+ 1   2  3       1   2  3       1   2   3
+
+1,2,3
+1,3,2
+2,1,3
+2,3,1
+3,1,2
+3,2,1
+
+
+Scriem in C, programul pt a calcula permutarile unei multimi a ( vector 
+ce are toate elementele diferite intre ele):
+Folosim variabile globale pt a nu avea antete mai complicate de functii!
+#include <iostream>
+
+using namespace std;
+//var. globale:
+const int N=3;//dim. vector
+//Oblig. tb sa-l dau pe N ca si constanta, altfel in CodeBlocks eroare la compilare
+int a[N]={1,2,3};//multimea ce trebuie permutata
+int X[N];//vectorul solutie ( reprezinta o permutare a multimii a)
+void afisare();
+int valid(int k);
+void back(int k);
+int main(){
+ back(0);
+ return 0;
+}
+
+void back(int k){
+ //da urmatoarea valoare disponibila pt X[k]:
+ //S-a completat vectorul solutie ?
+ int i;
+ if(k==N)afisare();
+ else{
+   //dam urm. val. dispo. pt X[k]: (cu for se parcurge sirul de valori disponibile)
+   for(i=0;i<N;i++){
+       X[k]=a[i];
+       //este corecta solutia partiala gasita ? X[0],X[1],..., X[k] ?
+       if(valid(k))back(k+1);
+   }
+ }
+}
+
+//Functia valid difera de la problema la problema:
+int valid(int k){
+  //Stim ca X[0],X[1],...,X[k-1] este valida
+  //Adaugand pe X[k], solutia partiala X[0],X[1],...,X[k-1],X[k] este valida ?
+  //Trebuie ca X[k] sa fie diferit de toate: de X[0], de X[1], ..., de X[k-1]
+  for(int i=0;i<=k-1;i++)
+     if(X[k]==X[i])return 0;
+  return 1;
+}
+
+void afisare(){
+ for(int i=0;i<N;i++)
+   cout<<X[i]<<" ";
+ cout<<endl;
+}
+

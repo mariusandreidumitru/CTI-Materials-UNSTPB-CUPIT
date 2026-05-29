@@ -1,0 +1,578 @@
+Curs 12 2023-2024
+
+TEMA DE CASA pana la ultimul curs (pe moodle se va posta)
+
+1. Citim N. Citim N cuvinte. 
+ Afisati daca sunt toate egale intre ele sau nu.
+
+2. Citim un sir. Sa se inverseze cele doua jumatati intre ele.
+(in acelasi sir!)
+Ex:
+s="ABCD"
+Dupa inversare:
+s="CDAB"
+
+Ex:
+s="ABCDE"
+Las mijlocul fix
+s, dupa inversare:
+s="DECAB"
+
+3.Citim un sir s.
+Sa formam sirul s1, ce contine car. de pe poz. impare si s2, de pozitiile 
+pare.
+Ex: s="ABCDE"
+s1="BD"
+s2="ACE"
+
+4. (facultativ)
+Adunam doua numere foarte lungi, citite ca siruri (nu se pot citi ca int sau long).
+1234567890987654321+
+   5555555555999999
+-------------------
+?
+
+
+
+
+
+SIRURI DE CARACTERE (continuare)
+
+FUNCTIA strcpy()
+ Este folosita pentru a copia un sir in alt sir.
+Atentie:
+ Un sir NU se copiaza in alt sir cu operatorul de atribuire !
+ Ex:
+ char s1[10]="abc";
+ char s2[10];
+ //copiez pe s1 in s2:
+ s2=s1; //GRESIT !!!
+Putem scrie noi o functie care sa copieze sirul s1 in sirul s2:
+void copiere(char* s2, char* s1){
+  int i;
+  for(i=0;i<=strlen(s1);i++) //este <= pt a copia si 0-ul terminal din s1
+     s2[i]=s1[i];
+}
+int main(){
+ char s1[10]="abc";
+ char s2[10];
+ copiere(s2,s1);
+ cout<<s2;
+ return 0;
+}
+
+Este evident ca nu are rost sa scriem o functie care este 
+deja in biblioteca !
+Pentru copiere avem functia de biblioteca: strcpy()
+ strcpy(char* destinatie, char* sursa)
+int main(){
+ char s1[10]="abc";
+ char s2[10];
+ strcpy(s2,s1);
+ cout<<s2;
+ return 0;
+}
+
+Exemplu:
+Citim 3 siruri de la tastatura.
+Care este sirul care are cea mai mare lungime ?
+Ex:
+s1="abc";
+s2="xy";
+s3="aaaa"
+Rezultat="aaaa"
+
+int main(){
+ char s1[100];//acoperitor
+ char s2[100];//acoperitor
+ char s3[100];//acoperitor
+ cout<<"sir1=";
+ cin.get(s1,100);
+  cin.get();//descarca caracterul ENTER din bufferul tastaturii
+ cout<<"sir2=";
+ cin.get(s2,100);
+  cin.get();
+ cout<<"sir3=";
+ cin.get(s3,100);
+
+ int lMax=strlen(s1);
+ char sMax[100];
+ //Initializez sMax cu s1:
+ //sMax=s1; GRESIT !!!
+ strcpy(sMax,s1);
+ if(strlen(s2)>lMax){
+    lMax=strlen(s2);
+    strcpy(sMax,s2);
+ }
+ if(strlen(s3)>lMax){
+   lMax=strlen(s3);
+   strcpy(sMax,s3);
+ }
+ cout<<"lung max = "<<lMax<<endl;
+ cout<<"sirul de lungime maxima = "<<sMax;
+ return 0;
+}
+
+FUNCTIA strcat()
+ Este folosita pt a concatena ( a alipi) doua siruri.
+ strcat(char* s2, char* s1)
+Lipeste la sfarsitul sirului s2 pe sirul s1.
+Ex:
+ char s1[100]="abc";
+ strcat(s1,"1234");
+ cout<<s1;//abc1234
+
+Ex:
+ Citim un nume. Citim un prenume.
+ Sa construim sirul numeComplet.
+nume="Popescu"
+prenume="Ion"
+Atunci:
+numeComplet="Popescu Ion"
+
+int main(){
+ char nume[40];
+ char prenume[40];
+ char numeComplet[80];
+ cout<<"nume="; cin.get(nume,40);cin.get();
+ cout<<"prenume="; cin.get(prenume,40);
+ //copiez nume in numeComplet:
+ strcpy(numeComplet, nume);
+ strcat(numeComplet," ");
+ strcat(numeComplet,prenume);
+ cout<<numeComplet;
+ return 0;
+}
+
+FUNCTIA strcmp()
+  este folosita pt a compara doua siruri d.p.v al ordinii 
+lexicografice ( o generalizare a ordinii alfabetice, prin compararea
+codurilor ASCII)
+int strcmp(char* s1, char* s2)
+Daca s1 este egal cu s2 (acelasi continut) va returna 0.
+Daca s1>s2 (in sens lexicografic) va returna un numar >0
+Daca s1<s2 (in sens lexicografic) va returna un numar <0
+
+Regula mnemotehnica: ca si cum ar returna s1-s2
+ 
+Citim doua siruri s1 si s2. Sunt egale intre ele ?
+Atentie: NU se compara pt egalitate cu operatorul ==
+
+char s1[100], s2[100];
+cin.get(s1,100); cin.get();
+cin.get(s2,100);
+if(strcmp(s1,s2)==0)cout<<"sunt egale";
+else cout<<"nu";
+
+Exemplu:
+ Citim N cuvinte. Cate cuvinte sunt egale cu primul cuvant citit ?
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    cin.get();
+    //citim primul cuvant:
+    char primulCuvant[100];
+    cout<<"cuvant="; cin.get(primulCuvant,100);
+    cin.get();
+    //citesc restul cuvintelor:
+    int i;
+    char cuvant[100];
+    int contor=0;
+    for(i=2;i<=N;i++){
+        cout<<"cuvant=";
+        cin.get(cuvant,100);
+        cin.get();
+        //este egal cu primul?
+        if(strcmp(cuvant,primulCuvant)==0)contor++;
+    }
+    cout<<"contor="<<contor;
+    return 0;
+}
+
+Exemplu:
+Citim s1 si s2 doua siruri.
+Vrem sa le aranjam in ordine alfabetica.
+Ex:
+s1="Popescu"
+s2="Ion";
+Atunci:
+s1="Ion";
+s2="Popescu";
+
+char s1[100]; cin.get(s1,100); cin.get();
+char s2[100]; cin.get(s2,100); 
+if(strcmp(s1,s2)>0){
+ //le interchimbam:
+ char aux[100];
+ strcpy(aux,s1);
+ strcpy(s1,s2);
+ strcpy(s2,aux);
+}
+cout<<s1<<endl<<s2;
+
+Alte functii:
+  strchr() cauta un caracter intr-un sir
+  strstr() cauta un cuvant intr-un sir
+  strupr() converteste la litere mari
+  strlwr() converteste la litere mici
+  atoi() - converteste un string numeric la numar intreg
+        Ex: "123" ---> 123
+  itoa() - converteste un int la string
+        Ex: 123 ---> "123"
+  strtok() - pentru a extrage cuvintele (componentele) dintr-un sir.
+Ex: "Ana   are mere" - care e cel mai lung cuvant? 
+                       - cate cuvinte sunt ?
+Ex: Avem timpul: "12:34:20" - cate secunde sunt?
+Cu strtok() extrag cele 3 componente: "12", "34", "20"
+ Apoi cu functia atoi() le convertim la int.
+
+VECTORI DE SIRURI
+Cel mai simplu este sa definim cu typedef tipul de date sir.
+Ex:
+typedef char sir[100];// sir este un tip de date ce reprezinta un string de max. 99 car.
+sir v[100];
+Aplicatie:
+ Citim N cuvinte . Sa afisam daca sunt toate diferite intre ele sau nu.
+Va trebui sa memoram cuvintele intr-un vector de stringuri.
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+typedef char str[100];
+int toateDiferite(str v[],int N);
+int main()
+{
+    int N; cout<<"N="; cin>>N; cin.get();
+    str v[N];
+    int i;
+    for(i=0;i<N;i++){
+       cout<<"cuvant=";
+       cin.get(v[i],100);
+       cin.get();
+    }
+    int rezultat=toateDiferite(v,N);
+    if(rezultat==1)cout<<"toate diferite";
+    else cout<<"nu";
+    return 0;
+}
+int toateDiferite(str v[],int N){
+  int i,j;
+  for(i=0;i<N-1;i++)
+     for(j=i+1;j<N;j++)
+       if(strcmp(v[i],v[j])==0)return 0;
+  return 1;
+}
+
+Citim N cuvinte. Folosind algo de sortare prin interschimbare, 
+sa sortam alfabetic cele N cuvinte.
+
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+typedef char str[100];
+void sortare(str v[],int N);
+int main()
+{
+    int N; cout<<"N="; cin>>N; cin.get();
+    str v[N];
+    int i;
+    for(i=0;i<N;i++){
+       cout<<"cuvant=";
+       cin.get(v[i],100);
+       cin.get();
+    }
+    sortare(v,N);
+    //afisare:
+    for(i=0;i<N;i++)cout<<v[i]<<endl;
+    return 0;
+}
+void sortare(str v[],int N){
+  int i,j;
+  for(i=0;i<N-1;i++)
+     for(j=i+1;j<N;j++)
+       if(strcmp(v[i],v[j])>0)
+          swap(v[i],v[j]);//sau cu regula paharelor, folosind 
+                        //de 3 ori strcpy()
+}
+ 
+
+/////
+ STRUCTURI 
+Ce este o structura ?
+Este un tip compus de date care grupeaza mai multe date de acelasi tip 
+sau de tipuri diferite.
+Avantajul lor:
+ program mai usor de inteles.
+ Modeleaza mai bine aplicatia.
+
+In alte lb de programare sunt denumite record-uri. 
+Se declara cu cuv. cheie struct.
+Ex: structura punct ce are doua campuri: x si y coordonate punct in plan
+Cuv. cheie struct si intre acolade se enumera campurile structurii.
+
+struct{
+  int x;
+  int y;
+} p1, p2;
+
+Daca vrem in alta parte in program sa declaram o alta varibila p3
+de tipul structura punct:
+struct{
+  int x;
+  int y;
+} p3;
+
+O solutie mai eleganta este sa declar structura folosind declaratia typedef , dandu-i un nume, astfel:
+typedef struct{
+      int x; 
+      int y;} punct;
+Declaram oriunde vrem in program variabile de tip structura punct astfel:
+punct p1,p2;
+...
+punct p3;
+
+Exemplu:
+typdef struct{
+     char nume[31];
+     char prenume[31];
+     int varsta;
+     double medie;
+} elev;
+
+elev e1, e2;//variabile e1 si e2 de tip structura
+
+
+CUM SE ACCESEAZA CAMPURILE UNEI VARIABILE DE TIP STRUCTURA ?
+  Cu ajutorul operatorului .
+
+typedef struct{
+      int x; 
+      int y;} punct;
+punct p1,p2;
+
+ p1.x=3; p1.y=2;
+
+Ex:
+typdef struct{
+     char nume[31];
+     char prenume[31];
+     int varsta;
+     double medie;
+} elev;
+
+elev e;
+e.varsta=12;
+//Cum scriu in campul nume , numele Popescu ?
+// NU asa: e.nume="Popescu"; 
+strcpy(e.nume, "Popescu");
+
+CUM SE ACCESEAZA CAMPURILE UNEI VARIABILE struct ATUNCI CAND II STIM ADRESA ?
+ Se foloseste operatorul ->
+punct p;
+p.x=7; p.y=11;
+punct* adr_p=&p;
+
+adr_p->x=100;//am scris 100 in p.x
+
+Se va folosi acest mod de accesare, intensiv,  la liste inlantuite, arbori, etc.
+CITIREA DE LA TASTATURA a unei varibile struct: 
+  nu se face global, ci camp cu camp.
+
+ AFISAREA unei variabile struct:
+  nu se face global, ci camp cu camp
+
+COMPARAREA pt a vedea daca doua variabile struct de acelasi tip sunt egale:
+  nu se face global cu operatorul ==, ci se face camp cu camp.
+
+COPIEREA unei variabile structuri intr-o variabila de acelasi tip, se face direct, cu operatorul de 
+atribuire =.
+Ex: Citim doua puncte p1, p2. Sa afisam daca sunt egale intre ele.
+
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+typedef struct{
+  int x;
+  int y;} punct;
+int main()
+{
+    punct p1,p2;
+    //cin>>p1; GRESIT, se citeste camp cu camp!
+    cout<<"x1=";cin>>p1.x;
+    cout<<"y1=";cin>>p1.y;
+    cout<<"x2=";cin>>p2.x;
+    cout<<"y2=";cin>>p2.y;
+    //este egal p1 cu p2?
+    //if(p1==p2) GRESIT, tb. comparate camp cu camp:
+    if(p1.x==p2.x && p1.y==p2.y)cout<<"egale";
+    else cout<<"nu egale";
+    cout<<endl;
+    punct p3;
+    p3=p1;
+    cout<<"x3="<<p3.x<<" y3="<<p3.y;
+    return 0;
+}
+
+Ex : sa comutam doua puncte intre ele
+#include <iostream.h>
+using namespace std;
+typedef struct{
+      int x; 
+      int y;} punct;
+int main(){
+ punct p1,p2;
+ cout<<"x1="; cin>>p1.x;
+ cout<<"y1="; cin>>p1.y;
+ cout<<"x2="; cin>>p2.x;
+ cout<<"y2="; cin>>p2.y;
+ punct aux;
+ aux=p1;
+ p1=p2;
+ p2=aux;
+ cout<<"dupa interschimbare: p1="<<p1.x<<" "<<p1.y<<" p2="<<p2.x<<" "<<p2.y;
+ return 0;
+}
+
+EXEMPLU DE FUNCTII CE AU CA PAR. STRUCTURI
+Sa scriem o functie ce are ca parametru o variabila p, de tipul punct.
+Functia returneaza distanta lui p fata de origine.
+
+typedef struct{
+      int x; 
+      int y;} punct;
+
+double distanta(punct p){
+  return sqrt(p.x*p.x+p.y*p.y);
+}
+
+ Fie structura de nr complex:
+typedef struct{
+  double re;
+  double im;
+} complex;
+
+Citim doua numere complexe c1 si c2. Folosind o functie separata sa calculam si sa returnam suma lor.
+
+(Obs: o functie poate returna o structura!)
+
+
+typedef struct{
+  double re;
+  double im;
+} complex;
+
+complex suma(complex c1, complex c2){
+  complex s;//suma c1+c2
+  s.re=c1.re+c2.re;
+  s.im=c1.im+c2.im;
+  return s;
+}
+
+int main(){
+ complex c1,c2;
+ cin>>c1.re; cin>>c1.im;
+ cin>>c2.re; cin>>c2.im;
+ complex rezultat;
+ rezultat=suma(c1,c2);
+ cout<<rezultat.re<<"  "<<rezultat.im;
+ return 0;
+}
+
+VECTORI DE STRUCTURI
+Citim N numere complexe intr-un vector. Sunt toate diferite intre ele ?
+
+#include ..
+using namespace std;
+typedef struct{
+  double re;
+  double im;
+} complex;
+
+int toateDiferite(complex c[], int N);
+int main(){
+ int N; cin>>N;
+ complex c[N];
+ int i;
+ for(i=0;i<N;i++){
+  cin>>c[i].re;
+  cin>>c[i].im;}
+ int sunt=toateDiferite(c,N);
+ if(sunt==1)cout<<"da, sunt";
+ else cout<<"nu";
+ return 0;
+}
+int toateDiferite(complex c[], int N){
+ int i, j;
+ for(i=0;i<N-1;i++)
+   for(j=i+1;j<N;j++)
+     //este c[i] egal cu c[j] ?
+     if(c[i].re==c[j].re && c[i].im==c[j].im) return 0;
+ return 1;
+}
+
+
+Citim doua variabile elev (structura elev). Care are media mai mare?
+typdef struct{
+     char nume[31];
+     char prenume[31];
+     int varsta;
+     double medie;
+} elev;
+
+elev e1,e2;
+//Citim primul elev:// nu citesc asa: cin>>e1.nume;
+cout<<"nume="; cin.get(e1.nume, 31);
+cin.get();
+cout<<"prenume="; cin.get(e1.prenume, 31);
+cin.get();
+cout<"varsta="; cin>>e1.varsta;
+cout<<"medie="; cin>>e1.medie;
+//Citim al doilea elev:
+.....
+
+//Care are media mai mare ?
+if(e1.medie>e2.medie)cout<<e1.nume<<" "<<e1.prenume;
+else if(e1.medie==e2.medie)cout<<"egale";
+else cout<<e2.nume<<" "<<e2.prenume;
+
+Exemplu:
+ Citim N numere complexe intr-un vector.
+ Sa calculam suma lor.
+#include <iostream>
+
+using namespace std;
+typedef struct{
+ double re;
+ double im;} complex;
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    complex c[N];
+    int i;
+    for(i=0;i<N;i++){
+        cout<<"re="; cin>>c[i].re;
+        cout<<"im="; cin>>c[i].im;
+    }
+    //Calcul suma celor N numere complexe:
+    complex suma;
+    suma.re=0;
+    suma.im=0;
+    for(i=0;i<N;i++){
+        suma.re=suma.re+c[i].re;
+        suma.im=suma.im+c[i].im;
+    }
+    cout<<"suma_re="<<suma.re<<" suma_im="<<suma.im;
+    return 0;
+}
+
+Tema (nu pe moodle)
+Care este numarul din vector ce are cel mai mare modul ?
+modul nr complex=radical(re*re+im*im)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+

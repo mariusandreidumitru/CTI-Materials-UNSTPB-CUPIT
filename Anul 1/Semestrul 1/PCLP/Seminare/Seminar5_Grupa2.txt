@@ -1,0 +1,237 @@
+TEMA PT. SEMINARUL URMATOR (se va verifica printr-un scurt test !!!)
+1. Citim un numar natural. Nu stim cate cifre are.
+   Calculati cate cifre pare are.
+
+2. Citim N. Citim N numere naturale.
+Calculati cel mai mare divizor comun al celor N numere.
+
+3. Se citesc a si b, doua numere naturale.
+ Calculati cate numere prime sunt in intervalul [a,b].
+
+TEMA pt seminarul 5 (SOLUTII):
+GRUPA 2
+A. Citim un numar real nr. Sa afisam daca a doua zecimala este 
+egala cu a treia sau nu.
+Ex1: nr=12.3447  A doua zecimala =4, a treia este 4 Deci sunt egale
+Ex2: nr=1.2345  NU 
+Ex3: nr=1.2 Sunt ambele 0, deci ewgale 
+Ideea:
+  double nr; cin>>nr;
+  int nr1=nr*100;
+  int zecimala_2=nr1%10;
+  
+
+B. Citim N, nr natural. Citim N numere intregi.
+Cate numere patrat perfect am introdus.
+#include <iostream>
+#include <math.h>
+using namespace std;
+int main()
+{
+    int N;
+    int numerePatratPerfect = 0;
+    cout << "Introduceti nr de numere: ";
+    cin >> N;
+    for (int i=1;i<=N;i++){
+        int numar;
+        cout <<"Introduceti numarul " << i << ":";
+        cin >> numar;
+        int este;
+        if(numar<0)este=0;
+        else{
+            int radical=sqrt(numar);
+            if(radical*radical==numar)este=1;
+            else este=0;
+        }
+       
+         if(este==1)numerePatratPerfect++;
+        
+    }
+    cout << "Ati introdus" << numerePatratPerfect;
+    return 0;
+}
+
+C. Citim N, nr natural. Citim N numere intregi.
+Afisati care numar are cea mai mare cifra a zecilor.
+Exemplu:
+ N=3
+ nr=717
+ b=80
+ c=12345
+Se va afisa: nr 80 are cea mai mare cifra a zecilor
+Ideea?
+
+cifraZeciMax=0;
+int nrFinal;//nr cu cea mai mare cifra a zecilor
+for(i=1;i<=N;i++){
+   cin>>nr;
+   int zeci=(nr/10)%10;
+   if(zeci>cifraZeciMax){
+       cifraZeciMax=zeci;
+       nrFinal=nr;
+   }
+}
+cout<<nrFinal;
+Cazul in care nu da rezultate corecte?
+
+N=3
+106, 1100, 708
+
+Mai corect:
+cin>>nr;
+cifraZeciMax=nr/10%10;
+nrFinal=nr;
+//citesc restul numerelor:
+for(i=2;i<=N;i++){
+   cin>>nr;
+   int zeci=(nr/10)%10;
+   if(zeci>cifraZeciMax){
+       cifraZeciMax=zeci;
+       nrFinal=nr;
+   }
+}
+cout<<nrFinal;
+
+
+SEMINAR 6
+IF MULTIPLU, exemplu:
+Citim a,b, c numere reale. Sa rezolvam ecuatia de gradul doi:
+ax^2 + bx + c=0
+Discernem 3 cazuri:
+-x1, x2 radacini reale diferite intre ele (delta>0)
+-x1=x2 (delta=0)
+-x1 si x2 radacini complexe (delta<0)
+
+#include <iostream>
+#include <math.h>
+using namespace std;
+int main()
+{
+    double a,b,c,x1,x2;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    cout<<"c="; cin>>c;
+    if(a==0){
+        cout<<"a trebuie sa fie diferit de 0";
+    }else{
+      double delta;
+      delta=b*b-4*a*c;
+      if (delta<0)cout<<"radacini complexe";
+      else if (delta==0){
+        x1=-b/(2*a);
+        x2=-b/(2*a);
+        cout<<"x1=x2="<<x1;
+      }
+      else {
+        x1=(-b+sqrt(delta))/(2*a);
+        x2=(-b-sqrt(delta))/(2*a);
+        cout<<"x1="<<x1<<endl;
+        cout<<"x2="<<x2<<endl;
+      }
+    }
+    return 0;
+}
+
+Instructiunea for
+Sa calculam suma urmatoare:
+  S=1^3+2^3+...+N^3
+#include <iostream>
+#include <math.h>
+using namespace std;
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int suma=0;
+    int i;
+    for(i=1;i<=N;i++)
+        suma=suma+i*i*i;
+    cout<<"suma="<<suma;
+    return 0;
+}
+
+
+Sa calculam suma urmatoare ce are N termeni:
+  S=1^3-2^3+3^3-4^3+..
+Indicatie:
+  daca i este par, se scade
+  daca i este impar, se aduna
+
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int suma=0;
+    int i;
+    for(i=1;i<=N;i++)
+        if(i%2==0)suma=suma-i*i*i;
+        else suma=suma+i*i*i;
+    cout<<"suma="<<suma;
+    return 0;
+}
+
+
+Sa se calculeze produsul: 1*2*...*N ( calcul N!)
+Obs:
+  Se repeta inmultirea
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int produs=1;
+    int i;
+    for(i=1;i<=N;i++)
+        produs=produs*i;
+    cout<<produs;
+    return 0;
+}
+
+N=3 produs=6
+N=20
+produs=-2102132736 (!!!) S-a depasit capacitatea de memorare intr-un int !
+
+Citim N numere de la tastatura. Sa calculam produsul lor.
+ALGORITM
+  produs=1
+  pentru i=1,N repeta
+       citesc nr
+       produs=produs*nr
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int produs=1;
+    int i;
+    int nr;
+    for(i=1;i<=N;i++){
+        cout<<"nr="; cin>>nr;
+        produs=produs*nr;
+    }
+    cout<<produs;
+    return 0;
+}
+
+Citim doua numere intregi a si b. 
+Care numar are mai multi divizori?
+int main()
+{
+    int a,b,i,diva=0,divb=0;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    for(i=1;i<=a;i++)
+    {
+        if(a%i==0)
+            diva++;
+
+    }
+    for(i=1;i<=b;i++)
+    {
+        if(b%i==0)
+            divb++;
+    }
+    if(diva<divb)
+        cout<<"b are mai multi divizori";
+    else if(diva==divb)cout<<"nr egal de divizori";
+    else cout<<"a are mai multi divizori";
+    return 0;
+}
+
+
+
+

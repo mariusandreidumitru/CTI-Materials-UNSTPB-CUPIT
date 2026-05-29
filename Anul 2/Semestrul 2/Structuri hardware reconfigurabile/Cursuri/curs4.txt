@@ -1,0 +1,77 @@
+Proiectare structuri in VHDL
+
+SSI - ok
+MSI - ok
+1.LSI - Large Scale Integrated circuits
+1.a component
+1.b for-generate
+2. Exemplu descriere LSI
+3. Process - descrieri secventiale
+
+1.a component
+
+top-level : structura care contine mai multe componente (descrise sau nu in proiect)
+
+Lucru cu componente:
+
+1. In top-level in zona declaratii a arhitecturii: intre ARCHITECTURE si BEGIN se declara componenta (componentele).
+Conventie de notatii utilizate la structuri de instructiuni in VHDL:
+CUVANT_CHEIE_VHDL :  cu litere mari
+<parametru care se inlocuieste> : litere mici intre < si >
+[declaratii optionale - pot lipsi] : intre [ ] 
+
+COMPONENT <nume componenta cum este declarata in entity> IS 
+[
+	GENERIC (<lista generice>);
+]
+	PORT(<lista porturi>);
+END COMPONENT;
+
+2. In top-level in zona arhitecturii (dupa ARCHITECTURE) se aloca componenta.
+
+<eticheta componenta in top level> : <nume componenta cum este declarata in entity>
+[GENERIC MAP (<lista alocari generice>) ]
+PORT MAP (<lista alocari porturi>) ;
+
+<eticheta componenta in top level> reprezinta numele componentei alocate in top level. Este unic pe componenta alocata in top-level. Nu poate fi <nume componenta cum este declarata in entity> !
+
+
+1.b Utilizarea FOR ... GENERATE
+
+In cazul in care este necesara alocarea mai multor componente de acelasi tip sau se doreste initializari/conectari semnale se poate utiliza FOR ... GENERATE
+Structura instructiunii - care se apeleaza intotdeauna in ARCHITECTURE in zona unde sunt descrise circuitele (dupa BEGIN) - este urmatoarea:
+
+<eticheta bloc de componente alocate in top level> : 
+FOR <index> IN 0 TO <valoare maxima - numarul ultimei componente alocate -1> GENERATE
+	<bloc de instructiuni de alocare>
+END GENERATE;
+
+<bloc de instructiuni de alocare> : alocari de componente, atribuiri de porturi / semnale. In blocul de instructiuni de alocare <index> poate fi utilizat -pentru indexare componenta respectiv port/semnal. 
+
+Exista in completare la instructiunea FOR ... GENERATE si instructiunea IF ... GENERATE
+
+<eticheta componente alocate conditionat> : 
+IF <conditie alocare> GENERATE
+	<bloc de instructiuni alocare>
+END GENERATE;
+
+Nota : FOR ... GENERATE si IF ... GENERATE se utilizeaza NUMAI la alocari componente / atribuiri porturi semnale . Ele sunt rulate in etapa de sinteza a circuitelor. 
+
+2. Exemplu
+
+Sa se realizeze un circuit care sorteaza crescator 3 numere pe 8 biti fiecare.
+
+2.1. Semisumator
+2.2. Sumator complet pe un bit
+2.3. Sumator pe 8 biti
+2.4. Diferenta pe 8 biti
+2.5. Comparatie doua numere pe 8 biti
+2.6. Minim-maxim pe 8 biti
+2.7. Top level: sortare numere pe 8 biti
+
+
+
+
+
+
+

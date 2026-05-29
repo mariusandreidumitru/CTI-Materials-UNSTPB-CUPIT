@@ -1,0 +1,209 @@
+
+CURS 1 POO 
+
+limbajul Java (mai simplu fata de C++)
+C++=C (programare structurata)+imbunatatiri+POO
+Python (AI,...)
+
+programare structurata : limbajul C --- accent pe functii !
+Trasaturi specifice POO:
+ 1. incapsulare
+ 2. agregare (compozitie)
+ 3. mostenire
+ 4. polimorfism
+
+Ce vom studia ?
+   Clase elementare
+
+We'll study Java programming language
+   Clase elementare in Java (elementary classes: Circle, Square, etc.)
+   Specificatori de acces (access specifiers: private, public, protected, default)
+   Compozitie (Composition)
+   Arrays
+   String
+   Mostenire (inheritance)
+   Polimorfism (polymorphism)
+   Interfete (interfaces)
+   Colectii (Collections : ArrayList,...)
+   Exceptii (Exceptions)
+   Fisiere (Files: text and binaries)
+
+
+Folosit in ind. 
+
+Medii integrate de dezvoltare:
+JCreator ,Netbeans, Eclipse, InteliJ
+
+La curs folosim Eclipse.
+
+Avantaje POO vs Programare structurata
+ - se modeleza mai bine realitatea
+  Ex: interfata grafica 
+ POO: descoper obiectele ( butoane, butoane radio, meniuri,...) si relatiile 
+       dintre ele.
+ - se pot scrie programe mai mari , cu mai putine erori latente. Deci fiabilitate sporita
+
+Obiect: insusiri sau proprietati (atribute: substantive) + comportament ( ce poate face - descris prin verbe)
+Obiect masina: viteza max, culoare, marca,... = atribute
+               accelereaza, franeaza,... = comportament
+
+Obiect animal: atribute: culoare, greutate,...
+              sunetulPeCareIlScoate()
+
+insusiri: var. de instanta
+comportament, actiuni : metode (termen specific POO = functii)
+
+Obiect cerc:
+  atribute: raza, coordonate centru,...
+  comportament: aria, calculDiametru,...
+
+POO=programare cu clase
+clasa = fabrica de obiecte. Clasa= sablon din care se creeaza obiecte (se instantiaza)
+A crea un obiect dintr-o clasa= instantiere
+Instantierea se face cu operatorul new.
+Se recomanda : obiecte , nume incepe cu litera mica
+               clasa : nume , cu litera mare la inceput
+Exemplu:
+  clasa Cerc
+  obiect din clasa Cerc: c1
+ Daca clasa Cerc are ca var. de instanta raza, creem un obiect astfel:
+  Cerc c1=new Cerc(10);
+  Cerc c2=new Cerc(7);
+Exemplu:
+  clasa Dreptunghi are ca var. de instanta  lungime si latimea
+  Dreptunghi d=new Dreptunghi(20,5);
+
+O aplicatie Java consta din una sau mai multe clase.
+Pt a putea fi executata tb. sa existe o clasa (una singura!) ce contine metoda main().
+Prima instr. din main este punctul de inceput al aplicatiei.
+
+Principiu incapsularii:
+  In acelasi invelis (clasa) stau impreuna datele (var. de instanta) si metodele care le prelucreaza.
+  Membrii clasei= var. de instanta + metode
+  Accesul la membrii se face controlat de specificatori de acces.
+  Incapsularea are si rolul de ascunde datele sensibile de utilizatorii clasei.
+  Specificatorii de acces:
+   private: un element private nu poate fi accesat decat din clasa respectiva. NU poate fi accesat din afara clasei.
+   public : un element public poate fi accesat atat din clasa respectiva cat si din afara din afara clasei.
+   protected: poate fi accesat din clasa respectiva si din orice clasa derivata din clasa respectiva(mostenire) si din orice clasa ce 
+              face parte din acelasi pachet (package) cu clasa respectiva
+   acces implicit (niciun cuvant cheie):poate fi accesat din clasa respectiva si din orice clasa ce 
+              face parte din acelasi pachet (package) cu clasa respectiva
+
+
+Clase particulare:
+  - au doar metode ( echiv. cu lb. C). Nu contin variabile de instanta.
+  - au doar date ( echiv. in C cu tipul de date struct ). Nu contin functii.
+
+Clasa : o generalizare a notiunii de tip de date
+  int nr;
+  Complex c;
+  Cerc c2;
+Fiecare obiect se declara avand ca tip clasa din care face parte.
+
+
+Portabilitate la nivel binar in Java
+=Portabilitate ?
+  Posib. de a rula aceeasi aplicatie pe diverse SO
+  C: sortare.cpp --il compilez , SO Windows---> sortare.exe
+     Linux : sortare.exe NU merge 
+  Schimb strategia
+   Iau sortare.cpp ( prog. sursa , facut sub Windows). Il duc si-l compilez 
+  cu un compilator pt Unix (gcc). Rezulta un nou executabil. Va rula pe UNIX ? DA !
+  Portabilitate la nivel sursa ! Cu conditia sa folosesc instructiuni standard ! 
+ Nu clrscr()
+
+Java initial folosita pt a crea programe ce fac pag web dinamice ( animatie, ...): applet-uri
+
+sortare.java --compilatorul Java : javac --cod obiect pt un procesor IMAGINAR (virtual) JVM 
+(Java virtual machine) Rezulta fisierul .class (cod de bytes)
+Al doilea pas, in interpretorul java (java)  se face interpretarea fiecarei instructiuni  din fisierul .class 
+( pt. SO si procesorul respectiv)
+Nu mai rezulta un fisier .exe ca in lb. C
+Interpretorul Java  (care este diferit de la SO la SO) face doua lucruri:
+ -traduce de la codul de bytes (fisierul .class) in limbaj masina (pt procesorul si sistemul de operare pe care se executa aplicatia Java)
+ -executa aplicatia instructiune cu instructiune
+Ia o o instructiune, o traduce si apoi o si executa.
+Deci acelasi cod obiect (.class) poate fi rulat pe orice CPU pentru care exista un interpretor Java.
+
+Pt ca este o executie interpretata ( iau instr. crt. din fisierul .class: o traduc de la procesorul virtual la procesorul si SO 
+ de pe device-ul si o execut): este executia mai lenta !)
+
+
+ Java dezvoltata initial de firma Sun. Acum : Oracle
+
+......................
+	O aplicatie java consta din una sau mai multe clase.
+	Oblig. trebuie sa fie prezenta met. main() intr-o singura clasa,
+	pt a putea fi exec. aplicatia.
+	Prima instr din main e punctul de intrare in aplicatie.
+
+	PACHETE DE CLASE (package)
+Carti in biblioteca.
+
+Java are mii de clase.
+
+	Pentru a evita conflict de nume, nume complet clasa:
+	numePachet.numeClasa
+Ex. clasa de biblioteca Scanner folosita si pt a citi e la tastatura, se gaseste in pachetul   java.util
+    Nume complet al clasei Scanner: java.util.Scanner
+Asa se instantiaza un obiect din clasa Scanner (obiectul sc):
+     	java.util.Scanner sc=new java.util.Scanner(System.in);
+   Alte package: java.lang Ex: clasa String, clasa System
+                 java.io
+                 java.net
+etc.
+
+Evit numele complete folosind import:
+	import java.util.Scanner;
+Instantiem obiect din clasa Scanner, asa:
+	Scanner sc=new Scanner(System.in);
+
+	java.lang contine clasele de baza ale lb ( ex: String, System )
+	Este importat automat
+
+	Afisarea :
+ 	System.out.print("mesaj");
+metoda print, a obiectului out, care este definit in clasa System;
+	Afisare continut variabila:
+ 	int x=3;
+ 	//valoarea x=...
+ 	System.out.print("valoarea x="+x); 
+
++ este operator de concatenare.
+Diferenta print - println 
+ println va trece cursor pe linia urm.
+Sintaxa unei clase este in general aceasta:
+class NumeleClasei
+{
+  //membrii clasei:
+  //var. de instanta:
+     //pot sa nu fie !
+  //metode:
+     //pot sa nu fie !
+}
+
+Cea mai simpla clasa pe care sa o putem si executa, nu are var. de instanta,
+are doar o singura metoda: main()
+
+Primul program Java:
+class PrimulProgram
+{
+  public static void main(String args[]){
+    System.out.println("Cautati mai intai Imparatia lui Dumnezeu !\nsi neprihanirea Lui");
+  }
+}
+
+	import java.util.Scanner; 
+	class Divizori{
+ 	public static void main(String args[]){
+  		int nr; 
+  		Scanner sc=new Scanner(System.in);
+  		nr=sc.nextInt(); 
+  		int i;
+  		for(i=1;i<=nr;i++)
+     			if(nr%i==0)System.out.println(i);
+	 }
+	} 
+/////////////////////////////
+

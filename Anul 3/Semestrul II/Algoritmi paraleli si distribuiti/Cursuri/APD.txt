@@ -1,0 +1,2 @@
+Parallel Optimization of Program Instructions Using Genetic Algorithms - https://www.techscience.com/cmc/v67n3/41625
+Evolution of Hybrid Cellular Automata for Density Classification Problem - https://www.mdpi.com/2073-8994/16/5/599

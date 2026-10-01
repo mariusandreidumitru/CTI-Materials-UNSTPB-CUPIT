@@ -1,0 +1,153 @@
+
+PROIECT #2
+
+
+TEMA PT. CURS 2:
+ Vom salva fisierul text intr-un vector de String si facem 
+cautare liniara in aceste vector - titlul si autorul cititi de la tastatura)
+Structura fisier:
+                Amintiri din copilarie
+		Ion Creanga
+		10
+		Marile sperante
+		Charles Dickens
+		7
+		Poezii
+		Mihai Eminescu
+                20
+La curs: salvare fisier text in vector de Stringuri, de dimensiune acoperitoare
+Pt. proiectul final veti realiza si cautarea liniara in vectorul de String
+
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		final int N_MAX_LINII=1000;
+		String biblioteca[]=new String[N_MAX_LINII];
+		int N=0;//numarul real de linii din fisier
+		try {
+			FileReader fr=new FileReader("carti.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			//citire linie cu linie:
+			int i=0;//index in vector biblioteca[]
+			for(;;) {
+				String s=bfr.readLine();
+				if(s==null)break;
+				biblioteca[i]=s;
+				i++;
+			}
+			N=i;
+			bfr.close();
+			fr.close();
+		}catch(IOException e) {
+			System.exit(1);
+		}
+		//Verificam ca a fost salvat corect fisieru in vector:
+		for(int i=0;i<N;i++)
+			System.out.println(biblioteca[i]);
+	}
+
+}
+
+TEST LA CURS:
+1. In clasa A avem constructorul: public A(int x, int y)
+    a. Creati un obiect din clasa A
+            A obj=new A(3,5);
+    b. In clasa A este metoda publica: public double f(). Dati un exemplu de apel din afara clasei A si apoi 
+        propuneti o implementare pt metoda f()
+            A obj=new A(3,5);
+            double rezultat=obj.f();
+        public double f(){
+            return (x+y)/2.0;
+       }
+            
+    c. Care este smnatura metodei parseDouble() daca ea se apeleaza astfel:
+        double rezultat=Double.parseDouble("12.34");
+       In ce clasa este ea definita? 
+        public static double parseDouble(String s)
+        din clasa Double
+
+
+2. In clasa B avem constructorul: public B(char ch)
+    a. Creati un obiect din clasa B
+          B obj=new B('A');
+    b. In clasa B este metoda publica: public void f(). Dati un exemplu de apel din afara clasei B si apoi 
+       propuneti o implementare pt metoda f()
+          B obj=new B('A');
+          obj.f();
+      public void f(){
+           System.out.println(ch);
+      }
+          
+    c. In clasa C avem metoda cu semnatura urmatoare:
+           public static int f(int x)
+       Dati un exemplu de apel din afara clasei C pentru metoda f.
+             int rezultat=C.f(7);
+
+
+Vom realiza prima aplicatie (cautare liniara in vector de stringuri) din cele 3, astfel: 
+Interfata text, pentru prima aplicatie:
+
+1. Cautare dupa autor si titlu (cate exemplare sunt in biblioteca)
+2. Cautare dupa autor (titlurile cartilor scrise de autor prezente in iblioteca)dupa titlu
+3. Iesire (Exit)
+
+Dati nr. optiunii: ...
+
+Ex: nr. optiune=1 :
+Se vor completa urmatoarele campuri:
+  autor: Ion Creanga
+  titlu: Harap Alb
+Va raspunde aplicatia: nr de exemplare Harap Alb in biblioteca: 20
+
+
+
+PROIECTARE
+
+-mai intai incarcam fisierul in vectorul de String (v. ora 1)
+-apoi realizam meniul astfel:
+SE REPETA
+  afisez meniu
+  citesc nr. optiune
+  execut optiune
+CAT TIMP optiunea este diferita de exit
+
+
+Realizam portiunea aceasta din program:
+SE REPETA
+  afisez meniu
+  citesc nr. optiune
+  execut optiune
+CAT TIMP optiunea este diferita de exit
+
+
+Solutie:
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		
+		for(;;) {
+			afisareMeniu();
+			String optiune=sc.nextLine();
+			if(optiune.equals("3"))break;
+			//if(optiune.equals("1"))cautareDupaAutorSiTitlu();
+		}
+	}
+	static void afisareMeniu() {
+		System.out.println("1. Cautare dupa autor si titlu");
+		System.out.println("2. Cautare dupa autor");
+		System.out.println("3. Iesire");
+		System.out.print("\nDati nr. optiune: ");
+	}
+
+}

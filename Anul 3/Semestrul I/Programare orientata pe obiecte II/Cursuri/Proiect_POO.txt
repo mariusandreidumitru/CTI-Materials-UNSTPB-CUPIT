@@ -1,0 +1,392 @@
+Programare Orientata Pe Obiecte - Proiect
+
+
+
+APLICATIA 1
+
+ Aplicatie  Java pentru a face o cautare intr-o biblioteca de carti
+
+ Avem nevoie de 2 clase pentru aplicatie. O clasa pentru obiectul Carte si o clasa pentru programul main.
+
+Clasa Carte:
+public class Carte {
+    public String titlu;
+    public String autor;
+    public int nrExemplare;
+
+    // Constructor pentru initializarea obiectului la citirea din fisier
+    public Carte(String titlu, String autor, int nrExemplare) {
+        this.titlu = titlu;
+        this.autor = autor;
+        this.nrExemplare = nrExemplare;
+    }
+
+    // Metoda pentru afisarea detaliilor
+    public String toString() {
+        return "Titlu: " + titlu + " | Autor: " + autor + " | Stoc: " + nrExemplare;
+    }
+}
+
+Clasa Main:
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Carte> biblioteca = incarcareDate("carti.txt");
+        Scanner sc = new Scanner(System.in);
+
+        for (;;) {
+            System.out.println("\n1. Cautare (Autor + Titlu)");
+            System.out.println("2. Iesire");
+            System.out.print("Dati nr. optiune: ");
+            
+            String optiune = sc.nextLine().trim();
+
+            if (optiune.equals("2")) {
+                break; 
+            }
+
+            if (optiune.equals("1")) {
+                System.out.print("autor: ");
+                String a = sc.nextLine().trim();
+                System.out.print("titlu: ");
+                String t = sc.nextLine().trim();
+
+                boolean gasit = false;
+                for (int i = 0; i < biblioteca.size(); i++) {
+                	Carte c = biblioteca.get(i);
+                    // Comparatie si ignorare litere mari/mici
+                    if (c.autor.equalsIgnoreCase(a) && c.titlu.equalsIgnoreCase(t)) {
+                        System.out.println("nr carti existente: " + c.nrExemplare);
+                        gasit = true;
+                        break;
+                    }
+                }
+                if (!gasit) System.out.println("Cartea nu exista!");
+            }
+        }
+    }
+
+    public static ArrayList<Carte> incarcareDate(String numeFisier) {
+        ArrayList<Carte> lista = new ArrayList<>();
+        try (BufferedReader bfr = new BufferedReader(new FileReader(numeFisier))) {
+            String lineTitlu;
+            while ((lineTitlu = bfr.readLine()) != null) {
+                String lineAutor = bfr.readLine();
+                String lineNr = bfr.readLine();
+                
+                if (lineAutor != null && lineNr != null) {
+                    // Ordinea trebuie sa fie (Titlu, Autor, Nr) 
+                    // conform constructorului clasei Carte
+                    lista.add(new Carte(lineTitlu.trim(), lineAutor.trim(), Integer.parseInt(lineNr.trim())));
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Eroare la procesarea fisierului!");
+        }
+        return lista;
+    }
+}
+
+--------------------------------------------------------------------------------------------------------------------------
+APLICATIA 2
+
+Aplicatia in care cartile sunt memorate intr-un fisier xml. Il parsam cu parserul StaX .
+NU cu alt parser!)
+
+In aceasta aplicatie avem nevoie de clasa anterioara "Carte" si clasa Main care reprezinta programul principal.
+
+Clasa Main:
+
+import java.io.*;
+import java.util.*;
+import javax.xml.stream.*;
+
+public class Main {
+    public static void main(String[] args) {
+        //  Incarcam datele din XML in ArrayList 
+        ArrayList<Carte> biblioteca = incarcareXML("carti.xml");
+        Scanner sc = new Scanner(System.in);
+        
+        
+        for(;;) {
+            afisareMeniu();
+            String optiune = sc.nextLine();
+            
+            if(optiune.equals("3")) break; // Iesire
+            
+            if(optiune.equals("1")) {
+                System.out.print("autor: ");
+                String a = sc.nextLine().trim();
+                System.out.print("titlu: ");
+                String t = sc.nextLine().trim();
+                
+                boolean gasit = false;
+                for(int i = 0; i < biblioteca.size(); i++) {
+                    Carte c = biblioteca.get(i);
+                    if(c.autor.equalsIgnoreCase(a) && c.titlu.equalsIgnoreCase(t)) {
+                        System.out.println("nr de exemplare " + t + " in biblioteca: " + c.nrExemplare);
+                        gasit = true;
+                        break;
+                    }
+                }
+                if(!gasit) System.out.println("Cartea nu a fost gasita!");
+            }
+            
+            if(optiune.equals("2")) {
+                System.out.print("autor: ");
+                String a = sc.nextLine().trim();
+                boolean areCarti = false;
+                
+                for(int i = 0; i < biblioteca.size(); i++) {
+                    Carte c = biblioteca.get(i);
+                    if(c.autor.equalsIgnoreCase(a)) {
+                        System.out.println("- " + c.titlu);
+                        areCarti = true;
+                    }
+                }
+                if(!areCarti) System.out.println("Nu s-au gasit carti pentru acest autor.");
+            }
+        }
+    }
+
+    static void afisareMeniu() {
+        System.out.println("\n[Cautare]");
+        System.out.println("1. Cautare dupa autor si titlu");
+        System.out.println("2. Cautare dupa autor");
+        System.out.println("3. Iesire");
+        System.out.print("\nDati nr. optiune: ");
+    }
+
+    // Metoda Parsare 
+    public static ArrayList<Carte> incarcareXML(String numeFisier) {
+        ArrayList<Carte> lista = new ArrayList<>();
+        Carte cCrt = null;
+        String textInterior = "";
+        
+        try {
+            XMLInputFactory factory = XMLInputFactory.newInstance();
+            XMLStreamReader reader = factory.createXMLStreamReader(new FileReader(numeFisier));
+            
+            while(reader.hasNext()) {
+                int eveniment = reader.next();
+                
+                switch(eveniment) {
+                    case XMLStreamConstants.START_ELEMENT:
+                        if(reader.getLocalName().equals("carte")) {
+                            cCrt = new Carte("", "", 0);
+                        }
+                        break;
+                    case XMLStreamConstants.CHARACTERS:
+                        textInterior = reader.getText().trim();
+                        break;
+                    case XMLStreamConstants.END_ELEMENT:
+                        String tag = reader.getLocalName();
+                        if(cCrt != null) {
+                            if(tag.equals("titlu")) cCrt.titlu = textInterior;
+                            else if(tag.equals("autor")) cCrt.autor = textInterior;
+                            else if(tag.equals("nr_exemplare")) cCrt.nrExemplare = Integer.parseInt(textInterior);
+                            else if(tag.equals("carte")) lista.add(cCrt);
+                        }
+                        break;
+                }
+            }
+            reader.close();
+        } catch (Exception e) {
+            System.out.println("Eroare la citirea XML!");
+        }
+        return lista;
+    }
+}
+
+Fisierul XML :
+
+<BIBLIOTECA>
+    <carte>
+        <titlu>Amintiri din copilarie</titlu>
+        <autor>Ion Creanga</autor>
+        <nr_exemplare>10</nr_exemplare>
+    </carte>
+    <carte>
+        <titlu>Marile sperante</titlu>
+        <autor>Charles Dickens</autor>
+        <nr_exemplare>7</nr_exemplare>
+    </carte>
+    <carte>
+        <titlu>Poezii</titlu>
+        <autor>Mihai Eminescu</autor>
+        <nr_exemplare>20</nr_exemplare>
+    </carte>
+</BIBLIOTECA>
+
+--------------------------------------------------------------------------------------------------------------------------
+APLICATIA 3
+
+Aplicatia client-server in care cartile sunt memorate intr-un fisier text care sta pe server .
+
+Vom avea nevoie de urmatoarele clase:
+
+- Clasa Server
+- Clasa FirClient 
+- Clasa Client 
+
+Clasa Server:
+
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server {
+    public static void main(String[] args) {
+        try {
+            ServerSocket ss = new ServerSocket(5000);
+            System.out.println("Serverul a pornit");
+
+            while (true) {
+                Socket cs = ss.accept();
+                System.out.println("Client nou conectat!");
+                
+                // Aici cream instanta clasei separate FirClient
+                FirClient fir = new FirClient(cs);
+                fir.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Clasa Client:
+
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Client {
+    public static void main(String[] args) {
+        try {
+            System.out.println("Se incearca conectarea la server...");
+            Socket socket = new Socket("localhost", 5000);
+            System.out.println("Conectat cu succes!");
+
+            PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            Scanner scanner = new Scanner(System.in);
+
+            while(true) {
+                System.out.println("\n--- MENIU ---");
+                System.out.print("Introduceti numarul liniei (sau 0 pentru iesire): ");
+                
+                // Citim toata linia ca text pentru a evita blocaje sau erori
+                String inputTastatura = scanner.nextLine(); 
+                
+                int comanda;
+                try {
+                    comanda = Integer.parseInt(inputTastatura);
+                } catch (NumberFormatException e) {
+                    System.out.println(">> Eroare: Te rog introdu doar cifre!");
+                    continue; // Reia bucla fara sa trimita la server
+                }
+
+                if(comanda == 0) {
+                    break;
+                }
+
+                // Trimitem cererea la server
+                pw.println(comanda);
+                
+                // Asteptam si afisam raspunsul
+                String raspuns = bfr.readLine();
+                System.out.println("SERVER: " + raspuns);
+            }
+            
+            socket.close();
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("Eroare de conexiune: " + e.getMessage());
+        }
+    }
+}
+
+Clasa FirClient:
+
+import java.io.*;
+import java.net.Socket;
+import java.util.ArrayList;
+
+public class FirClient extends Thread {
+    private Socket cs;
+    private BufferedReader bfr;
+    private PrintWriter pw;
+    
+    // Lista in care tinem tot fisierul in memorie 
+    private ArrayList<String> liniiFisier;
+
+    public FirClient(Socket cs) {
+        this.cs = cs;
+        this.liniiFisier = new ArrayList<>();
+        
+        try {
+            //Pregatim comunicarea
+            pw = new PrintWriter(cs.getOutputStream(), true);
+            bfr = new BufferedReader(new InputStreamReader(cs.getInputStream()));
+
+            //Incarcam fisierul in lista ACUM, la inceput
+            File f = new File("carti.txt");
+            if (f.exists()) {
+                BufferedReader brFisier = new BufferedReader(new FileReader(f));
+                String linie;
+                while ((linie = brFisier.readLine()) != null) {
+                    liniiFisier.add(linie);
+                }
+                brFisier.close(); // Inchidem fisierul imediat
+                // Acum tot textul este in variabila liniiFisier
+            } else {
+                System.out.println("Eroare: Fisierul carti.txt nu exista!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void run() {
+        try {
+            while (true) {
+                String input = bfr.readLine();
+                
+                if (input == null || input.trim().isEmpty()) {
+                    break; // Clientul a iesit
+                }
+
+                int N;
+                try {
+                    N = Integer.parseInt(input.trim());
+                } catch (NumberFormatException e) {
+                    pw.println("Trimite un numar valid!");
+                    continue;
+                }
+
+                // Cautare direct in lista
+                if (liniiFisier.isEmpty()) {
+                     pw.println("Serverul nu are date incarcate (fisier gol/lipsa).");
+                     continue;
+                }
+
+                int index = N - 1; // Ajustam pentru ca listele incep de la 0
+
+                if (index >= 0 && index < liniiFisier.size()) {
+                    // Luam linia instantaneu din memorie
+                    String raspuns = liniiFisier.get(index);
+                    pw.println("Linia " + N + ": " + raspuns);
+                } else {
+                    pw.println("Nu exista linia " + N + "! (Max: " + liniiFisier.size() + ")");
+                }
+            }
+            cs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

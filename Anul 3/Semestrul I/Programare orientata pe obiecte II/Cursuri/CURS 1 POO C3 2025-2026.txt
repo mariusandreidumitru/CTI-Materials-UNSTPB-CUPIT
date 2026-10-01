@@ -1,0 +1,201 @@
+
+PROIECT #1
+
+Proiectul se va aduce fizic , intr-un dosar, ce va contine:
+ -specificatiile proiectului
+ -listingul COMENTAT al aplicatiilor
+
+Tema:
+APLICATIA 1
+ Aplicatie  Java pentru a face o cautare 
+  intr-o biblioteca de carti
+Cartile:
+ - fisier text editat cu Notepad
+Exemplu carti.txt:
+Informatii in fisier, pe linii separate:
+TITLUL 
+AUTOR
+NR DE EXEMPLARE
+
+Amintiri din copilarie
+Ion Creanga
+10
+Marile sperante
+Charles Dickens
+7
+
+Interfata text, meniul, pentru prima aplicatie:
+
+1. Cautare in fisier text 
+2. Iesire (Exit)
+
+Dati nr. optiunii: ...
+
+Ex: nr. optiune=1 :
+Se vor completa urmatoarele campuri:
+  autor: Ion Creanga
+  titlu: Harap Alb
+
+TEMA PENTRU CURS 2:
+ Realizati meniul:
+
+SE REPETA
+  afisez meniu
+  citesc nr. optiune
+  execut optiune
+CAT TIMP optiunea este diferita de exit
+
+
+
+Algo face o cautare liniara in fisierul text si va afisa:
+nr carti existente: 10
+
+Obs: dupa o cautare va reveni tot la meniu
+
+Deoarece facem mai multe cautari in fisierul text, este bine ca de la inceput sa 
+salvam fisierul in memorie, si sa facem apoi cautarile in memorie.
+In ce structura de date salvam informatiile?
+A. Putem salva informatiile din fisier intr-un array de String.
+Si apoi facem o cautare liniara in acesta array.
+Deficienta: nu stim ce dimensiune sa dam acestui array
+
+TEMA PT. CURS 2:
+  de realizat acest program (salvam fisier text intr-un vector de String si facem 
+cautare liniara in aceste vector - titlul si autorul cititi de la tastatura)
+
+Citire String de la tastatura: Scanner , metoda nextLine()
+
+B. Copiem fisierul intr-un ArrayList<String> (nu trebuie sa stim de la inceput 
+numarul de linii din fisier)
+  Mai sugestiv este sa copiem fisierul ArrayList<Carte>
+unde avem:
+class Carte{
+  public String titlu;
+  public String autor;
+  public int nrExemplare;
+  //constructor:
+  ...
+}
+
+
+APLICATIA 2 (nou!)
+ Aplicatie client server in java 
+Cautam carti intr-un fisier text care sta pe calculatorul server.
+
+Obs:
+ Doar aplicatia 1 facuta la examen: nota maxima 6 .
+
+
+
+Programe lucrate la curs, in Eclipse:
+
+
+RECAPITULARE 
+A. Vectori
+  1. maximul dintr-un vector
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		int N;
+		Scanner sc=new Scanner(System.in);
+		System.out.print("N=");
+		N=sc.nextInt();
+		int a[]=new int[N];
+		for(int i=0;i<N;i++) {
+			System.out.print("nr=");
+			a[i]=sc.nextInt();
+		}
+		int maxim=maxVector(a);
+		System.out.println("max="+maxim);
+	}
+	static int maxVector(int a[]) {
+		int max=a[0];
+		for(int i=1;i<a.length;i++)
+			if(a[i]>max)max=a[i];
+		return max;
+	}	
+}
+
+
+    2. Avem un vector de String. Cate elemente sunt egale cu primul element?
+
+public class Main {
+
+	public static void main(String[] args) {
+		String s[]= {"ana", "abc","abc","ana", "are","2","mere", "ana"};
+		int contor=0;
+		//parcurg vector:
+		for(int i=1; i<s.length;i++)
+			if(s[i].equals(s[0]))contor++;
+		System.out.println("contor="+contor);
+	}
+
+}
+
+B. Maximul dintr-un ArrayList de numere intregi
+ArrayList<Integer>
+Citim nr intregi de la tastatura pana tastez 0, intr-un ArrayList
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		ArrayList<Integer> lista=new ArrayList();
+		for(;;) {
+			System.out.print("nr=");
+			int nr=sc.nextInt();
+			if(nr==0)break;
+			lista.add(nr);
+		}
+		int max=lista.get(0);
+		//parcurg lista:
+		for(int i=1;i<lista.size();i++)
+			if(lista.get(i)>max)
+				max=lista.get(i);
+		System.out.println("maxim="+max);
+	}
+
+}
+
+C. Maximul dintr-un fisier text de numere intregi, cate un numar pe fiecare linie
+date.txt
+12
+77
+-78
+5
+max=77
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		try {
+			FileReader fr=new FileReader("date.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			//pres. ca exista cel putin un numar in fisier:
+			String s=bfr.readLine();
+			int max=Integer.parseInt(s);//"123"--->123
+			//citim restul numerelor
+			for(;;) {
+				s=bfr.readLine();
+				if(s==null)break;
+				int nr=Integer.parseInt(s);
+				if(nr>max)max=nr;
+			}
+			bfr.close();fr.close();
+			System.out.println("maxim="+max);
+	    }catch(IOException e) {
+	    	System.out.println("eroare fisier");
+	    	System.exit(0);
+	    }
+	}
+}
+
+

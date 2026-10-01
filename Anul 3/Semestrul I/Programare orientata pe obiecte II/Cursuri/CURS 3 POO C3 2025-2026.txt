@@ -1,0 +1,254 @@
+CURS 3
+TEST PROBABIL LA CURSUL 4: 
+testul de la cursul 2: [4,8]
+1. In clasa A avem constructorul: public A(int x, int y)
+    a. Creati un obiect din clasa A
+            A obj=new A(3,5);
+    b. In clasa A este metoda publica: public double f(). Dati un exemplu de apel din afara clasei A si apoi 
+        propuneti o implementare pt metoda f()
+            A obj=new A(3,5);
+            double rezultat=obj.f();
+        public double f(){
+            return (x+y)/2.0;
+       }
+            
+    c. Care este semnatura metodei parseDouble() daca ea se apeleaza astfel:
+        double rezultat=Double.parseDouble("12.34");
+       In ce clasa este ea definita? 
+        public static double parseDouble(String s)
+        din clasa Double
+
+
+2. In clasa B avem constructorul: public B(char ch)
+    a. Creati un obiect din clasa B
+          B obj=new B('A');
+    b. In clasa B este metoda publica: public void f(). Dati un exemplu de apel din afara clasei B si apoi 
+       propuneti o implementare pt metoda f()
+          B obj=new B('A');
+          obj.f();
+      public void f(){
+           System.out.println(ch);
+      }
+          
+    c. In clasa C avem metoda cu semnatura urmatoare:
+           public static int f(int x)
+       Dati un exemplu de apel din afara clasei C pentru metoda f.
+             int rezultat=C.f(7);
+
+
+
+Tema pentru proiectul final:
+ Incarcati datele din fisierul text de carti intr-un ArrayList<Carte>, unde clasa Carte este urmatoarea:
+/*  
+AUTOR
+TITLUL 
+NR DE EXEMPLARE
+*/
+public class Carte {
+    public String autor;
+    public String titlu;
+    public int nrExemplare;
+	public Carte(String autor, String titlu, int nrExemplare) {
+		this.autor = autor;
+		this.titlu = titlu;
+		this.nrExemplare = nrExemplare;
+	}
+}
+
+Apoi folosind meniul dezvoltat in Cursul 2, faceti cautari (dupa titlu, dupa autor) in lista ArrayList<Carte>
+
+////////////////////////////////////////
+Vom face la acest curs: Incarcarea informatiilor din fisierul de carti, intr-o lista ArrayList<String>:
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ArrayList<String> lista=new ArrayList();
+		try {
+			FileReader fr=new FileReader("carti.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			for(;;) {
+				String s=bfr.readLine();
+				if(s==null)break;
+				lista.add(s);
+			}
+			bfr.close();fr.close();
+		}catch(IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		//afisam de test continutul listei:
+		for(int i=0;i<lista.size();i++)
+			System.out.println(lista.get(i));
+	}
+}
+
+PARSAREA FISIERELOR XML
+
+XML - are tag-uri ca si HTML. Diferente:
+-tagurile HTML sunt predefinite. Tagurile XML noi le creem, le denumim
+-tagurile HTML descriu modul in care browserul va afisa informatia.
+ Tagurile XML descriu structura documentului
+
+Un exemplu de fisier XML care contine numere complexe:
+<NUMERE_COMPLEXE>
+  <complex>
+     <re>5</re>
+     <im>7</im>
+  </complex>
+  <complex>
+     <re>-5</re>
+     <im>-7</im>
+  </complex>
+  <complex>
+     <re>15</re>
+     <im>17</im>
+  </complex>
+</NUMERE_COMPLEXE>
+
+
+Fisierul XML cu carti:
+<CARTI>
+ <carte>
+   <autor>Ion Creanga</autor>
+   <titlu>Amintiri din copilarie</titlu>
+   <nr_exemplare>7</nr_exemplare>
+ </carte>
+ <carte>
+   <autor>Ion Slavici</autor>
+   <titlu>Mara</titlu>
+   <nr_exemplare>3</nr_exemplare>
+ </carte>
+</CARTI>
+
+Prelucrarea unui fisier XML se cheama parsere.
+Vom folosi parserul StaX.
+Ideea de parsare:
+Se creeaza un obiect reader si cu acest obiect reader parcurgem fisierul, cu metoda next() ce returneaza un numar intreg, numar ce corespunde unui eveniment. Ex. de evenimente:
+-inceput de tag
+  Ex: intalneste tagul <complex> sau tagul <re>
+-sfarsit de tag
+  Ex: </complex> sau </re>
+-caractere (text)
+  Ex: -5 
+  Ex: "Ion Creanga"
+
+<NUMERE_COMPLEXE>
+    <complex>
+        <re>2.5</re>
+        <im>1.5</im>
+    </complex>
+    <complex>
+        <re>-3.0</re>
+        <im>4.0</im>
+    </complex>
+    <complex>
+        <re>1.0</re>
+        <im>-2.5</im>
+    </complex>
+    
+</NUMERE_COMPLEXE>
+
+
+public class Complex {
+    private double re;
+    private double im;
+
+    public Complex() {
+    }
+    public Complex(double re, double im) {
+        this.re = re;
+        this.im = im;
+    }
+
+    public double getRe() { return re; }
+    public void setRe(double re) { this.re = re; }
+
+    public double getIm() { return im; }
+    public void setIm(double im) { this.im = im; }
+
+    public Complex add(Complex c) {
+        return new Complex(this.re + c.re, this.im + c.im);
+    }
+
+   
+}
+
+//reader.next() doar mută cursorul și ne spune ce tip de eveniment e.
+lenta dar mai POO.
+import java.util.*;
+import java.io.*;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+//Suma numerelor complexe din numere.xml:
+
+public class Main
+{
+ public static void main(String args[]) throws FileNotFoundException, XMLStreamException
+ //am folosit clauza throws, pt a nu mai trata aceste exceptii in blocuri try...catch
+ {
+  ArrayList<Complex> al=null;
+  Complex pCrt=null;  String continutTag=null;
+  File file = new File("numere.xml");
+  XMLInputFactory factory = XMLInputFactory.newInstance();
+  XMLStreamReader reader = factory.createXMLStreamReader(new FileReader(file));
+
+  while(reader.hasNext()){//cat timp nu s-a terminat fisierul xml
+  	//citim ce eveniment a fost intalnit de reader:
+	int event=reader.next();//Acesta este API-ul de tip „cursor” (iterator pe evenimente).
+
+//reader.next() avansează cursorul la următorul eveniment din fluxul XML.
+
+//După apel, poți afla ce tip de eveniment este (start element, text, end element etc.) folosind metode
+	if(event==XMLStreamConstants.START_ELEMENT){//inceput de tag (de element)
+	  String s=reader.getLocalName();//getLocalName citeste numele tag-ului xml
+ 	  if(s.equals("NUMERE_COMPLEXE"))//daca este tagul NUMERE_COMPLEXE
+	    al=new ArrayList<Complex>();
+	  else if(s.equals("complex")) //daca este tagul complex
+		pCrt=new Complex();
+	}else if(event==XMLStreamConstants.CHARACTERS)
+	  continutTag=reader.getText().trim();//citeste informatia dintre <tag> si </tag>
+	  //trim (): scoate spatiile de la inceput sir si de la sfarsit sir
+	else if(event==XMLStreamConstants.END_ELEMENT){//s-a terminat un tag
+	  String s=reader.getLocalName();	//vedem ce tag a fost
+	  if(s.equals("re"))pCrt.setRe(Double.parseDouble(continutTag));
+	  else if(s.equals("im"))pCrt.setIm(Double.parseDouble(continutTag));
+          else if(s.equals("complex"))al.add(pCrt);
+	}//if END_ELEMENT
+  }//end while reader.hasNext()
+  //Suma:
+  Complex suma=new Complex(0,0); 
+  for(int i=0;i<al.size();i++) {
+  	suma.setRe(suma.getRe()+al.get(i).getRe());
+	suma.setIm(suma.getIm()+al.get(i).getIm());
+  }
+  System.out.println(suma.getRe()+" + "+suma.getIm()+"i");
+
+ }
+}
+
+De ce nu am folosit try...catch? Datorita caluzei throws :
+ public static void main(String args[]) throws FileNotFoundException, XMLStreamException
+
+ TEMA
+DE adus pe foi!!!
+Modificati programul simplificand clasa Complex astfel:
+public class Complex {
+    public double re;
+    public double im;
+
+    public Complex() {
+    }
+    public Complex(double re, double im) {
+        this.re = re;
+        this.im = im;
+    }
+}
+
+Vom mai face un exemplu de parsare fisier XML de cordonate!

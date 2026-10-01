@@ -1,0 +1,388 @@
+CURS 5
+
+PROIECTUL FINAL VA CONTINE 3 APLICATII (pentru nota 10)
+1. Aplicatia cu fisier text
+Incarcam fisierul text cu cartile, cel mai bine intr-un ArrayList<Carte>
+
+2. Aplicatia in care cartile sunt memorate intr-un fisier xml. Il parsam cu parserul StaX .
+NU cu alt parser!)
+
+3. Aplicatia client-server in care cartile sunt memorate intr-un fisier text care sta pe server .
+
+Proiectul va fi incarcat pe moodle (un singur fisier .txt, ce contine cele 3 aplicatii !), pana pe data de 18.01.2026
+Il veti aduce si fizic la examen (printat sau copiat de mana, pe fiecare pagina scris si numele studentului - OBLIGATORIU !).
+Il veti folosi ca referinta si in timpul examenului scris.
+
+EXAMENUL SCRIS ( 1 ora) poate contine 3 aplicatii:
+-o problema cu ArrayList
+-Scrieti clasa Client si metoda run() din clasa FirClient pentru o aplicatie client-server ce face urmatoarele :....
+-sa stiti si teoria de la parserul StaX
+
+
+Scrieti urmatoarea aplicatie client-server:
+Clientul repeta urmatoarea secventa:
+  citeste N, un numar natural Daca N=0 se va deconecta
+  altfel:
+     citeste N numere intregi
+     le trimite catre server
+     serverul calculeaza maximul si-l trimite la client
+     clientul afiseaza maximul primit de la server
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Client {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		Socket cs=null;
+		BufferedReader bfr=null;
+		PrintWriter pw=null;
+		try {
+			cs = new Socket ("localhost",5000);
+			InputStreamReader isr=new InputStreamReader(cs.getInputStream());
+			bfr=new BufferedReader(isr);
+			pw=new PrintWriter(cs.getOutputStream());
+			System.out.println("s-a setat reteaua");
+			for(;;) {
+				System.out.print("N=");
+				int N=sc.nextInt();
+				if(N==0) {
+					pw.println("");
+					pw.flush();
+					break;}
+				
+					else {
+						pw.println(N);
+						pw.flush();
+						for(int i=0;i<N;i++) {
+							System.out.print("nr=");
+							int nr=sc.nextInt();
+							pw.println(nr);
+							pw.flush();
+						}
+			//citim raspuns de la server
+						String textln=bfr.readLine();
+						if(textln==null)break;
+						System.out.println(textln);
+					}
+			}
+
+			}catch(IOException e) {
+					e.printStackTrace();
+				}
+				System.out.println("Clientul s-a deconectat");
+			}
+}
+
+/////
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server {
+
+	public static void main(String[] args) {
+		// aplicatia server
+		System.out.println("Am pornit serverul");
+		try {
+			ServerSocket ss = new ServerSocket(5000);
+			for (;;) {
+				Socket cs = ss.accept();
+				FirClient firPtClient = new FirClient(cs);
+				firPtClient.start();
+				System.out.println("Avem o conectare");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+}
+/////
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+public class FirClient extends Thread {
+	private Socket cs;
+	private BufferedReader bfr;
+	private PrintWriter pw;
+	public FirClient(Socket cs) {
+		try {
+			this.cs=cs;
+			pw=new PrintWriter(cs.getOutputStream());
+			bfr=new BufferedReader(new InputStreamReader(cs.getInputStream()));
+		}catch(Exception e) {
+		 e.printStackTrace();
+				System.exit(0);
+		}
+	}
+	public void run() {
+		try {
+			for(;;) {
+				String textln = bfr.readLine();
+				if(textln.equals(""))break;
+				int N=Integer.parseInt(textln);
+				//primul numar din cele N trimise, voi initializa maximul cu el:
+				int max=Integer.parseInt(bfr.readLine());
+				//Citesc de la clent restul de N-1 numere:
+				for(int i=1;i<=N-1;i++) {
+					int numar=Integer.parseInt(bfr.readLine());
+					if(numar>max)max=numar;
+				}
+				pw.println("Maximul este: "+max);
+				pw.flush();
+			}
+			}catch(Exception e) {
+				e.printStackTrace();
+				System.exit(0);
+		}
+	}
+}
+////////////////////////////
+
+Solutia 2 mai eficienta:
+Trimitem de la client toate numerele o singura data.
+Ex: daca avem 3 numere de trimis: -10, 7, 9  formam un sir cu ele:
+"-10 7 9" si transmitem acest sir.
+Noua clasa Client este:
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Client {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		Socket cs=null;
+		BufferedReader bfr=null;
+		PrintWriter pw=null;
+		try {
+			cs = new Socket ("localhost",5000);
+			InputStreamReader isr=new InputStreamReader(cs.getInputStream());
+			bfr=new BufferedReader(isr);
+			pw=new PrintWriter(cs.getOutputStream());
+			System.out.println("s-a setat reteaua");
+			for(;;) {
+				System.out.print("N=");
+				int N=sc.nextInt();
+				if(N==0) {
+					pw.println("");
+					pw.flush();
+					break;}
+				
+					else {
+						String toateNumerele="";
+						for(int i=0;i<N;i++) {
+							System.out.print("nr=");
+							int nr=sc.nextInt();
+							toateNumerele+=nr+" ";
+						}
+						pw.println(toateNumerele);pw.flush();
+						//citim raspuns de la server
+						String textln=bfr.readLine();
+						System.out.println(textln);
+					}
+			}
+
+			}catch(IOException e) {
+					e.printStackTrace();
+				}
+				System.out.println("Clientul s-a deconectat");
+			}
+}
+
+Clasa Server nu se modifica.
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+public class FirClient extends Thread {
+	private Socket cs;
+	private BufferedReader bfr;
+	private PrintWriter pw;
+	public FirClient(Socket cs) {
+		try {
+			this.cs=cs;
+			pw=new PrintWriter(cs.getOutputStream());
+			bfr=new BufferedReader(new InputStreamReader(cs.getInputStream()));
+		}catch(Exception e) {
+		 e.printStackTrace();
+				System.exit(0);
+		}
+	}
+	public void run() {
+		try {
+			for(;;) {
+				String toateNumerele = bfr.readLine();
+				if(toateNumerele.equals(""))break;//s-a terminat clientul
+				//Despachetam numerele:
+				String s[]=toateNumerele.split(" ");
+				//numarul de numere, este dimensiunea vectorului s:
+				int N=s.length;
+				//primul numar din cele N trimise, s[0], voi initializa maximul cu el:
+				int max=Integer.parseInt(s[0]);
+				//Restul de N-1 numere:
+				for(int i=1;i<=N-1;i++) {
+					int numar=Integer.parseInt(s[i]);
+					if(numar>max)max=numar;
+				}
+				pw.println("Maximul este: "+max);
+				pw.flush();
+			}
+			}catch(Exception e) {
+				e.printStackTrace();
+				System.exit(0);
+		}
+	}
+}
+
+
+
+APLICATIE
+Pe server avem fisierul text scrisoare.txt.
+Clientul repeta urmatoarea secventa:
+  citeste un numar n,  numar natural Daca n=0 se va deconecta
+  altfel trimite pe n la server si serverul va trimite clientului linia numarul n 
+  din fiserul text. Daca n e prea mare, va raspunde: "NU EXISTA !"
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Client {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		Socket cs=null;
+		BufferedReader bfr=null;
+		PrintWriter pw=null;
+		try {
+			cs = new Socket ("localhost",5000);
+			InputStreamReader isr=new InputStreamReader(cs.getInputStream());
+			bfr=new BufferedReader(isr);
+			pw=new PrintWriter(cs.getOutputStream());
+			System.out.println("s-a setat reteaua");
+			for(;;) {
+				System.out.print("Dati numarul liniei: ");
+				int N=sc.nextInt();
+				if(N==0) {
+					pw.println("");
+					pw.flush();
+					break;}
+				
+					else {
+						pw.println(N+"");pw.flush();
+						//citim raspuns de la server
+						String textln=bfr.readLine();
+						System.out.println(textln);
+					}
+			}
+
+			}catch(IOException e) {
+					e.printStackTrace();
+				}
+				System.out.println("Clientul s-a deconectat");
+			}
+}
+//////////////////
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server {
+
+	public static void main(String[] args) {
+		// aplicatia server
+		System.out.println("Am pornit serverul");
+		try {
+			ServerSocket ss = new ServerSocket(5000);
+			for (;;) {
+				Socket cs = ss.accept();
+				FirClient firPtClient = new FirClient(cs);
+				firPtClient.start();
+				System.out.println("Avem o conectare");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+}
+//////
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+public class FirClient extends Thread {
+	private Socket cs;
+	private BufferedReader bfr;
+	private PrintWriter pw;
+	public FirClient(Socket cs) {
+		try {
+			this.cs=cs;
+			pw=new PrintWriter(cs.getOutputStream());
+			bfr=new BufferedReader(new InputStreamReader(cs.getInputStream()));
+		}catch(Exception e) {
+		 e.printStackTrace();
+				System.exit(0);
+		}
+	}
+	public void run() {
+		try {
+			for(;;) {
+				String sN = bfr.readLine();
+				if(sN.equals(""))break;//s-a terminat clientul
+				int N=Integer.parseInt(sN);
+				//deschid fisierul text:
+				FileReader fr=new FileReader("date.txt");
+				BufferedReader bf=new BufferedReader(fr);
+				int nrLinie=0;
+				boolean gasit=false;
+				String linieCrt="";
+				//Citesc liniile din fisier pana ajungem la linia N:
+				for(;;) {
+					linieCrt=bf.readLine();
+					if(linieCrt==null)break;//s-a terminat fisierul
+					nrLinie++;
+					if(nrLinie==N) {
+						gasit=true;//este linieCrt ce o vom servi clientului
+						break;
+					}
+				}//for;;
+				bf.close(); fr.close();
+				if(gasit==true) {
+				   pw.println("Linia "+N+" este: "+linieCrt);
+				   pw.flush();}
+				else {
+					pw.println("NU EXISTA!");
+					pw.flush();
+				}
+			 }//for;;	
+			}catch(Exception e) {
+				e.printStackTrace();
+				System.exit(0);
+		    }
+	}//run
+}
+
+TEMA
+ Dati o solutie mai eficienta a.i. sa nu deschidem /inchidem repetat fisierul.
+In constructorl clase FirClient putem memora tot fisierul text intr-o lista ArrayList<String> si apoi, in metoda run() 
+vom face cautarea in aceasta lista, nu in fisier.
+La fel este indicat sa folositi si la proiect!!
+
+

@@ -1,0 +1,316 @@
+CURS 4
+Programul de calcul suma numere complexe din fisierul xml numere.xml,
+folosind o alta varianta pt clasa Complex:
+<NUMERE_COMPLEXE>
+    <complex>
+        <re>2.5</re>
+        <im>1.5</im>
+    </complex>
+    <complex>
+        <re>-3.0</re>
+        <im>4.0</im>
+    </complex>
+    <complex>
+        <re>1.0</re>
+        <im>-2.5</im>
+    </complex>
+    
+</NUMERE_COMPLEXE>
+
+
+public class Complex {
+    public double re;
+    public double im;
+
+    public Complex() {
+    }
+    public Complex(double re, double im) {
+        this.re = re;
+        this.im = im;
+    }
+
+ 
+
+    public Complex add(Complex c) {
+        return new Complex(this.re + c.re, this.im + c.im);
+    }
+}
+
+import java.util.*;
+import java.io.*;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+//Suma numerelor complexe din numere.xml:
+
+
+public class Main
+{
+ public static void main(String args[]) throws FileNotFoundException, XMLStreamException
+ //am folosit clauza throws, pt a nu mai trata aceste exceptii in blocuri try...catch
+ {
+  ArrayList<Complex> al=null;
+  Complex pCrt=null;  String continutTag=null;
+  File file = new File("numere.xml");
+  XMLInputFactory factory = XMLInputFactory.newInstance();
+  XMLStreamReader reader = factory.createXMLStreamReader(new FileReader(file));
+
+  while(reader.hasNext()){//cat timp nu s-a terminat fisierul xml
+  	//citim ce eveniment a fost intalnit de reader:
+	int event=reader.next();//Acesta este API-ul de tip „cursor” (iterator pe evenimente).
+
+//reader.next() avansează cursorul la următorul eveniment din fluxul XML.
+
+//După apel, poți afla ce tip de eveniment este (start element, text, end element etc.) folosind metode
+	if(event==XMLStreamConstants.START_ELEMENT){//inceput de tag (de element)
+	  String s=reader.getLocalName();//getLocalName citeste numele tag-ului xml
+ 	  if(s.equals("NUMERE_COMPLEXE"))//daca este tagul NUMERE_COMPLEXE
+	    al=new ArrayList<Complex>();
+	  else if(s.equals("complex")) //daca este tagul complex
+		pCrt=new Complex();
+	}else if(event==XMLStreamConstants.CHARACTERS)
+	  continutTag=reader.getText().trim();//citeste informatia dintre <tag> si </tag>
+	  //trim (): scoate spatiile de la inceput sir si de la sfarsit sir
+	else if(event==XMLStreamConstants.END_ELEMENT){//s-a terminat un tag
+	  String s=reader.getLocalName();	//vedem ce tag a fost
+	  if(s.equals("re"))pCrt.re = Double.parseDouble(continutTag);
+	  else if(s.equals("im"))pCrt.im = Double.parseDouble(continutTag);
+          else if(s.equals("complex"))al.add(pCrt);
+	}//if END_ELEMENT
+  }//end while reader.hasNext()
+  //Suma:
+  Complex suma=new Complex(0,0); 
+  for(int i=0;i<al.size();i++) {
+  	suma = suma.add(al.get(i));
+  }
+  System.out.println(suma.re+" + "+suma.im+"i");
+
+ }
+}
+
+
+Alt exemplu de parsare XML: 
+parsare fisier de coordonate:
+<COORDONATE>
+ <punct>
+   <x>12</x>
+   <y>20</y>
+ </punct>
+  <punct>
+   <x>100</x>
+   <y>200</y>
+ </punct>
+  <punct>
+   <x>50</x>
+   <y>30</y>
+ </punct>
+</COORDONATE>
+
+
+public class Punct {
+	public int x;
+	public int y;
+	public Punct() {
+	}
+	public Punct(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+}
+import java.util.*;
+import java.io.*;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+//Care este punctul din fisierul xml aflat la distanta cea mai mare de origine ?
+class ParsareCoordonate
+{
+ public static void main(String args[]) throws FileNotFoundException, XMLStreamException
+ //am folosit clauza throws, pt a nu mai trata aceste exceptii in blocuri try...catch
+ {
+  ArrayList<Punct> al=null;
+  Punct pCrt=null;  String continutTag=null;
+  File file = new File("coordonate.xml");
+  XMLInputFactory factory = XMLInputFactory.newInstance();
+  XMLStreamReader reader = factory.createXMLStreamReader(new FileReader(file));
+
+  while(reader.hasNext()){//cat timp nu s-a terminat fisierul xml
+  	//citim ce eveniment a fost intalnit de reader:
+	int event=reader.next();
+	if(event==XMLStreamConstants.START_ELEMENT){//inceput de tag (de element)
+	  String s=reader.getLocalName();//getLocalName citeste numele tag-ului xml
+ 	  if(s.equals("COORDONATE"))//daca este tagul <COORDONATE>
+	    al=new ArrayList<Punct>();
+	  else if(s.equals("punct")) //daca este tagul <punct>
+		pCrt=new Punct();//fra campuri completate
+	}else if(event==XMLStreamConstants.CHARACTERS)
+	  continutTag=reader.getText().trim();//citeste informatia dintre <tag> si </tag>
+	  //trim (): scoate spatiile de la inceput sir si de la sfarsit sir
+	else if(event==XMLStreamConstants.END_ELEMENT){//s-a terminat un tag
+	  String s=reader.getLocalName();	//vedem ce tag a fost
+	  if(s.equals("x"))pCrt.x=Integer.parseInt(continutTag);
+	  else if(s.equals("y"))pCrt.y=Integer.parseInt(continutTag);
+          else if(s.equals("punct"))al.add(pCrt);
+               //avem un obiect Punct caruia i-am complertat x si y: il adaug in ArrayList
+	}//if END_ELEMENT
+  }//end while reader.hasNext()
+  //Afisare puncte:
+  for(int i=0;i<al.size();i++)
+  	System.out.println(al.get(i).x+" , "+al.get(i).y);
+  System.out.println("Nr. total de puncte: "+al.size());
+
+  int xMax=0, yMax=0;
+  double distMax=0;
+   for(int i=0;i<al.size();i++){
+   	  int xCrt=al.get(i).x;
+   	  int yCrt=al.get(i).y;
+   	  double distCrt=Math.sqrt(xCrt*xCrt+yCrt*yCrt);
+   	  if(distCrt>distMax){
+   	  	 distMax=distCrt;
+   	  	 xMax=xCrt;
+   	  	 yMax=yCrt;
+   	  }
+   }
+  System.out.println("dist max= "+distMax+ "x="+xMax+" y="+yMax);
+ }
+}
+
+TEMA
+Modificati programul a.i. sa afiseze daca toate punctele sunt diferite intre ele sau nu
+
+APLICATII CLIENT SERVER
+
+Exemplu de aplicatie client-server:
+În aplicaţia client se repetă următoarea secvenţă de operaţii:
+-se citeşte de la tastatură un cuvânt
+-dacă cuvântul este STOP, se iese din aplicaţia client (se termină)
+ altfel cuvântul citit  se transmite serverului. 
+- serverul calculează dacă cuvântul recepționat este palindrom (simetric față de mijloc) sau nu  și transmite rezultatul clientului.
+-în aplicaţia client se afişează rezultatul trimis de către server.
+Exemplu: cuvântul COJOC este palindrom. La fel și cuvântul ABBA .
+Cuvântul ARC nu este palindrom.
+
+////////// APLICATIA CLIENT: //////////////////
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Client {
+ public static void main(String[] args) {
+  int N;
+  Scanner sc=new Scanner(System.in);
+  Socket cs=null;
+  BufferedReader bfr=null;
+  PrintWriter pw=null;
+  try{
+   cs=new Socket("localhost",5000) ;
+   InputStreamReader isr=
+         new InputStreamReader(cs.getInputStream());
+   bfr=new BufferedReader(isr);
+   pw=new PrintWriter(cs.getOutputStream());
+   System.out.println("S-a setat reteaua");
+   for(;;){
+       System.out.print("cuvant=");
+       String cuvant=sc.nextLine();
+       //daca este STOP : se va deconecta
+       if(cuvant.equals("STOP")) {pw.println(""); pw.flush();break;}
+       else  {pw.println(cuvant); pw.flush();}
+      //Citim raspuns server:
+       String textIn=bfr.readLine();
+       if(textIn==null)break;
+       System.out.println(textIn);
+   }//for;;
+   }catch( IOException e){
+       e.printStackTrace();
+   }
+   System.out.println("Client s-a deconectat !");
+ }//main
+}
+
+//////////////// APLICATIA SERVER: /////////////////////
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server {
+	public static void main(String[] args) {
+		System.out.println("Am pornit server...");
+		try {
+			ServerSocket ss = new ServerSocket(5000);
+			for (;;) {
+				Socket cs = ss.accept();//IP client este impachetat in obiectul cs
+				FirClient firPtClient = new FirClient(cs);// s-au creat obiectele BufferedReader si PrintWriter
+				firPtClient.start();// apeleaza automat run() de la firul de executie
+				System.out.println("Avem o conectare!");
+			} // for;;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+////////////// FIRUL DE EXECUTIE: ////////////////////
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+public class FirClient extends Thread{
+   private Socket cs;
+   private BufferedReader bfr;
+   private PrintWriter pw;
+   //constructorul clasei:
+   public FirClient(Socket clientsock)
+   {
+     try{
+      cs=clientsock;
+      pw=new PrintWriter(cs.getOutputStream());
+      InputStreamReader isr=
+             new InputStreamReader(cs.getInputStream());
+      bfr=new BufferedReader(isr);
+     }catch(Exception e){
+            e.printStackTrace();
+     }
+   }
+
+   public void run()
+   {
+     String textIn;
+     try{
+      for(;;){
+        textIn=bfr.readLine();
+        if(textIn==null)break;
+        if(textIn.equals(""))break;//s-a deconectat clientul 
+                                                  //( a tastat STOP);
+         boolean este=estePalindrom(textIn);
+         if(este)pw.println("este palindrom");
+         else pw.println("nu este palindrom");
+         pw.flush();
+      }//for;;
+     }catch(Exception e){
+            e.printStackTrace();
+     }
+   }//run
+
+  boolean estePalindrom(String s){
+     int N=s.length();//lungime sir 
+     int i;
+     for(i=0;i<N/2;i++)
+         if(s.charAt(i)!=s.charAt(N-i-1))return false;
+     return true;
+  }
+}
+///////////////// TEMA: //////////////////
+
+Scrieti urmatoarea aplicatie client-server:
+Clientul repeta urmatoarea secventa:
+  citeste N, un numar natural Daca N=0 se va deconecta
+  altfel:
+     citeste N numere intregi
+     le trimite catre server
+     serverul calculeaza maximul si-l trimite la client
+     clientul afiseaza maximul primit de la server
+

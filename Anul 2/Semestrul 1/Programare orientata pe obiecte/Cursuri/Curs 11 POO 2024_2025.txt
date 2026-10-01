@@ -1,0 +1,463 @@
+CURS 11
+ COLECTII
+O colectie este un obiect , grup ce contine alte obiecte.
+Colectiile sunt o alternativa la vectorii de obiecte.
+Dezavantajul la vectori:
+la vectori (vectorii intrinseci), o data stabilita dimensiunea, NU o putem depasi.
+Ex:
+int a[]=new int[3];
+a[0]=1; a[1]=0; a[2]=6;
+a[3]=7;//EROARE !
+La o colectie (grup de obiecte) nu se stabileste de la inceput dimensiunea grupului, deci putem
+adauga ulterior cate obiecte sunt necesare.
+
+O alta diferenta intre vectorii intrinseci si colectii :
+ Vectorul poate contine si obiecte , dar 
+sunt si vectori ce contin date de tipuri primitive (int, double,...)
+Colectiile NU pot contine date de tipuri primitive, doar obiecte.
+Daca o colectie de date de tipul int ? Nu se poate asa, dar, putem folosi 
+obiecte din clasa Integer (o clasa wrapper -"ambalaj" pentru tipul int).
+ex:
+ int nr=7;
+ Integer obj=new Integer(7);
+Alte clase wrapper:
+ pentru double: clasa Double
+
+In limbajul Java pt ca sunt mai multe tipuri de colectii.
+IMPRTANT: colectiile sunt tratate unitar (acelasi nume de metode:
+ex: get(),add(), etc..) prin implementarea interfetelor.
+Avem legate de colectii interfetele:
+Collection
+List
+Set
+
+Interfata Collection
+ Este cea mai generala interfata pt colectii. Ea modeleaza 
+un grup de obiecte (elemente).
+Cateva metode declarate in interfata Collection (doar cu semnatura):
+ public int size() 
+    Returneaza nr de elemente din colectie
+ 
+ public boolean add(Object obj)
+   adauga un element in colectie
+
+ Iterator iterator() 
+   returneaza un obiect de tip Iterator folosit pt parcurgerea colectiei.
+ 
+etc.
+ Nicio clasa din JDK NU implementeaza aceasta interfata.
+ Interfata Collection este folosita pt a fi mostenita de interfata List si Set.
+
+Interfata List
+ - extinde interfata Collection (mosteneste Colection)
+Este folosita pt a modela un grup de elemente INDEXATE. 
+In grup , obiectele se pot repeta
+  Metode noi din interfata List:
+   Object get(int index)
+      returneaza obiectul de pe pozitia index din grup , dar nu-l scoate din colectie
+
+  void set(int index, Object element)
+      modifica obiectul de pe pozitia index
+
+ Object remove(int index)
+     Scoate din colectie elementul de pe pozitia index
+
+Interfata List este implementata de mai multe clase:
+   ArrayList (aceasta o vom folosi intensiv)
+   LinkedList
+   Vector
+
+Interfata Set
+ modeleaza o multime de obiecte - nu mai este doar un grup ( nu pot aparea dubluri)
+/////////////////////
+PARCURGEREA COLECTIILOR
+ Cea mai generala parcurgere: parcurgerea cu iteratori.
+ Interfata Iterator declara 3 metode:
+ boolean hasNext()
+ Object next()
+   Returneaza obiectul urmator din colectie
+ void remove()
+   pt eliminarea unui obiect din colectie
+   ....
+
+Dar vom folosi colectii indexate (clasa ArrayList, clasa Vector, etc.)  si acestea se parcurg mai simplu cu
+ metoda get()
+
+CLASA Collections (atentie: nu are legatura cu INTERFATA Collection)
+ Clasa contine metode statice (exemplu: metoda sort(), shuffle(),...) , folosite pt prelucrarea colectiilor (ex: daca vrem sa sortam o colectie).
+Astfel pentru vectori aveam metoda Arrays.sort(numeVector).
+Pentru a sorta o colectie de obiecte avem Collections.sort(numeColectie);
+
+Semnatura metodei sort():
+public static void sort(Collection c)
+
+Alta metoda din clasa Collections:
+public static void shuffle(Collection c)
+  amesteca aleator elementele colectiei      
+
+
+Vom folosi in principal colectii de elemente indexate (implementate prin clasa ArrayList).
+In general intr-o colectie putem introduce obiecte si din clase diferite. Dar, daca vrem ca intr-o 
+colectie sa fie doar obiecte de acelasi tip,  folosim colectii parametrizate, pt care, se specifica tipul de obiecte 
+din colectia respectiva. Daca vrem sa introducem intr-o colectie parametrizata
+un obiect de alt tip, avem eroare la compilare.
+Compilatorul face niste verificari suplimentare pt colectiile parametrizate.
+Este mult mai simplu de lucrat cu colectii parametrizate.
+
+EXEMPLE
+O colectie neparametrizata  in care vom introduce obiecte Integer, Double si String:
+
+ArrayList al=new ArrayList();
+// al.add(3); Eroare de sintaxa ! Nu pot adauga decat obiecte si 3, nu este obiect
+al.add(new Integer(3));//da, este corect
+al.add(new Integer(5));
+al.add("ABCD");//este corect,deoarece colectia al este neparametrizata.
+al.add(new Double(2.3));
+
+O colectie parametrizata ce contine doar obiecte Integer, se declara asa:
+ArrayList<Integer> al=new ArrayList<Integer>();
+ sau, de al o versiune mai noua de Java, se poate instantia si asa:
+ArrayList<Integer> lista=new ArrayList();
+//Vrem sa introducele obiectele Integer ce contin valorile 3 si apoi 5:
+//Putem face asa: al.add(new Integer(3));
+//Dar, mai simplu, pt ca este o lista parametrizata:
+al.add(3);//compilatorul va substitui cu: al.add(new Integer(3));
+al.add(5);
+al.add("ABCD");//EROARE la compilare, pt ca lista al este parametrizata , accepta doar obiecte Integer
+
+IMPORTANT, de retinut:
+Cand folosim ArrayList si cand folosim vectori intrinseci de obiecte ?
+Folosim ArrayList cand nu stim de la inceput ce dimensiune sa dam listei de obiecte !
+Ex:
+Generam numere aleatoare cuprinse intre 0 si 99 pana se genereaza numarul aleator 99, cand ne vom opri. 
+Sa afisam apoi numerele generate.
+
+- algo toate diferite presupunem sa memoram toate numerele
+ - In ce le memoram ? In vector ? Nu stim ce dimensiune sa dam !
+   Le memoram intr-o colectie ArrayList
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Main {
+
+	public static void main(String[] args) {
+		//Introducem numere aleatoare intre 0 si 20 intr-o lista
+		ArrayList<Integer> lista=new ArrayList();
+		Random r=new Random();
+		final int GAMA=21;
+		for(;;) {
+			int nr=r.nextInt(GAMA);
+			if(nr==GAMA-1)break;
+			lista.add(nr);
+		}
+		//afisare:
+		for(int i=0;i<lista.size();i++)
+		   System.out.print(lista.get(i)+" ");
+	}
+
+}
+
+
+Alt exemplu:
+Citim repetat de la tastatura cuvinte, pana se tasteaza stop.
+Sa afisam daca toate cuvintele sunt diferite intre ele.
+Apoi sa le sortam si sa le afisam sortate.
+ Solutie:
+Cuvintele trebuie memorate, pt a le putea compara intre ele.
+Nu putem estima o dimensiune acoperitoare ca sa folosim un vector, deci vom folosi un ArrayList.
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ArrayList<String> lista=new ArrayList();
+		Scanner sc=new Scanner(System.in);
+		for(;;) {
+			System.out.print("Cuvant=");
+			String cuvant=sc.nextLine();
+			if(cuvant.equals("stop"))break;
+			lista.add(cuvant);
+		}
+		//afisare:
+		for(int i=0;i<lista.size();i++)
+			   System.out.print(lista.get(i)+" ");
+		System.out.println();
+		//Sunt toate diferite:
+		boolean rezultat=suntDiferite(lista);
+		if(rezultat)System.out.println("toate cuvintele diferite");
+		else System.out.println("NU toate cuvintele diferite");
+		//Sortare:
+		Collections.sort(lista);
+		System.out.println("Afisare sortate:");
+		for(int i=0;i<lista.size();i++)
+			   System.out.print(lista.get(i)+" ");
+	}
+	static boolean suntDiferite(ArrayList<String> lista) {
+		for(int i=0;i<lista.size()-1;i++)
+			for(int j=i+1;j<lista.size();j++) {
+				//este egal cuvantul lista.get(i) cu cuvantul lista.get(j)?
+				String s1=lista.get(i);
+				String s2=lista.get(j);
+				if(s1.equals(s2))return false;
+			}	
+		return true;
+	}
+
+}
+                                                             
+Exemplu pentru utizarea metodei set:
+ Sa interschimbam (swap) primul cu ultimul element dintr-o ArrayList de cuvinte.
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ArrayList<String> lista=new ArrayList();
+		Scanner sc=new Scanner(System.in);
+		for(;;) {
+			System.out.print("Cuvant=");
+			String cuvant=sc.nextLine();
+			if(cuvant.equals("stop"))break;
+			lista.add(cuvant);
+		}
+		//afisare:
+		for(int i=0;i<lista.size();i++)
+			   System.out.print(lista.get(i)+" ");
+		System.out.println();
+		//interschimbam primul cu ultimul:
+		if(lista.size()==1)return; //nu avem ce comuta
+		int N=lista.size();//lungimea listei
+		String primul=lista.get(0);
+		String ultimul=lista.get(N-1);
+		//modific pe primul:
+		lista.set(0, ultimul);
+		//Modific si pe ultimul:
+		lista.set(N-1, primul);
+		System.out.println("Afisare noua lista:");
+		for(int i=0;i<lista.size();i++)
+			   System.out.print(lista.get(i)+" ");
+	}
+}
+
+ Tema (nu pe moodle, dar pentru pregatire examen)
+Se da clasa Dreptunghi ce modeleaza un dreptunghi 
+(var. de instanta: lungimea si latimea, si metodele necesare: constructor, arie(), etc.)
+Sa se implementeze folosind clasa ArrayList<Dreptunghi> urmatorul algoritm:
+SE REPETA
+  Citesc lungime si latimea unui dreptunghi
+  Il adaugam in ArrayList
+  Doriti continuare ? d/n
+CAT TIMP se doreste continuare
+Apoi se parcurge ArayList-ul si se afiseaza cate dreptunghiuri au aria egala 
+cu aria primului dreptunghi din lista.
+
+Exemplu:
+Scrieti clasa Elev:
+ var. de instanta : nume - String
+                    nota: int
+ - ca metode : constructor,...
+
+Scrieti clasa Main, ce contine metoda main(), in care citim repetat
+ de la tastatura elevi pana cand tastam pt. nume : stop.
+Introducem elevii intr-un ArrayList
+Cati elevi au note >=5 ?
+
+
+public class Elev {
+	private String nume;
+	private int nota;
+	public Elev(String nume, int nota) {
+		this.nume = nume;
+		this.nota = nota;
+	}
+	public String getNume() {
+		return nume;
+	}
+	public void setNume(String nume) {
+		this.nume = nume;
+	}
+	public int getNota() {
+		return nota;
+	}
+	public void setNota(int nota) {
+		this.nota = nota;
+	}
+}
+
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ArrayList<Elev> lista=new ArrayList();
+		Scanner sc=new Scanner(System.in);
+		for(;;) {
+			System.out.print("nume elev = ");
+			String nume=sc.nextLine();
+			if(nume.equals("stop"))break;
+			//citim nota:
+			System.out.print("nota=");
+			String sNota=sc.nextLine();
+			int nota=Integer.parseInt(sNota);
+			Elev e=new Elev(nume,nota);
+			lista.add(e);
+		}
+		//afisare:
+		for(int i=0;i<lista.size();i++)
+			   System.out.println(lista.get(i).getNume()+" "+lista.get(i).getNota());
+		System.out.println();
+		//cati elevi au note >=5 ?
+		int contor=0;
+		for(int i=0;i<lista.size();i++)
+			if(lista.get(i).getNota()>=5)contor++;
+		System.out.println("contor="+contor);
+		
+	}
+}
+
+                                  POLIMORFISM
+Este o trasatura specifica POO. poli=mai multe
+                                morfism=forme
+  - polimorfism la compilare (polimorfism parametric) - a fost studiat in primele cursuri
+In aceeasi clasa putem avea mai multe metode care au acelasi nume dar au liste de parametrii
+diferiti. Si implementarile sunt diferite !
+  class PolimorfismParametric
+  {
+    public static void main(String args[]){
+      double m1=medie(3,4);
+      System.out.println(m1);
+      double m2=medie(3,4,4);
+      System.out.println(m2);
+    }
+    static double medie(int a, int b){ return (a+b)/2.0;}
+    static double medie(int a, int b, int c){ return (a+b+c)/3.0;}
+  }
+ In faza de compilare, compilatorul stie, dupa nr si tipul argumentelor, care 
+  metoda sa o lege in cod ("early binding" - legare timpurie, adica in faza de compilare si nu la executie ).
+  
+ - polimorfism la executie
+  Avem aceeasi semnatura de metoda (si ca nume dar si ca parametrii si ca tip returnat), dar implementari diferite. Se foloseste tipic in cazul calselor derivate ( legat de mostenire).
+  In cazul mostenirii putem redefini o metoda a clasei de baza , in clasa derivata (vom avea semnatura identica, dar implementare diferita )
+  In anumite situatii, atunci cand se apeleaza metoda ce este si redefinita in clasa derivata, numai la executie se poate 
+determina codul carei metode va fi executat: cea din clasa de baza sau cea din clasa derivata ?
+ Codul metodei adecvate va fi "legat" dinamic,  la executie : "late binding" (legare tarzie) 
+
+Totdeauna putem declara un obiect de tipul clasei de baza si sa instantiem acel obiect din clasa derivata.
+Exemplu:
+   class PatratColor extends Patrat
+   ...
+Patrat p=new PatratColor();//un PatratColor, obiectul creat este in acelasi timp si un Patrat
+
+Invers nu se poate:
+PatratColor pc=new Patrat() ; //NU SE POATE. Eroare la compilare, pt ca obiectul creat, Patrat, NU este si un 
+                              // PatratColor in acelasi timp.
+Exemplu de cod:
+                Patrat p=new PatratColor(2,"alb");
+		p.afisare();//este corect, mpt ca afisare() este declarata si in clasa Patrat
+		//p.setCuloare("rosu");//GRESIT. Putem apela doar metode din clasa Patrat (tipul declarat) !
+		//The method setCuloare(String) is undefined for the type Patrat
+		//PatratColor pc=new Patrat(7); GRESIT !!
+		//Type mismatch: cannot convert from Patrat to PatratColor
+        
+Definim clasa Patrat cu metodele tipice.
+Derivam din ea clasa PatratColor si in aceasta clasa redefinim metoda afisare() din clasa de baza.
+
+
+public class Patrat {
+	private int a;
+
+	public Patrat(int a) {
+		this.a = a;
+	}
+
+	public int getA() {
+		return a;
+	}
+
+	public void setA(int a) {
+		this.a = a;
+	}
+	public void afisare() {
+		System.out.println("latura="+a);
+	}
+
+}
+/////////////
+
+
+public class PatratColor extends Patrat {
+	private String culoare;
+
+	public PatratColor(int a, String culoare) {
+		super(a);
+		this.culoare = culoare;
+	}
+
+	public String getCuloare() {
+		return culoare;
+	}
+
+	public void setCuloare(String culoare) {
+		this.culoare = culoare;
+	}
+	
+    @Override
+    public void afisare() {
+    	super.afisare();
+    	System.out.println("culoare="+culoare);
+    }
+     
+}
+///////////////////////
+
+Clasa Main:
+Introducem N obiecte Patrat sau PatratColor intr-un vector. Decidem daca este Patrat sau PatratColor, 
+generand un numar aleator.
+Apoi, parcurgem vectorul si pt fiecare obiect din vector, apelam metoda afisare().
+
+import java.util.Random;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int N=5;//3 obiect 
+		Patrat p[]=new Patrat[N];
+		int i;
+		Random r=new Random();
+		for(i=0;i<N;i++) {
+			//ce introduc in vector este aleator:
+			int cod=r.nextInt(2);//0 sau 1
+			if(cod==0)p[i]=new Patrat(4);
+			else p[i]=new PatratColor(10,"red");
+		}
+		//afisrea vector:
+		for(i=0;i<N;i++) {
+			p[i].afisare();//late binding !
+			System.out.println();
+		}
+	}  
+/*
+latura=10
+culoare=red
+
+latura=4
+
+latura=4
+
+latura=4
+
+latura=4
+
+*/
+	 */
+	
+}

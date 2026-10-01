@@ -1,0 +1,555 @@
+CURS 8 POO 2024-2025
+    Clasa String (continuare)
+Recapitulare metodele lengh() si charAt():
+
+public class Main {
+
+	public static void main(String[] args) {
+		System.out.println(toateEgale("aaaa"));
+		System.out.println(toateDiferite("abcbd"));
+	}
+	static boolean toateEgale(String s) {
+		for(int i=1;i<s.length();i++)
+			if(s.charAt(i)!=s.charAt(0))return false;
+		return true;
+	}
+	
+	static boolean toateDiferite(String s) {
+		for(int i=0;i<s.length()-1;i++)
+			for(int j=i+1;j<s.length();j++)
+				if(s.charAt(i)==s.charAt(j))return false;
+		return true;
+	}
+
+}
+
+Exercitiu:
+Citim N. Citim N cuvinte de la tastatura. Cate cuvinte incep 
+cu litera a ?
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int N;
+		System.out.print("N=");;
+		N=sc.nextInt();
+		//Construim un alt obiect Scanner pt a citi cuvintele:
+		Scanner scs=new Scanner(System.in);
+		int contor=0;
+		for(int i=0;i<N;i++) {
+			System.out.print("cuvant=");
+			String s=scs.nextLine();
+			if(s.charAt(0)=='a')contor++;
+		}
+		System.out.println("contor="+contor);
+	}
+
+}
+
+SOLUTIA 2, folosind un singur obiect Scanner , cu care citim doar string-uri:
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int N;
+		System.out.print("N=");
+		String sN=sc.nextLine();//"3"
+		N=Integer.parseInt(sN);
+		int contor=0;
+		for(int i=0;i<N;i++) {
+			System.out.print("cuvant=");
+			String s=sc.nextLine();
+			if(s.charAt(0)=='a')contor++;
+		}
+		System.out.println("contor="+contor);
+	}
+
+}
+Exercitiu:
+Citim N. Citim N cuvinte. Cate cuvinte au aceeasi lungime cu primul cuvant citit ?
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("N=");
+		String sN=sc.nextLine();
+		int N=Integer.parseInt(sN);
+		//Ciesc primul cuvant separat:
+		System.out.print("cuvant=");
+		String primul=sc.nextLine();
+		int L1=primul.length();
+		int contor=0;
+		//Citim restul cuvintelor:
+		int i;
+		for(i=2;i<=N;i++) {
+			System.out.print("cuvant=");
+			String s=sc.nextLine();
+			if(s.length()==L1)contor++;	
+		}
+        System.out.println("nr="+contor);
+	}
+}
+
+CONCATENAREA A DOUA SIRURI
+Pt a concatena doua siruri , o posibilitate este de a folosi operatorul +.
+E un operator binar, in care unul dintre operanzi trebuie sa fie obligatoriu String.
+Celalalt, daca nu este, va fi convertit automat la String.
+Ex:
+String s1="abc";
+String s2="xy";
+String s=s1+s2;//s:  "abcxy"
+Pe aceasta proprietate se bazeaza si conversia de la int la String.
+Ex:   123 ----> "123"
+Ideea: concatenam numarul cu stringul vid.
+int nr;
+nr=123;
+String s_nr=""+nr;//"123"
+Conversia inversa, de la String la int se face cu: Integer.parseInt()
+
+Exemplu:
+ Citim de la tastatura un nume, apoi un prenume. Sa formam intr-un alt String numele complet.
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String args[]) {
+	Scanner sc=new Scanner(System.in);
+	String nume; System.out.print("nume=");nume=sc.nextLine();
+	String prenume; 
+        System.out.print("prenume=");
+        prenume=sc.nextLine();
+	String numeComplet=nume+"  "+prenume;
+	System.out.println("nume complet= "+numeComplet);
+	}
+
+}
+
+Sa scriem o metoda ce are doi parametrii de intrare: Stringul s si un numar natural N.
+Metoda returneaza un alt sir obtinut prin repetarea de N ori a lui s.
+Ex: daca s="abc" si N=3, va returna: "abcabcabc"
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		System.out.println(repetare("abc",4));
+	}
+	static String repetare(String s, int N) {
+		String rezultat="";
+		for(int i=1;i<=N;i++)
+			rezultat=rezultat+s;
+		return rezultat;
+	}
+
+}
+
+
+METODA compareTo() (este echivalentul lui strcmp() din lb. C)
+Compararea a doua siruri d.p.v al ordinii lexicografice (o generalizare a ordinii 
+alfabetice) se face cu metoda compareTo(): s1.compareTo(s2)
+public int compareTo(String s)
+Daca cele doua siruri (sirul curent cu care apelam metoda si sirul dat ca parametru)
+au acelasi continut: va returna 0
+Daca sirul curent este > decat sirul dat ca parametru (> in sens lexicografic), atunci
+ returna un rezultat >0.
+
+
+Ex:
+int rez="xy".compareTo("abcd");//rez>0
+
+Exemplu:
+Citim N. Citim N cuvinte . Cate cuvinte sunt egale cu primul cuvant citit ?
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int N;
+		System.out.print("N=");
+		N=Integer.parseInt(sc.nextLine());
+		//Citim primul cuvant separat:
+		System.out.print("cuvant=");
+		String primul=sc.nextLine();
+		//citim restul de N-1 cuvinte:
+		int contor=0;
+		for(int i=2;i<=N;i++) {
+			System.out.print("cuvant=");
+			String s=sc.nextLine();
+			if(s.compareTo(primul)==0)contor++;
+	     }
+		System.out.println("contor="+contor);
+	}
+}
+
+OBSERVATIE:
+Putem compara mai simplu doua siruri daca au acelasi continut, cu metoda equals().
+Metoda equals() este definita in clasa Object si este redefinita in clasa String
+public boolean equals(Object obj)   
+Returneaza true daca cele doua obiecte sunt egale
+if(s.compareTo(primul)==0)contor++;
+SAU:
+if(s.equals(primul)==true)contor++;
+sau, mai bine:
+if(s.equals(primul))contor++;
+  
+
+OPERATORUL ==
+Compararea a doua siruri cu ==
+NU se compara doua siruri ca si continut cu == !
+Nu le compara ca si continut. Compara referintele ( adresele obiectelor)
+
+Ex:
+String s1="abc";
+String s2=new String("abc");
+//Cele doua stringuri sunt memorate in zone diferite de memorie !
+if(s1==s2)System.out.print("da");
+else System.out.print("nu");//  va afisa: nu
+
+String s3=s1;//nu a creat in s3 un obiect nou, doar a copiat adresa lui s1 in s3
+if(s1==s3)System.out.print("da"); //va afisa: da
+else System.out.print("nu");
+
+           VECTORI DE SIRURI
+ Sunt vectori de obiecte . Se declara la fel ca vectorii de primitive (int, float, ...).
+ex: Vrem sa construim un array de N=10 stringuri:
+int N=10;
+String s[]=new String[N];
+
+Putem sa-i initializam direct:
+String t[]={"abc","123", "mar"};
+System.out.println("nr cuvinte in vector t ="+t.length);
+
+Ex: Citim N cuvinte in vector s[]. Sunt toate diferite intre ele ?
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		System.out.print("N=");
+		int N=Integer.parseInt(sc.nextLine());
+		String v[]=new String[N];
+		int i;
+		for(i=0;i<N;i++) {
+			System.out.print("cuvant=");
+			v[i]=sc.nextLine();
+		}
+		boolean rez=toateDiferite(v);
+		System.out.println(rez);
+	}
+    static boolean toateDiferite(String v[]) {
+    	for(int i=0;i<v.length-1;i++)
+    		for(int j=i+1;j<v.length;j++)
+    			if(v[i].equals(v[j]))return false;
+    	return true;
+    }
+}
+
+Exemplu:
+Citim N cuvinte intr-un vector de siruri.
+-Sa le sortam in ordine alfabetica.
+-Sa afisam cel mai lung cuvant.
+Putem sa sortam direct un vector de string-uri cu Arrays.sort().
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+		public static void main(String[] args) {
+			Scanner sc=new Scanner(System.in);
+			System.out.print("N=");
+			int N=Integer.parseInt(sc.nextLine());
+			String v[]=new String[N];
+			int i;
+			for(i=0;i<N;i++) {
+				System.out.print("cuvant=");
+				v[i]=sc.nextLine();
+			}
+			Arrays.sort(v);
+			for(i=0;i<N;i++)
+				System.out.println(v[i]);
+			System.out.println(celMaiLung(v));
+		}
+		static String celMaiLung(String v[]) {
+			int lMax=0;
+			String sMax="";
+			for(int i=0;i<v.length;i++)
+				if(v[i].length()>lMax) {
+					lMax=v[i].length();
+					sMax=v[i];
+				}
+			return sMax;
+		}
+}
+
+Exercitiu:
+Criptarea unui sir cu algo. Caesar
+Criptare prin substitutie.
+
+---------------------------------
+Cripteaza doar literele, restul caracterelor raman neschimbate.
+Substituie litera curenta cu litera aflata in alfabet la distanta 3 de ea. Ex:
+A--->D
+B--->E
+...
+W--->Z
+X--->A
+Y--->B
+Z--->C
+ex:
+A+B=XY
+Criptat:
+D+E=AB
+	Citim un sir s1. Il convertim la litere mari si construim sirul s2
+ obtinut prin criptarea Caesar
+Conversia la litere mari a unui sir se face cu metoda toUpperCase() din clasa String
+  public String toUpperCase()
+
+Putem verifica daca un caracter este litera cu metoda statica isLetter() din
+clasa Character:
+public static boolean isLetter(char ch)
+Ex. de apel:
+boolean este=Character.isLetter('#');//false
+import java.util.Scanner; 
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		System.out.print("sir=");
+		String s1=sc.nextLine();
+		s1=s1.toUpperCase();
+		String s2="";//va fi sirul criptat
+		//Parcurgem pe s1 caracter cu caracter:
+		int i;
+		for(i=0;i<s1.length();i++) {
+			char ch=s1.charAt(i);
+			if(Character.isLetter(ch)) {
+				if(ch=='X')s2=s2+'A';
+				else if(ch=='Y')s2=s2+'B';
+				else if(ch=='Z')s2=s2+'C';
+				else {
+					char chCriptat=(char)((int)ch+3);
+					s2=s2+chCriptat;	
+				}
+			}else s2=s2+ch;
+		}
+		
+        System.out.println(s2);
+	}
+
+}
+
+
+
+Problema posibila la examen:
+CRIPTAREA PRIN TRANSPOZITIE CU MATRICE A UNUI SIR
+Se copiaza sirul intr-o matrice patratica de dimensiune minima.
+Sirul criptat se obtine parcurgand matricea pe coloane.
+Ex:
+"ABCD" cum se cripteaza?
+lungime=4 deci dimensiune matrice=2
+A B
+C D
+Parcurgem pe coloane:
+"ACBD" este sirul criptat
+
+Ex: "ABCDEFG"
+lungime=7, deci dimensiune matrice =3
+A  B  C
+D  E  F
+G  -  -
+Sirul criptat va fi:
+"ADGBE-CF-"
+
+
+ora2
+
+PROBLEMA:
+Vrem sa sortam un vector de siruri in ordinea crescatoare a lungimii lor.
+Ex: {"ZZZ","ABCDE","X"}
+Va rezulta: "X", "ZZZ", "ABCDE"
+Nu mai putem folosi direct Arrays.sort() !
+
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("N=");
+		String sN=sc.nextLine();
+		int N=Integer.parseInt(sN);
+		String s[]=new String[N];
+		int i;
+		for(i=0;i<N;i++) {
+			System.out.print("cuvant=");
+			s[i]=sc.nextLine();
+		}
+                //sortare in ordinea lungimii:
+                //Folosim sortarea prin interschimbare:
+                int i, j;
+                for(i=0;i<N-1;i++)
+                  for(j=i+1;j<N;j++)
+                    if(s[i].length()>s[j].length()){
+                       //le comutam:
+                       String aux=s[i];
+                       s[i]=s[j];
+                       s[j]=aux;
+                    }
+                //afisare vector sortat:
+                ...
+             }
+           }
+
+Observatie:
+ Putem folosi si metoda Arrays.sort() dar, trebuie sa-i transmitem inca un parametru 
+ce impacheteaza noul criteriu de sortare.
+
+METODA split() din clasa String: folosita cel mai des pentru a extrage cuvintele 
+dintr-un String.
+Semnatura:
+public String[] split(String separator)
+Este folosita pt a extrage "atomii" - componentele unui sir, delimitate 
+prin separatorul dat ca parametru. In cazul extragerii cuvintelor separatorul este 
+spatiul.
+Exemplu de folosire pt a extrage cuvintele dintr-o propozitie:
+public class Main {
+	public static void main(String[] args) {
+		String s="Ana are mere";
+		//extrag cuvintele:
+		String cuvinte[]=s.split(" ");
+		for(int i=0;i<cuvinte.length;i++)
+			System.out.println(cuvinte[i]);
+	}
+
+}
+
+Pt a separa corect cuvintele ce sunt separate cu mai multe spatii in propozitie, folosim ca separator o expresie regulata (regexp).
+Expresia regulata ce defineste separatorul UNUL SAU MAI MULTE SPATII este:
+\\s+
+\s - spatiu
++ un cuantificator: unul sau mai multe
+
+String s="Ana        are     mere";
+//extrag cuvintele:
+String cuvinte[]=s.split("\\s+");
+System.out.println("Nr cuvinte="+cuvinte.length);
+for(int i=0;i<cuvinte.length;i++)
+  System.out.println(cuvinte[i]);
+
+Ex. Citim ca string un timp in formatul hh:mm:ss. Ex: "15:20:44".
+Sa convertim si sa afisam timpul exprimat in secunde.
+
+Scanner sc=new Scanner(System.in);
+System.out.print("timp=");
+String st=sc.nextLine();
+String timp[]=st.split(":");
+int h =Integer.parseInt(timp[0]);
+int min =Integer.parseInt(timp[1]);
+int sec =Integer.parseInt(timp[2]);
+int secTotal=3600*h+60*min+sec;
+
+Ex: Cel mai lung cuvant dintr-o propozitie.
+public class Main {
+	public static void main(String[] args) {
+		String s="Ana  are  douazeci de   mere";
+		//extrag cuvintele:
+		String cuvinte[]=s.split("\\s+");
+		System.out.println("nr cuvinte="+cuvinte.length);
+		System.out.println("cel mai lung cuvant = "+celMaiLung(cuvinte));
+	}
+	static String celMaiLung(String v[]) {
+		int lMax=0;
+		String sMax="";
+		for(int i=0;i<v.length;i++)
+			if(v[i].length()>lMax) {
+				lMax=v[i].length();
+				sMax=v[i];
+			}
+		return sMax;
+	}
+
+
+}
+
+Putem sa extragem atomii dintr-un String si cu ajutorul clasei StringTokenizer:
+(Alternativa la metoda split())
+Exemplu:
+String s="Ana are mere";
+StringTokenizer tk=new StringTokenizer(s);
+int nrCuvinte=tk.countTokens();
+int i;
+for(i=0;i<nrCuvinte;i++){
+  String cuvant=tk.nextToken();
+  System.out.println(cuvant);
+}
+
+                  Clasa StringBuffer
+Aceste instructiuni:
+String s="Ionescu";
+s+=" ";//"modific" pe s
+s+="Marius";//"modific" s
+Sunt ineficiente. Clasa String este imutabila. De fiecare data creeaza un string nou.
+Pt. eficienta : StringBuffer
+Obiectele de tipul StringBuffer se pot modifica.
+Exemplu:
+StringBuffer sb=new StringBuffer();
+sb.append("Ionescu"); sb.append(" ");sb.append("Marius");
+Extrag String dintr-un StringBuffer cu metoda toString():
+String s=sb.toString();
+System.out.println(sb.toString()):
+
+StringBuffer nu creeaza un string nou, ci îl modifică pe cel vechi.
+
+
+                  MOSTENIRE. CLASE DERIVATE
+Mostenirea este o trasatura specifica POO (ca si incapsularea, polimorfism, etc)
+Prin mostenire modificam o clasa existenta (denumita clasa de baza sau clasa parinte)
+pentru a obtine o clasa noua (denumita clasa derivata sau clasa fiu).
+Deci in loc sa construim de la zero o noua clasa, cautam o clasa pe care sa o modificam ( sau sa o 
+extindem, sa o mostenim).
+Mostenirea conduce la cresterea productivitatii in programare (vom programa doar diferentele fata de 
+clasa existenta )
+Pentru a putea obtine prin mostenire o noua clasa , trebuie ca intre clasa fiu si clasa parinte sa fie 
+o relatie de tipul: "este_un" sau "este_o" (engl: "is_a")
+Exemplu:
+Avem clasele Vehicul, Cerc, Fruct, Casa
+Vrem sa obtinem o noua clasa: Mar 
+Care ar putea fi clasa de baza ?
+mar este_un vehicul ? NU
+mar este_un fruct ? DA
+Cuvantul cheie folosit pt mostenire in Java este: extends
+class Mar extends Fruct{
+ //aici se programeaza doar diferentele fata de clasa de baza Fruct
+}
+
+Ex. de mostenire:
+ In programarea grafica in Java, clasa pe care o scriem in care desenam interfata 
+noastra grafica 
+mosteneste compartamentul de fereastra din clasa de biblioteca JFrame:
+class Fereastra extends JFrame{
+ //doar diferentele se programeaza
+}
+
+Ce se mosteneste din clasa de baza in clasa derivata ?
+-membrii clasei de baza (var. de instanta si metode) care sunt public sau protected
+NU se mostenesc membrii private !
+NU se mostenesc constructorii !
+
+In clasa derivata putem sa facem si modificari fata de clasa de baza, si anume:
+- putem crea in clasa derivata noi variabile de instanta
+- putem crea in clasa derivata noi metode
+- putem redefini (modifica)  metode ale clasei de baza (le pastram semnatura)
+In cazul metodelor pe care le modificam , este indicat sa folosim specificatia:
+   @Override
+
+In Java nu avem mostenire multipla.
+Deci o clasa derivata poate avea un singur parinte ( os ingura clasa de baza)
+Stramosul tuturor claselor Java este clasa Object.
+

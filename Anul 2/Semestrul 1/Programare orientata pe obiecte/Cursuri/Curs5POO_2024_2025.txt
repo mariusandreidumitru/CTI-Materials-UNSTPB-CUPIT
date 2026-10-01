@@ -1,0 +1,307 @@
+
+CURS 5
+CLASA LISTA
+Dezvoltam o lista simplu inlantuita in Java:
+(ilustreaza f.b. compozitia)
+O lista simplu inlantuita contine noduri.
+Un nod are doua campuri: informatia memorata: nr
+ si adresa nodului urmator: next
+
+public class Nod {
+	public int nr;
+	public Nod next;
+	public Nod(int nr, Nod next) {
+		this.nr = nr;
+		this.next = next;
+	}
+}
+
+O lista inlantuita este accesata prin head, adresa primului nod
+
+public class Lista {
+	private Nod head;
+
+	public Lista() {
+		head=null;
+	}
+    public void inserareLaInceput(int x) {
+    	if(head==null) {
+    		head=new Nod(x,null);
+    		return;
+    	}
+    	Nod headNou=new Nod(x,head);
+    	head=headNou;
+    }
+    public void afisare() {
+    	if(head==null) {
+    		System.out.println("lista este vida");
+    		return;
+    	}
+    	//parcurgem lista incepand de la head:
+    	Nod nodCrt=head;
+    	for(;;) {
+    		//afisam informatia din nodul crt:
+    		System.out.print(nodCrt.nr+" ");
+    		//avansam in lista:
+    		nodCrt=nodCrt.next;
+    		if(nodCrt==null)break;
+    	}
+    	System.out.println();
+    }
+    
+    public int cateNumerePare() {
+    	//pres. ca lista nu e vida
+    	int contor=0;
+    	//parcurg lista:
+    	Nod nodCrt=head;
+    	for(;;) {
+    		if(nodCrt.nr%2==0)contor++;
+    		//avansam in lista:
+    		nodCrt=nodCrt.next;
+    		if(nodCrt==null)break;
+    	}
+    	return contor;
+    }
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Lista lista=new Lista();
+		for(int i=1;i<=10;i++)
+			lista.inserareLaInceput(i);
+	    lista.afisare();
+	    System.out.println("Numarul de numere pare = "+lista.cateNumerePare());
+	}
+
+}
+
+/////////////////
+Implementare arbore binar de cautare
+
+Definitie: pentru orice nod, valorea din nod este mai mare decat valorile memoraate in orice nod al subarborelui stang,
+                             si este mai mica decat valorile memorate in toate nodurile din subarborele drept.
+
+{5,3,4,9,6,1,7}
+
+           5
+   3              9
+ 1   4       6        50
+                7
+
+//un nod pt un arbore binar , in general:
+class Nod{
+  public int nr;
+  public Nod fSt;
+  public Nod fDr;
+  public Nod(int nr, Nod fSt, Nod fDr){
+    this.nr=nr;
+    this.fSt=fSt;
+    this.fDr=fDr;
+ }
+}
+
+
+public class ArboreBinarCautare {
+	private Nod rad;
+
+	public ArboreBinarCautare() {
+		rad=null;
+	}
+	public boolean esteVid() {
+		if(rad==null)return true;
+		else return false;
+	}
+	public void inserare(int x) {
+		//presupunem ca nu exista chei duble
+		if(rad==null) {
+			rad=new Nod(x,null,null);
+			return;
+		}
+		Nod nodNou=new Nod(x,null,null);
+		//unde il legam de vechiul arbore?
+		//Plecam de la rad:
+		Nod nodCrt=rad;
+		for(;;) {
+			if(x<nodCrt.nr) {
+				//mergem pe stanga. Avem fiu stanga?
+				if(nodCrt.fSt==null) {
+					//aici il inseram:
+					nodCrt.fSt=nodNou;
+					return;
+				}else nodCrt=nodCrt.fSt;
+			}else {
+				//mergem pe dreapta. Avem fiu dreapta?
+				if(nodCrt.fDr==null) {
+					//aici il inseram:
+					nodCrt.fDr=nodNou;
+					return;
+				}else nodCrt=nodCrt.fDr;
+			}
+		}//for;;
+	}//inserare()
+	
+	public int maxim() {
+		//este valoarea din cea mai din dreapta frunza
+		//Presupunem ca nu este vid
+		//Plecam de la rad:
+		Nod nodCrt=rad;
+		for(;;) {
+			if(nodCrt.fDr==null)
+				return nodCrt.nr;
+			else nodCrt=nodCrt.fDr;
+		}
+	}
+
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		ArboreBinarCautare ab=new ArboreBinarCautare();
+	    ab.inserare(7); 
+	    ab.inserare(17); 
+	    ab.inserare(77);   
+	    ab.inserare(-7); 
+	    ab.inserare(-17); 
+	    int max=ab.maxim();
+	    System.out.println(max);
+	}
+}
+////////////////////////////////////////////
+COMPARAREA A DOUA OBIECTE CU OPERATORUL ==
+Comparam doua obiecte Patrat:
+public class Patrat {
+	public int a;//latura
+
+	public Patrat(int a) {
+		this.a = a;
+	}
+        ...
+}
+public class Main {
+
+	public static void main(String[] args) {
+		Patrat p1=new Patrat(5);
+		Patrat p2=new Patrat(5);
+		if(p1==p2)System.out.println("egale");
+		else System.out.println("NU egale");
+	}
+
+}
+
+Se va afisa : NU egale, pt ca p1 si p2 sunt REFERINTE (adrese) catre 
+zonele de memorie unde sunt efectiv memorate cele doua obiecte.
+
+CUVANTUL CHEIE static
+Intr-o clasa putem avea membrii care sunt si statici (var. de instanta si metode).
+Ei sunt declarati cu cuv. cheie static.
+Ex:
+  static int N;
+  public static void main(String args[])
+
+Membrii statici pot fi accesati fara  a crea un obiect din clasa respectiva, folosind sintaxa:
+    numeClasa.numeMembru
+Ex: in clasa Math:
+    public static double sqrt(double x)
+double rez=Math.sqrt(7);
+
+Ex: in clasa Math:
+     public final static PI=3.141...;
+O accesam direct:
+     double arie=Math.PI*r*r;
+
+In general, daca variabilele de instanta ale unei clase nu sunt statice, se va face o copie a lor
+(li se rezerva spatiu de memorie) in fiecare obiect instantiat.
+Exemplu:
+Punct p2=new Punct(1,2);
+Punct p1=new Punct(3,5);  //in spatiul de memorie alocat lui p1, avem memorate x=3 si y=5
+p1.setX(7);// in locatia x de memorie din obiectul p1, am scris 7. Nu a afectat locatia de memorie x din obiectul p2.
+
+
+Important: variabilele de instanta statice, sunt unice pe clasa ! Nu se mai copiaza in fiecare obiect instantiat.
+           Exista o singura copie la nivelul clasei.
+Variabilele de instanta statice sunt initializate inainte de a crea vreun obiect din clasa respectiva !
+Sunt initializate la incarcarea clasei.
+
+Obs:
+ Dintr-o metoda statica a unei clase nu putem accesa decat membrii tot statici ai aceleasi clase.
+Ex: daca vrem sa contorizam cate obiecte s-au instantiat dintr-o clasa, vom avea o variabila de instanta statica, un contor.
+
+class Patrat{
+ public int a;//latura
+ public static int contor=0;
+ //constructor:
+ public Patrat(int latura){
+   this.latura=latura;
+   contor++;  
+ }
+ public int arie(){
+   return latura*latura;
+ }
+}
+class TestPatrat{
+  public static void main(String args[]){
+    Patrat p1=new Patrat(1);
+    Patrat p1=new Patrat(10);
+    Patrat p1=new Patrat(3);
+    System.out.println("nr obiecte="+Patrat.contor);//accesare directa a var. contor, fara vreun obiect
+    //Putem si asa:
+     System.out.println("nr obiecte="+p1.contor);
+    //sau asa:
+    System.out.println("nr obiecte="+p2.contor);
+  }
+}
+
+
+Dar de ce nu se poate la fel si in cazul constantei statice PI ?
+ System.out.println("pi="+Math.PI);//Este corect
+dar , asa nu:
+
+  Math m=new Math();//GRESIT !
+  System.out.println("pi="+m.PI);//NU E CORECT !
+Raspuns: In clasa Math, constructorul este private, tocmai pt a impiedica instantierea !
+
+Daca vrem sa asociem un id local fiecarui obiect creat:
+public class Patrat{
+ public int latura;
+ private int id;
+ public static int contor=0;
+ //constructor:
+ public Patrat(int latura){
+   this.latura=latura;
+   contor++; 
+   id=contor;
+ }
+ public int getId() {
+	return id;
+}
+ public int arie(){
+   return latura*latura;
+ }
+}
+class Main{
+  public static void main(String args[]){
+    Patrat p1=new Patrat(1);
+    System.out.println("id obiect="+p1.getId());
+    Patrat p2=new Patrat(10);
+    Patrat p3=new Patrat(3);
+    System.out.println("id obiect="+p3.getId());
+  }
+}
+
+Cand se recomanda sa folosim cuv. cheie static ?
+- in putine cazuri, se recomanda static pt var. de instanta (de ex. se recomanda 
+cand trebuie sa asociem un id fiecarei instante)
+- se recomanda pt . constante (sunt pt intreaga clasa):
+     public/private final static int N=....;
+-se recomanda pt metodele care nu sunt legate de o anumita instanta din clasa respectiva 
+(Dacă o metodă nu foloseste variabilele de instanță ale clasei, are logică să o facem statică.)
+
+De ce dintr-o met. statica a unei clase nu pot apela decat o metoda tot statica, definita 
+in acea clasa ? 
+Metoda nestatica este legata de o instanta, iar cea statica, nu este !
+
+////////////////////////////////////////////////////////////////

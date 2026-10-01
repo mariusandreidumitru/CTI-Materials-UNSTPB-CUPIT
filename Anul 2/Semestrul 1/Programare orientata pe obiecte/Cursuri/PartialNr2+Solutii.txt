@@ -1,0 +1,70 @@
+Problema 1
+Constructorul clasei B are semnatura: public B(int a, int b)
+In clasa B avem metoda f( ) ce are semnatura: public double f()
+a.	Instantiati un obiect din clasa B
+       B obj=new B(3,4);
+b.	Dati un exemplu de apel pentru metoda f(), din afara clasei B
+       B obj=new B(3,4);
+       double rezultat=obj.f();
+
+Problema 2
+In clasa B avem metoda f( ) ce are semnatura:
+public static void f(int a, int b, int c)
+   Dati un exemplu de apel pentru metoda f(), din afara clasei B
+   B.f(1,2,3);
+
+Problema 3
+Scrieti clasa TreiNumere ce are ca variabile de instanta pe a,b si c, de tipul int.
+Ca metode: constructorul clasei, metoda minim() ce returneaza minimul dintre a, b si c,  si metoda toatePrime() care returneaza true daca si a si b  si c sunt numere prime.
+Scrieti si clasa Main , ce testeaza aceste metode.
+
+public class TreiNumere{ 
+  private int a,b,c;
+  public TreiNumere(int a, int b, int c){
+    this.a=a;
+    this.b=b;
+    this.c=c;
+  }
+ public int minim(){
+   int m=a;
+   if(b<m)m=b;
+   if(c<m)m=c;
+   return m;
+ }
+ boolean estePrim(int nr){
+   if(nr<=1)return false;
+   for(int i=2;i<=Math.sqrt(nr);i++)
+     if(nr%i==0)return false;
+   return true;
+ }
+ public boolean toatePrime(){
+   if(estePrim(a) && estePrim(b) && estePrim(c)) return true;
+   else return false;
+ }
+}
+
+public class Main{
+ public static void main(String args[]){
+   TreiNumere t=new TreiNumere(1,2,3);
+   System.out.println("min="+t.minim());
+   System.out.println(t.toatePrime());
+ }
+}
+
+Problema 4
+Adaugati in clasa Lista, ce modeleaza o lista inlantuita de numere intregi (are variabila de instanta head, de tipul Nod, unde Nod este clasa ce modeleaza un nod din lista), metoda suma(), ce are semnatura: public int suma()
+Metoda returneaza suma numerelor din lista.
+
+public int suma(){
+  int sum=0;
+  Nod nodCrt=head;
+  for(;;){
+     sum=sum+nodCrt.nr;
+     nodCrt=nodCrt.next;
+     if(nodCrt==null)break;
+  }
+  return sum;
+}
+
+
+

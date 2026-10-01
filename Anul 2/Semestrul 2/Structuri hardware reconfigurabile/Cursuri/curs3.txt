@@ -1,0 +1,40 @@
+Structuri logice in VHDL
+1. MSI 
+2. LSI (Large Scale Integrated Circuits)
+
+1.a MUX - done
+1.b Decodor m:n cu stare activa 0 sau 1
+Are m intrari Sm-1 ... S0
+Are n iesiri Yn-1 ... Y0
+m = [log2 n]
+Una dintre iesiri (Y) se afla in starea activa iar celelalte in starea inactiva. Iesirea care se afla in starea activa are indexul cu valoarea in zecimal a intrarilor S
+
+Exemplu:
+Decodor 1:2 cu activ 1
+Daca S = 0 atunci Y0 <- 1 Y1 <- 0
+Daca S = 1 atunci Y0 <- 0 Y1 <- 1
+
+Decodor 2:4 cu activ 1
+Vezi in paint
+
+Toate MSI se implementeaza in VHDL cu with ... select ...
+Exemplu VHDL in cod sursa (dcd2_4.vhd)
+
+1.c Demultiplexor 1:n cu stare activa 0 sau 1
+Are: 1 intrare I, m intrari de selectie Sm-1 ... S0
+n iesiri Yn-1 ... Y0
+m = [log2 n]
+Una dintre iesiri (Y) se afla in starea activa iar celelalte in starea inactiva daca I este activ. Iesirea care se afla in starea activa are indexul egal cu valoarea in zecimal a intrarilor S. Daca I este inactiv atunci toate iesirile sunt in starea inactiva.
+Explicatie functionare 2: Intrarea I este conectata la una dintre iesirile Y . Iesirea Y la care este conectata intrarea I are indexul egal cu valoarea in zecimal a intrarilor S.
+Exemplu VHDL in cod sursa (dmux1_2.vhd)
+
+1.d Decodorul general m:n
+Are m intrari Xm-1 ... X0
+n iesiri Yn-1 ... Y0
+Nu mai exista nicio relatie intre m si n.
+Poate implementa orice functie logica de forma F(X) = Y descrisa de un tabel de adevar
+In VHDL instructiunea este with ... select...
+
+Exemplu: decodorul 7 segmente activ 1 sau 0.
+
+

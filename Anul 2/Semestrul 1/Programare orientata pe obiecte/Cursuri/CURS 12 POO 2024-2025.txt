@@ -1,0 +1,348 @@
+CURS 12
+
+Introducem intr-un ArrayList obiecte Punct, pana tastam punctul de coordonate (0,0).
+Sa le sortam in ordinea crescatoare a distantelor fata de origine.
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ArrayList<Punct> lista=new ArrayList();
+		Scanner sc=new Scanner(System.in);
+		for(;;) {
+			System.out.print("x=");int x=sc.nextInt();
+			System.out.print("y=");int y=sc.nextInt();
+			if(x==0 && y==0)break;
+			lista.add(new Punct(x,y));
+		}
+		sortareLista(lista);
+		//afisare:
+		for(int i=0;i<lista.size();i++)
+			System.out.println(lista.get(i).x+" "+lista.get(i).y);
+	}
+    static void sortareLista(ArrayList<Punct> lista) {
+    	//sortare prin interschimbare:
+    	int i, j;
+    	for(i=0;i<lista.size()-1;i++)
+    		for(j=i+1;j<lista.size();j++) {
+    			Punct p1=lista.get(i);
+    			double d1=Math.sqrt(p1.x*p1.x+p1.y*p1.y);
+    			Punct p2=lista.get(j);
+    			double d2=Math.sqrt(p2.x*p2.x+p2.y*p2.y);
+    			if(d1>d2) {
+    				//interschimbam p1 cu p2 in lista:
+    				//duc in lista in locul lui p1 pe p2:
+    				lista.set(i,p2);
+    				lista.set(j,p1);
+    			}
+    		}
+    }
+}
+
+SOLUTIA 2
+Folosim Collections.sort() in care schimbam criteriul de sortare.
+Metoda statica sort() va primi si un al doilea parametru, un obiect dintr-o clasa 
+pe care noi o scriem , clasa ce implemementeaza interfata Comparator.
+Interfata contine o singura metoda, metoda compare():
+
+public class Sortator implements Comparator<Punct>{
+	@Override
+	public int compare(Punct p1, Punct p2) 
+...
+}
+
+Solutie:
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ArrayList<Punct> lista=new ArrayList<Punct>();
+		Scanner sc=new Scanner(System.in);
+		for(;;) {
+			System.out.print("x=");int x=sc.nextInt();
+			System.out.print("y=");int y=sc.nextInt();
+			if(x==0 && y==0)break;
+			lista.add(new Punct(x,y));
+		}
+		Collections.sort(lista,new Sortator());
+		//afisare:
+		for(int i=0;i<lista.size();i++)
+			System.out.println(lista.get(i).x+" "+lista.get(i).y);
+	}
+   
+}
+
+TEMA DE CASA
+  (inainte de examen, pana pe 8 feb)
+1. Avem un fisier de numere intregi, numere.txt, cate un numar pe fiecare linie.
+Incarcam fisierul intr-un obiect ArrayList<Integer> (nu stim cate numere sunt in fisier).
+Afsati daca numerele din fisier sunt in ordine crescatoare sau nu.
+
+2. Avem un fisier text care contine pe fiecare linie cate un nume si un prenume.
+Sa sortam in ordine alfabetica aceste nume si sa copiem numele sortate in alt fisier text.
+Obs: mai intai vom copia primul fisier intr-un obiect ArrayList<String> .
+
+3. Avem un fisier text f1.txt care contine mai multe linii.
+Sa construim fisierul f2.txt, obtinut din f1.txt prin eliminarea dublurilor
+(o propozitie ce apare de mai multe ori, o voi copia o singura data).
+Ex., daca f1.txt este:
+mar
+mar si para
+unu
+doi
+unu si trei
+doi
+mar si para 
+doi
+zece
+
+Fisierul f2.txt:
+mar
+mar si para
+unu
+doi
+unu si trei
+zece
+
+
+               FISIERE. 
+Sunt folosite pentru stocarea permanenta a informatiei.
+Clasele ce lucreaza fisiere fac parte din package java.io
+Sunt doua tipuri de fisiere: text si binare.
+In prelucrarea fisierelor apar erori (exceptii) care sunt obligatoriu de tratat.
+
+EXCEPTII
+ Sunt erori care apar la executia unui program.
+
+In limbajul C, deschiderea unui fisier se face cu functia fopen():
+  FILE * fp=fopen("date.txt","rt");
+  //tipic, dar nu obligatoriu, se verifica daca s-a putut deschide:
+  if(fp==NULL){
+     //tratarea erorii:
+     ...
+     exit(0);
+  }
+
+Ex.  de erori in Java:
+1) Scanner sc=new Scanner(System.in);
+   String sir;
+   System.out.print("sir=");
+   sir=sc.nextLine();
+   int nr=Integer.parseInt(sir);
+
+Daca sirul="A12B" NU poate sa-l converteasca, atunci apare o eroare la executie, 
+se va termina anormal programul.
+
+
+Sunt doua tipuri de exceptii in Java:
+- exceptii care nu sunt obligatoriu de tratat
+Ex: 
+   -convertirea la int cu parseInt() a unui sir care nu este numeric
+   -impartirea cu 0
+   -apelarea unei metode dintr-o clasa , folosind un obiect null (neinstantiat)
+   ...
+   Acestea sunt exceptii de tipul (din clasa) RunTimeException
+- exceptii care sunt obligatoriu de tratat
+Ex:
+  -exceptii ce apar la deschiderea unui fisier, sau la citirea / scrierea dintr-un fisier
+  -in aplicatii client server, transmiterea / receptia de date in retea
+...
+  Ele (exceptiile obligatoriu e tratat) fac parte din clasa Exception sau din clase derivate din clasa Exception (ex: clasa IOException tipica pt exceptiile legate de fisiere, 
+este derivata din Exception)
+
+
+Tratarea exceptiilor in Java se face in blocuri try...catch
+Cel mai simplu bloc:
+try{
+  //instructiuni care pot genera exceptii oblig. de tratat
+  //(ex: prelucrari de fisiere)
+}catch(TipExceptie e){
+   //tratarea exceptie
+} 
+Ex. concret:
+try{
+  FileReader fr=new FileReader("date.txt");
+  //prelucrez fisierul:
+  //....
+  fr.close();
+}catch(IOException e){
+  e.printStackTrace();
+  
+  System.exit(1);
+}
+
+Ce se intampla daca omitem try..catch ?
+class F1{
+ public static void main(String args[]) {
+   FileReader fr=new FileReader("date.txt");
+   ...
+ }
+}
+
+Programul nu se va compila , deci nu ajung la executie !
+
+
+Blocul try ..catch cel mai complex:
+try{
+ //instructiuni
+}catch(TipExceptie_1 e){
+  //prelucrare acesta exceptie
+}catch(TipExceptie_2 e){
+  //prelucrare acesta exceptie
+}
+...
+}catch(TipExceptie_n e){
+  //prelucrare acesta exceptie
+}finally{
+  //prelucrari care se fac indiferent daca a fost exceptie sau nu
+}
+
+Dar blocul finally este optional (poate lipsi finally).
+Putem sa evitam tratarea exceptiilor oblig. de tratat cu blocuri try..catch  si sa "aruncam" sarcina
+ tratarii lor mai departe, folosind clauza throws, ca in exemplul urmator:
+class F1{
+ public static void main(String args[]) throws IOException{
+   FileReader fr=new FileReader("date.txt");
+   ...
+ }
+}
+
+In afara de clasele de exceptii definite de Java, putem sa definim si noi, ca programatori, clase de exceptii.
+
+Obs:
+Putem trata in blocuri try..catch si exceptiile care nu sunt obligatoriu de tratat,
+desi in general nu se recomanda, pt ca incarca inutil codul.
+Ex: pt tratarea conversiei de la String la int cu parseInt()
+ Scanner sc=new Scanner(System.in);
+ for(;;){
+  boolean ok=true;
+  try{
+    String s=sc.nextLine();//"123" dar "1AB2" nu va putea sa-l converteasca la int
+    int nr=Integer.parseInt(s);//123
+    //afisare divizori:
+    for(int i=1;i<=nr;i++)
+      if(nr%i==0)System.out.println(i);
+  }catch(NumberFormatException e){
+     ok=false;
+  }
+  if(ok==true)break;
+ }//for;;
+ 
+
+FISIERE TEXT
+ In Java fisierele sunt tratate unitar. Sunt vazute ca fluxuri de date.
+ Exista clase separate pt tratrea fisierelor text si clase separate pt cele binare.
+ Exista clase pt citirea fisierelor si clase pt scrierea fisierelor
+
+Un fisier text poate fi citit caracter cu caracter (clasa FileReader) sau poate fi citit 
+linie cu linie (clasa BufferedReader)
+
+Clasele de prelucrat fisierele se gasesc in package-ul java.io .
+
+                         Clasa FileReader : pt a citi un fisier text caracter cu caracter
+  Constructorul:
+  public FileReader(String numeF)
+  Metode:
+   public int read()
+  returneaza codul caracterului de pe pozitia curenta din fisier  si avanseaza automat 
+    pe urmatorul caracter
+  returneaza -1 cand s-a terminat fisierul
+
+  public void close()
+pt a inchide fisierul. Metoda mostenita.
+
+Exemplu
+ Sa se calculeze de cate ori apare caracterul 'a' in fisierul text date.txt
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+	public static void main(String args[]) {
+		try {
+			FileReader fr=new FileReader("date.txt");
+			int contor=0;
+			//citire fisier caracter cu caracter:
+			for(;;) {
+				int cod=fr.read();
+				if(cod==-1)break;
+				if((char)cod=='a')contor++;
+			}
+			fr.close();
+			System.out.println("contor="+contor);
+		}catch(IOException e) {
+			System.exit(1);
+		}
+		
+	}
+
+}
+
+Puteam declara var. contor si in afara blocului try..catch, astfel:
+import java.io.*;
+class F1{
+ public static void main(String args[]){
+   int contor=0;
+   try{
+     FileReader fr=new FileReader("date.txt");//daca date.txt nu este in acelasi director cu aceasta clasa
+                                               //trebuie sa-i dam numele complet: "C:\\TEXTE\\date.txt"
+     //citim caracter cu caracter:
+     //Nu stim cate caractere sunt: 
+     for(;;){
+       int cod=fr.read();
+       if(cod==-1)break;
+       if((char)cod=='a')contor++;
+     }
+     fr.close();
+  }catch(IOException e){
+     System.exit(1);
+  }   
+  System.out.println(contor);
+ }
+}
+
+CITIRE FISIER TEXT LINIE CU LINIE
+
+Clasa BufferedReader
+Constructor
+ public BufferedReader(FileReader fr)
+metoda:
+ public String readLine() //citeste linia curenta
+returneaza null daca s-a terminat fisierul
+
+Ex: 
+Cate linii are fisierul date.txt ?
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+	public static void main(String args[]) {
+		int contor=0;
+		try {
+			FileReader fr=new FileReader("date.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			//citire fisier linie cu linie:
+			for(;;) {
+				String s=bfr.readLine();
+				if(s==null)break;
+				contor++;
+			}
+			bfr.close();fr.close();
+			
+		}catch(IOException e) {
+			System.exit(1);
+		}
+		System.out.println("contor="+contor);
+		
+	}
+
+}
+
+
+
+

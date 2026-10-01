@@ -1,0 +1,16 @@
+Arhitecturi reconfigurabile
+Aria logica programabila. Exemplu laborator
+
+1. Celula configurabila
+2. Aria logica programabila
+3. Implementare de circuite logice pe PLA (Programmable Logic Array)
+
+1. Celula configurabila
+In acest exemplu este constituita dintr-o poarta SI , o parta SAU si un MUX 2:1.
+Ea se poate adapta la mai mult de doua intrari.
+
+2. Aria logica programabila
+Schema ariei logice programabile pentru F(x2,x1,x0) = y - functie logica cu 3 intrari si o iesire
+
+3.Implementare circuite logice pe PLA
+

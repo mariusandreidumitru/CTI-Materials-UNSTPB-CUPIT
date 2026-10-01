@@ -1,0 +1,414 @@
+Curs 2 POO Calc. 2
+
+Recapitulare din cursul 1:
+Citesc N. Citesc N numere. Calcul suma lor
+
+Java:
+Citire cu clasa Scanner, met. nextInt()
+
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		int N;
+		Scanner sc=new Scanner(System.in);
+		System.out.print("N=");
+		N=sc.nextInt();
+		int suma=0;
+		for(int i=1;i<=N;i++) {
+			//citire nr:
+			System.out.print("nr=");
+			int nr=sc.nextInt();
+			suma=suma+nr;
+		}
+		System.out.println("suma="+suma);
+	}
+
+}
+
+////////////// clasa Random ///////////////////////
+Clasa Random , de biblioteca, face parte din java.util (package);
+Folosita pt a genera numere aleatoare.
+Creez un obiect din Random:
+Random r=new Random();
+Apelez metoda nextInt() din Random, ce are semnatura:
+public int nextInt(int N) //returneaza nr intreg aleatory in intervalul [0,N-1] 
+Ex:
+int nr=r.nextInt(10);//nr. intreg aleator intreg [0,9]
+
+Ex: pt a simula un zar:
+   int z=1+r.nextInt(6);
+
+
+///////////////// Comentarii in Java ////////////
+// (ca in C)
+/*  .... */ (ca in C)
+In Java avem in plus comentariile pt generarea automata a documentatiei
+ unui program:
+/**
+....
+*/
+Se foloseste utilitarul javadoc, care va crea documentatia 
+sub forma de fisiere .html
+
+///////// TIPURI DE DATE IN JAVA ///////////////
+  a)tipuri primare ("primitive data types")
+  Ca si in C:
+ short
+ int (4 octeti)
+ char (pe 2 octeti, codul Unicode)
+   ex: caracterul 'A' in ASCII ocupa un octet: 65
+    In Unicode (generalizare pt ASCII), ocupa doi octeti: 0, 65
+ long
+ float
+ double
+ boolean (true, false) - 1 bit
+ In C (nu in C++) nu aveam tipul boolean. In C False era reprezentat 
+prin valoarea intreaga 0.
+In C++ avem: bool
+
+IMPORTANT: Spre deosebire de C, in Java tipurile de date au 
+un nr fix de octeti alocat.
+Ex: tipul int ocupa 4 octeti.
+ b) In afar de tipurile primare (primitive) avem in Java si tipuri referinta 
+In aceste variabile se memoreaza adresa si nu valoarea.
+Totdeauna obiectele sunt variabile de tipul referinta.
+Ex: Scanner sc=new Scanner(System.in);
+Variabila sc este un obiect, deci o variabila de tip referinta.
+La fel si o variabila de tipul String este o variabila referinta.
+String s="abcd";
+
+/// Conversii automate si conversii fortate intre tipuri de date diferite,in Java////
+Exemplu:
+
+public class Conversii {
+
+	public static void main(String[] args) {
+         /* In lb. C, era corect: (in lb. Java: NU !)
+             double x=3.57;
+             int nr=x;//nr=3 , in lb. C!
+             //Va fi eroare de sintaxa in Java!
+         */
+     
+in Java, regula folosita pt conversii intre tipuri diferite de date:
+ Nu putem pune o cutie mare (double) intr-o cutie mica (int)
+ In java este eroare de sintaxa daca facem asa:
+     double x=3.57;
+     int nr=x;
+   */
+    //Corect in Java se face asa:
+     double x=3.57;
+     int nr=(int)x;//asa se forteaza conversia de la double la int
+     System.out.println("nr="+nr);
+    
+     //Invers, de la int la double, se poate direct !
+     double y;
+     int a=122;
+     y=a;
+     System.out.println(y);//122.0
+  }//main
+}//class
+    
+//// CONSTANTE DE TIPUL float SI DE TIPUL long: particularitati in Java///////////////////
+     double x1=1.2;//corect
+     float y1=1.2;//Gresit in Java! (in C era corect!)
+     //Type mismatch: cannot convert from double to float
+ In Java, constantele numere reale au implicit tipul double !
+Pt constante float:
+     float y1=1.2f;//corect !
+Constante long: (se mai pune sufixul L)
+     long nr2=1000000L;
+sau:
+     long nr3=1_000_000L;//mai usor de citit
+    
+Constantele intregi, implicit sunt de tipul int !
+     long nr4=5_000_000_000L;//l-am facut de tipul long
+
+
+////////// ATENTIE LA OPERATIILE CU NUMERE REALE ! ////////////////////  
+     double d1=3.1;
+     double d2=1.21;
+     double dif=d1-d2;//1.89
+     System.out.println(dif);//1.8900000000000001
+     if(dif==1.89)System.out.println("nota 10");
+     else System.out.println("nota 4");
+     //CaUZA: numerele reale nu se reprezinta 100% corect in memorie
+     //La numere intregi nu apar aceste probleme !
+    
+	}
+
+}
+
+//////////// Operatorul de concatenare + //////////////////////
+Operatorul + este folosit, in cazul stringurilor ,
+pentru concatenare.
+
+String s1="Ionescu";
+String s2="Ion";
+//nume Complet: Ionescu  Ion
+String numeComplet=s1+" "+s2;
+System.out.println(numeComplet);
+
+Operatorul +: daca unul dintre operanzi este String iar celalat 
+nu este, il va converti de asemenea la String,
+ si va face concatenarea intre doua Stringuri. Ex:
+
+Scanner sc=new Scanner(System.in);
+System.out.print("nr="); int nr=sc.nextInt();
+//Numarul introdus este: ...
+System.out.println("Numarul introdus este: "+nr); 
+
+Deci, putem folosi operatorul + pentru a converti 
+numere (int, double ) de la tipul numeric la tipul String.
+int nr=5;
+String s_nr=nr+"";//concatenare cu string vid
+Exemplu:
+int nr=123;
+//Stringul "123" se obtine astfel:
+String s_nr=""+nr;//Nu este adunare, este concatenare
+
+double x=3.123;
+String s_x=""+x;
+
+Conversia inversa de la String la int se face folosind clasa Integer 
+si metoda parseInt(), astfel:
+String s="123";
+//Vrem sa obtinem numarul intreg 123:
+int nr=Integer.parseInt(s);
+
+double x=Double.parseDouble("12.45");//x=12.45
+Clasele Integer si Double sunt denumite clase wrapper
+ (invelis, ambalaj).
+Fac parte din pachetul java.lang, ca si clasa System
+Acest pachet este automat importat !
+
+////////// CONSTANTE IN JAVA ////////////////////
+ - Constantele sunt variabile ce au un continut fix.
+ - Se recomanda ca numele lor sa fie scris cu litere mari
+ - se definesc in Java cu cuvantul cheie final
+Ex:
+final int NR_ELEVI=30;
+//In C++: const int NR_ELEVI=30;
+ -  De ce le folosim ?
+ Ca sa fie mai usor de inteles programul.
+Constanta PI (3.14...) in Java  este definita in clasa Math, si o folosim astfel:
+Math.PI
+Ex: (calcul arier cerc, raza citita de la tastatura)
+        Scanner sc=new Scanner(System.in);
+        System.out.print("raza=");
+        int r=sc.nextInt();
+        //double arie=3.14*r*r;
+        double arie=Math.PI*r*r;//mai precisa valoarea lui  pi=3.141592653589793
+        //const public static double PI=3.141592653589793; 
+        System.out.println("arie="+arie);
+
+Ex: Avem o suma de bani citita de la tastatura. O depunem la banca.
+Rata dobanzii anuale este 10%.
+Ce suma de bani avem in cont dupa o luna? 
+Obs: Definim constante, pt claritatea programului!
+import java.util.Scanner;
+
+public class Const {
+
+	public static void main(String[] args) {
+		final double RATA_DOBANZII_ANUALE=0.1;
+		final int NR_LUNI_AN=12;
+        Scanner sc=new Scanner(System.in);
+        int suma=sc.nextInt();
+        //double dobanda=suma*0.1/12; Greu de inteles ce reprezinta aceste constante !
+        double dobanda=suma*RATA_DOBANZII_ANUALE/NR_LUNI_AN;
+        double S=suma+dobanda;
+        System.out.println("Dupa o luna: "+S);
+        
+	}
+
+}
+Regula in programare:
+ NU numere magice !(suma*0.1/12;) Folosesc constante simbolice ! 
+La fel : NU numere magice in viata!
+
+////  Specificatori de acces (NOU, nu este in C, este specific POO, este IMPORTANT!) ///////////////
+  Exista principiul incapsularii in POO:
+datele (var. de instanta, proprietati, atribute) si metodele 
+unei clase stau impreuna, in acelasi invelis (capsula) si pot fi accesate 
+din afara clasei controlat de specificatori de acces.
+Principiul incapsularii: datele sensibile dintr-o clasa, sunt "ascunse"
+prin specificatori de acces, de cei din afara clasei ! De ex: o parola !
+Specificatorii de acces sunt:
+1. private
+Membrii private NU pot fi accesati din afara clasei (ei pot fi accesati doar in clasa respectiva)
+Ex: 
+  private int raza;
+  private String parola="abc";
+
+2. public
+public int raza;
+Membrii public POT fi accesati si din afara clasei 
+(ei pot fi accesati si din clasa respectiva, dar si din afara ei)
+ Atentie: Nu se acceseaza insa direct !
+Cum se acceseaza din afara clasei: (DE RETINUT !!)
+Sunt doua cazuri:
+A.
+ Daca membrul clasei (var. de instanta sau metoda ) este si static
+ atunci el se acceseaza folosind sintaxa:
+  numeClasa.numeMembru
+
+Exemplu: metoda parseInt() din clasa Integer are semnatura urmatoare:
+public static int parseInt(String s)
+  int rezultat=Integer.parseInt("123");
+
+Cuvantul cheie static este un modificator non-acces !
+Metoda sau variabila de instanta statica, apartin clasei si nu 
+unei instante (unui obiect instantiat din clasa respectiva).
+ Alt exemplu:
+  in clasa Math avem metoda statica sqrt():
+   public static double sqrt(double nr)
+O apelam asa:
+   double rezultat=Math.sqrt(2);
+  in clasa Math avem constanta PI:
+   public static final double PI=3.141...;
+ O folosim:
+   System.out.println("pi="+Math.PI);
+
+B.
+ Daca membrul clasei (var. de instanta sau metoda) nu este static, dar este public,
+ accesul se face in doi pasi:
+   - creem (instantiem) obiect din clasa respectiva , 
+           cu operatorul new (pas 1)
+   - pentru apel, folosim sintaxa: 
+           obiect.numeMembru (pas 2)
+             
+   Ex: vreau sa apelez metoda nextInt() din clasa Scanner:
+    (public int nextInt() )
+     Scanner sc=new Scanner(System.in);//pas 1: creez obiect
+     int nr=sc.nextInt();//pas 2
+
+    Este gresit apelul: int nr=nextInt();
+
+3. protected   (este legat de conceptul de mostenire)
+Ex:  protected int raza;
+   Un membru protected poate fi accesat (nu direct !) din orice clasa ce face parte din acelasi 
+   package (pachet) cu clasa lui SI poate fi accesat din orice subclasa (clasa derivata) a clasei lui, chiar daca
+   subclasa este in alt pachet
+
+4. accesul implicit ( nu este niciun cuvant cheie), este accesul la nivel de pachet
+ Exemplu:
+  int raza;
+ Este acces la nivel de package (poate fi accesat  din orice clasa ce face parte din acelasi 
+   package ) 
+
+//////////// ALTE EXEMPLE DE CLASE CE CONTIN DOAR METODE ///////////////
+  Vrem sa vedem cum se apeleaza dintr-o metoda a unei clase o alta metoda 
+OBSERVATIE:
+In cadrul aceleasi clase, dintr-o metoda statica a clasei (de exemplu din main() ), pot sa apelez doar 
+metode statice din aceeasi clasa (Evident, putem apela dintr-o metoda statica, metode ne-statice dar ale altor clase)
+ 
+Ex. 1:
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		//media aritm a doua numere:
+		int a,b;
+		Scanner sc=new Scanner(System.in);
+		System.out.print("a=");
+		a=sc.nextInt();
+		System.out.print("b=");
+		b=sc.nextInt();
+		double m=medie(a,b);
+		System.out.println("medie="+m);
+	}
+	static double medie(int a, int b) {
+		double rez=(a+b)/2.0;
+		return rez;
+	}
+
+
+}
+ 
+Calcul maxim a trei numere:
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		//maxium dintre 3 numere:
+		Scanner sc=new Scanner(System.in);
+		System.out.print("a=");
+		int a=sc.nextInt();
+		System.out.print("b=");
+		int b=sc.nextInt();
+		System.out.print("c=");
+		int c=sc.nextInt();
+		int maxim=calculMax(a,b,c);
+		System.out.println("maxim="+maxim);
+	}
+	static int calculMax(int a, int b, int c) {
+		int maxim=a;
+		if(b>maxim)maxim=b;
+		if(c>maxim)maxim=c;
+		return maxim;
+	}
+
+
+}
+
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		//maxium dintre 2 numere:
+		Scanner sc=new Scanner(System.in);
+		System.out.print("a=");
+		int a=sc.nextInt();
+		System.out.print("b=");
+		int b=sc.nextInt();
+		int maxim=Math.max(a,b);
+		System.out.println("maxim="+maxim);
+	}
+}
+
+
+Rescriem aplicatia ce calculeaza divizorii unui numar folosind o metoda separata
+ce-i calculeaza si afiseaza:
+import java.util.*; 
+class Divizori{
+
+ public static void main(String args[]){
+  int nr; 
+  Scanner sc=new Scanner(System.in);
+  nr=sc.nextInt(); 
+  afisareDivizori(nr);//apel ca in lb. C
+ }
+
+ private static void afisareDivizori(int nr){
+    int i;
+    for(i=1;i<=nr;i++)
+     if(nr%i==0)System.out.println(i);
+ }
+
+} 
+/////////////////////CLASA CE ARE DOAR VARIABILE DE INSTANTA//////////////////////
+
+public class Punct {
+  public int x;
+  public int y;
+}
+
+
+public class Test {
+
+	public static void main(String[] args) {
+		//creez obiect punct: 3,5
+  		//est greit asa: x=3; y=5;
+		Punct p=new Punct();
+		p.x=3;//Sintaxa de acces: obiect.numeVariabila
+		p.y=5;
+		System.out.println("x="+p.x+" y="+p.y);
+	}
+
+}
+

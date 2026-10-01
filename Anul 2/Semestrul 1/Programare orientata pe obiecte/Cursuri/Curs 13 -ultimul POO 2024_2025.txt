@@ -1,0 +1,453 @@
+CURS 13
+
+FISIERE (continuare)
+
+Exemple citire fisier text linie cu linie:
+Citire fisier linie cu linie: clasa BufferedReader
+CONSTRUCTOR:
+ public BufferedReader(FileReader fr)
+metode:
+ public String readLine()
+Returneaza linia curenta ca si String, dar cand se termina fisierul
+va returna null
+Exemplu:
+Sa afisam pe ecran fisierul text carti.txt
+Il vom afisa linie cu linie.
+
+
+Exemplu:
+Exemplu:
+Vrem sa afisam daca toate liniile din fisier sunt diferite intre ele sau nu.
+Vom memora toate liniile intr-un vector de String.
+Vom da o dimensiune acoperitoare pt vector.
+Apoi verificam vectorul daca are toate elementele diferite.
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		try {
+			FileReader fr=new FileReader("date.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			//citire linie cu linie si salvam intr-un vector 
+			//de dimensiune acoperitoare liniile:
+			String linii[]=new String[1000];
+			int index=0;//index in vectorul linii
+			for(;;) {
+				String s=bfr.readLine();
+				if(s==null)break;//s-a terminat fisierul
+				linii[index]=s;
+				index++;
+			}
+			int nrLinii=index;
+			bfr.close(); fr.close();
+			//verificare daca are toate liniile diferite:
+			boolean rezultat=toateDiferite(linii, nrLinii);
+			if(rezultat)System.out.print("toate diferite");
+			else System.out.print("nu toate diferite");
+		}catch(IOException e) {
+			System.exit(0);
+	    }	
+	}
+	static boolean toateDiferite(String linii[], int nrLinii) {
+		int i,j;
+		for(i=0;i<nrLinii-1;i++)
+			for(j=i+1;j<nrLinii;j++)
+				if(linii[i].equals(linii[j]))return false;
+		return true;
+	}
+}
+
+
+Care este dezavantajul acestei solutii?
+Nu stim daca este acoperitoare dimensiunea data pt vectorul linii.
+O solutie mai buna : memoram liniile ArrayList<String>:
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class Main {
+
+	public static void main(String[] args) {
+		try {
+			FileReader fr=new FileReader("date.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			//citire linie cu linie si salvam intr-un ArrayList<String>:
+			ArrayList<String> lista=new ArrayList<String>();
+			for(;;) {
+				String s=bfr.readLine();
+				if(s==null)break;//s-a terminat fisierul
+				lista.add(s);
+			}
+			bfr.close(); fr.close();
+			//verificare daca are toate liniile diferite:
+			boolean rezultat=toateDiferite(lista);
+			if(rezultat)System.out.print("toate diferite");
+			else System.out.print("nu toate diferite");
+		}catch(IOException e) {
+			System.exit(0);
+	    }	
+	}
+	static boolean toateDiferite(ArrayList<String> lista) {
+		int i,j;
+		for(i=0;i<lista.size()-1;i++)
+			for(j=i+1;j<lista.size();j++)
+				if(lista.get(i).equals(lista.get(j)))return false;
+		return true;
+	}
+}
+
+Exemplu.
+Avem un fisier text de numere intregi. Cate un numar pe fiecare linie.
+Sa calculam max din fisier.
+
+Vom initializa maximul cu primul numar (nu cu 0 !)
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		try {
+			FileReader fr=new FileReader("numere.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			//Citesc prima linie separat.
+			//Consideram ca fisierul are cel putin un numar!
+			String prima=bfr.readLine();//ex: "13"
+			int maxim=Integer.parseInt(prima);//13
+			//citire linie cu linie, pt restul fisierului:
+			for(;;) {
+				String s=bfr.readLine();
+				if(s==null)break;//s-a terminat fisierul
+                int nrCrt=Integer.parseInt(s);
+                if(nrCrt>maxim)maxim=nrCrt;
+			}
+			System.out.println("maxim="+maxim);
+			bfr.close(); fr.close();
+		}catch(IOException e) {
+			System.exit(0);
+	    }
+	}
+}
+
+Ex. 
+Sa calculam media aritmetica a numerelor intr-un fisier text, dar in fisier pot avea mai multe numere pe o linie.
+Numerele sunt separate printr-un spatiu intre ele.
+Ex:
+1 -2 7
+5
+6 
+4 55 88 90
+
+Solutie:
+Citim linie cu linie si extragem numerele ("atomii") din linia curenta, cu metoda split()
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		try {
+			FileReader fr=new FileReader("date.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			int n=0;//nr de numere din fisier
+			int suma=0;
+			//citire linie cu linie:
+			for(;;) {
+				String s=bfr.readLine();
+				if(s==null)break;
+				//Extragem numerele din linia citita:
+				String v[]=s.split(" ");
+				//Ex: Daca s="1 -2 77" atunci v={"1","-2","77"}
+				n=n+v.length;
+				//aduna la suma toate numerele din vectorul v:
+				for(int i=0;i<v.length;i++)
+					suma=suma+Integer.parseInt(v[i]);
+			}
+			double medie=suma/(double)n;
+			System.out.println("media arit.="+medie);
+			bfr.close();fr.close();
+		}catch(IOException e) {
+			System.exit(1);
+		}
+	}
+
+}
+
+Ex. 
+Daca numerele sunt separate intre ele prin unul sau mai multe spatii, 
+sigura modificare ce se face este:
+String v[]=s.split("\\s+");//am folosit o expresie regulata ce specifica: unul sau mai multe spatii
+
+
+SCRIEREA DE FISIERE TEXT CARACTER CU CARACTER 
+Clasa FileWriter
+Metode:
+public FileWriter(String numeFisier) (constructor)
+public void write(char ch)
+
+Exemplu:
+Citim un cuvant de la tastatura. Sa copiem fiecare litera din cuvant in fisierul text 
+litere.txt, fiecare litera pe o linie separata
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		System.out.print("cuvant=");
+		String cuvant=sc.nextLine();
+		try {
+			FileWriter fw=new FileWriter("litere.txt");
+			int i;
+			for(i=0;i<cuvant.length();i++) {
+				fw.write(cuvant.charAt(i));
+				fw.write('\n');
+			}
+			fw.close(); 
+			
+		}catch(IOException e) {
+			System.exit(0);
+	    }	
+		System.out.println("S-a creat fisierul text");
+	}
+}
+
+SCRIEREA DE FISIERE TEXT LINIE CU LINIE
+Pt a crea un fisier text, prin program Java, fisierul fiind 
+scris linie cu linie, se folosesc clasele FileWriter si BufferedWriter.
+Metode necesare:
+public FileWriter(String numeFisier) (constructor)
+
+Pentru clasa BufferedWriter:
+public BufferedWriter(FileWriter fw) (constructor)
+public void write(String s) //scrie in fisier pe linia curenta, stringul s
+public void newline() //scrie un ENTER in fisier (trece pe linia urmatoare)
+
+Exemplu:
+Citim N cuvinte de la tastatura. Sa le copiem in fisierul cuvinte.txt, cate un cuvant pe fiecare linie.
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		int N=5;//nr de cuvinte
+		int i;
+		//Citim pe rand fiecare cuvant si il scriem imediat
+		// in fisier:
+		try {
+			FileWriter fw=new FileWriter("cuvinte.txt");
+			BufferedWriter bfw=new BufferedWriter(fw);
+			for(i=1;i<=N;i++) {
+				System.out.print("cuvant=");
+				String s=sc.nextLine();
+				//scriu cuvant in fisier:
+				bfw.write(s);
+				//trec pe linia urmatoare, in fisier:
+				bfw.newLine();
+			}
+			bfw.close(); fw.close();
+			System.out.println("S-a terminat de scris fisierul text");
+	    }catch(IOException e) {
+	    	System.exit(1);
+	    }
+	}
+}
+
+
+
+//////////////// FISIERE BINARE ///////////////////
+Exemple de fisiere binare:
+-fisiere ce contin imagini .gif, .bmp,...
+-fisiere audio .mp3
+-fisiere .exe
+...
+Criteriul practic pt a vedea daca este fisier binar: se poate deschide cu Notepad ?
+Cele binare nu se pot deschide!
+
+Diferenta intre fisiere text si binare dpv al modului de inregistrare a informatiei in fisier:
+Ex: Vrem ca intr-un fisier text sa scrie numarul 130.
+In fisierul text se vor scrie octetii dati de codul ASCII, respectiv:
+49 (in baza 10), 51, 48
+
+Intr-un fisier binar informatia 130 va fi scrisa pe un singur octet, reprezentarea in binar 
+a lui 130, adica: 130=128+2=2^7+2^1=1000.0010
+
+Avem clase in Jasva pt. aciti un fisier binar octet cu octet si clase pt a citi 
+grupuri de octeti (de ex: putem citi un fisier binar de int-uri)
+////  CITIRE FISIER BINAR OCTET CU OCTET ////////
+clasa FileInputStream
+constructor: public FileInputStream(String numeFisier)
+metoda: public int read()
+Citeste octetul curent si trece automat pe urmatorul.
+Returneaza octetul citit sau -1 daca se termina fisierul.
+Obs:
+  Octeti (bytes) sunt numere intregi in intervalul [0,255] adica reprezentati in binar:
+0000.0000  (0)
+1111.1111  (255)
+
+Exemplu:
+Pt. fisierul D:\P1.class sa afisam cati octeti contine.
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		int contor=0;
+		try{
+		  FileInputStream f=new FileInputStream("D:\\P1.class");
+		  for(;;){
+		     int cod=f.read();
+		     if(cod==-1)break;
+		     contor++;
+		  }
+		  f.close();
+		}catch(IOException e){
+			System.exit(1);
+		}
+		System.out.print(contor);
+	}
+}
+
+SCRIEREA UNUI FISIER BINAR OCTET CU OCTET
+(de exemplu vrem sa facem o copie a unui fisier imagine)
+Pt a scrie un fisier binar octet cu octet avem clasa FileOutputStream.
+Constructor: public FileOutputStream(String numeFisier)
+Se foloseste metoda write() pentru a scrie un octet
+
+CLASELE DataOutputStream si DataInputStream.
+Fisierele binare pot fi structurate (grupuri de octeti, ce au 
+o semnificatie.  Ex: putem avea fisiere de numere intregi ,de int, 
+in care avem grupuri de cate 4 octeti, pt ca un int in Java ocupa 4 octeti. Deci, cand scriem/citim un numar intreg in 
+fisier binar de int-uri, scriem/citim un grup de 4 octeti.)
+  Clasa DataOutputStream este pt a crea fisiere de nr intregi, sau de nr. reale,etc
+Constructor:
+  public DataOutputStream(FileOutputStream fos)
+Metode:
+  public void writeInt(int nr)
+  public void writeDouble(double x)
+  public void writeChar(char c)
+   ...,
+
+Exemplu:
+Sa scriem intr-un fisier binar de numere intregi numere.dat, numerele de la 1 la 20,
+cate un numar pe fiecare linie.
+import java.io.*;
+class Bin1{
+ public static void main(String args[]){
+   try{
+     FileOutputStream f=new FileOutputStream("numere.dat");
+     DataOutputStream d=new DataOutputStream(f);
+     int i;
+     for(i=1;i<=20;i++)
+       d.writeInt(i);
+     d.close(); f.close();
+   }catch(IOException e){}
+   System.out.println("s-a creat fisierul binar.");
+ }
+} 
+
+
+CLASA DataInputStream:
+Clasa DataInputStream este pt a citi fisiere de numere intregi, de numere reale, etc.
+constructor: public DataInputStream(FileInputStream f)
+metode:
+   public int readInt()
+      Returneaza numarul curent citit din fisier
+   public double readDouble()
+...
+Cum stim ca se termina fisierul ?
+Vom calcula de la inceput lungimea fisierului (adica, cate numere are)
+Pt a calcula dimensiunea fisierului:
+Se foloseste metoda length() din clasa File, ce returneaza dimensiunea in OCTETI 
+a fisierului, astfel:
+File f=new File(numeFisier);
+long nrOcteti=f.length();
+Dar pt a calcula cate numere intregi sunt in fisier, tinem cont ca un intreg 
+ocupa 4 octeti!
+
+Exemplu:
+Se da fisierul binar de numere intregi numere.dat.
+Sa afisam toate numerele din fisier.
+Il vom citi int cu int, deci folosim clasa DataOutputStream.
+import java.io.*;
+class Bin{
+ public static void main(String args[]){
+   try{
+     FileInputStream fis=new FileInputStream("D:\\numere.dat");
+     DataInputStream d=new DataInputStream(fis);
+     //Calculez cati octeti are fisierul:
+     File f=new File("D:\\numere.dat");
+     long nrOcteti=f.length();
+      //in Java, un int are 4 octeti
+     int N=(int)nrOcteti/4; //cate nr. intregi sunt in fisier
+     int i;
+     //Citim cele N numere intregi:
+     for(i=1;i<=N;i++){
+        int nr=d.readInt();
+        System.out.println(nr);
+     }
+     d.close(); fis.close();
+   }catch(IOException e){}
+
+ }
+}
+
+Exemplu:
+Sa calculam care este cel mai mare numar dintr-un fisier de numere intregi.
+Obs:
+Vom initializa maximul cu primul numnar din fisier, nu cu 0.
+Presupunem ca fisierul are cel putin un numar intreg.
+
+import java.io.*;
+public class Main{
+ public static void main(String args[]){
+   //Calculez N, cate numere intregi are fisierul:
+   //Calculez cati octeti are fisierul:
+     File f=new File("D:\\numere.dat");
+     long nrOcteti=f.length();
+      //in Java, un int are 4 octeti
+     int N=(int)nrOcteti/4; //cate nr. intregi sunt in fisier
+   try{
+     FileInputStream fis=new FileInputStream("D:\\numere.dat");
+     DataInputStream d=new DataInputStream(fis);
+     int maxim=d.readInt();//primul numar din fisier
+     int i;
+     //Citim restul de N-1 numere intregi ramase:
+     for(i=2;i<=N;i++){
+        int nr=d.readInt();
+        if(nr>maxim)maxim=nr;
+     }
+     d.close(); fis.close();
+     System.out.println("maxim="+maxim);
+   }catch(IOException e){
+       System.exit(1);
+   }
+
+ }
+}
+
+Pt. examen:
+ -o problema de fisiere text
+ -posibil, o problema cu fisiere binare (clasele DataInputStream si DataOutputStream)
+
+Prin acest curs am recapitulat si:
+String-uri
+Vectori
+ArrayList

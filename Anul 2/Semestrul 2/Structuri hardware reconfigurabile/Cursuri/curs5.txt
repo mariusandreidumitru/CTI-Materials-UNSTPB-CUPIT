@@ -1,0 +1,138 @@
+Recapitulare:
+Descriere in VHDL SSI, MSI, LSI
+Descriere circuite secventiale in VHDL
+1. PROCESS - mod de declarare si utilizare
+2. Variabile, semnale si porturi in proces
+3. Instructiuni secventiale, atribute
+4. Exemple
+
+1. Pentru lucrul cu circuite secventiale se utilizeaza comanda PROCESS
+
+[eticheta:] PROCESS(<lista senzitivitati>)
+[<declaratii variabile>]
+BEGIN
+<instructiuni secventiale in proces>
+END PROCESS;
+
+eticheta (optional) : nume unic in arhitectura top level 
+PROCESS de declara in interiorul arhitecturii (dupa BEGIN).
+
+Procesul consta in doua stari principale intre care oscileaza: 
+- starea WAIT in care sunt citite intrarile procesului (senzitivitatile) si sunt actualizate iesirile lui (porturi / semnale) cu driverele lor (driver: imaginea unui semnal / port in interiorul procesului - orice operatie de scriere se efectueaza in proces aceasta afecteaza driverul unui semnal sau port)
+- starea RUN in care sunt executate instructiunile secventiale (se executa pe rand)
+Trecerea din WAIT in RUN are loc la aparitia unui eveniment pe unul dintre semnalele/porturile aflate in senzitivitati. Prin eveniment se intelege schimbarea starii.
+Trecerea din RUN in WAIT are loc la finalizarea executiei instructiunilor.
+ 
+2. In interiorul procesului (inainte de BEGIN) se declara variabile.
+
+VARIABLE <nume> : <tip> [:= <valoare initiala>];
+
+Variabilele sunt vizibile numai in interiorul procesului in care au fost declarate. O variabila poate fi scrisa / citita oriunde in proces iar starea ei se actualizeaza imediat ce a fost scrisa.
+Semnalele si porturile pot fi scrise / citite in proces, cu anumite restrictii la porturi, dar actualizarea starii lor se face numai in WAIT - deci dupa iesirea din RUN. In RUN, instructiunile secventiale modifica imagini (drivere) ale semnalelor si porturilor. In WAIT semnalele si porturile sunt actualizate cu ce se afla in driverele lor. 
+
+Exemplu: 
+
+signal a : integer;
+
+...
+process(a)
+....		--daca aici a = 1
+a <= a + 1;
+if a = 2 then  -- false ! aici a = 1 (nu este citit 2!!)
+
+abia la finalizarea executarii instructiunilor cand ajunge in WAIT a <- 2
+
+Porturile de intrare pot fi doar citite in proces.
+
+Exemplu:
+
+port(
+...
+a : in std_logic;
+)
+....
+
+process()
+...
+a <= '1'; --va da eroare de sintaxa ( portul a nu poate fi scris)
+if a = '1' then --ok aici e doar o citire
+
+Porturile de iesire pot fi doar scrise in proces.
+
+Exemplu:
+
+port(
+...
+b : out std_logic;
+)
+...
+proces(...)
+...
+b <= '1'; --este ok starea portului b se va actualiza cu 1 la finalizarea instructiunilor
+if b = '1' then  -- eroare portul b nu poate fi citit
+
+a <= a + 1; -- instructiune care face si citire si scriere
+
+Solutie pentru lucru cu semnale porturi (care se doreste sa fie scrise in proces si citite):
+
+a semnal sau port
+
+process(...)
+variable va : <acelasi tip ca a> [:= <valoare initiala>]
+...
+begin
+...
+va := a; --daca a permite citirea
+...
+va := va + 1;
+if va = 2 then --valoarea lui va este actualizata
+
+...
+
+a <= va; --daca a permite scrierea
+end process;
+
+...
+
+3. 
+
+IF <conditie> THEN
+<instructiuni daca este conditia adevarata>
+[ELSE
+<instructiuni daca este conditia falsa>]
+END IF;
+
+FOR <contor> IN <valoarea initiala> TO <valoare finala> LOOP
+<instructiuni in bucla>
+END LOOP;
+
+CASE <intrare> IS
+<valoare 1 intrare> => <instructiuni cand intrare este valoare 1>
+<valoare 2 intrare> => <instructiuni cand intrare este valoare 2>
+...
+OTHERS => <instructiuni cand intrare are alte valori>
+END CASE;
+
+Atribuiri:
+Pentru semnale, porturi atribuirea se face cu <=
+a <= '1';
+Pentru variabile, atribuirea se face cu :=
+va := 10;
+
+Conditii logice in VHDL
+
+= >= <= - returneaza in IF true sau false
+Pot fi si conditii compuse:
+IF <conditie 1> AND <conditie 2>  THEN   --trebuie sa fie true conditie 1 SI conditie 2 
+IF <conditie 1> OR <conditie 2> THEN -- trebuie sa fie true cel putin una dintre conditii
+
+In conditii pot fi si atribute. Atributul event returneaza de la un semnal/port din senzitivitati daca apare eveniment pe el.
+
+a'EVENT -- true daca pe a a aparut un eveniment.
+
+4. Exemple
+Un numarator zecimal pe doua cifre (20 - 62). Starea initiala a numaratorului se obtine prin reset. Daca Reset este 1 logic atunci numaratorul va fi instarea initiala 20. Daca reset este 0 atunci numaratorul va incrementa la fiecare front crescator care apare pe intrarea Clk. Daca ajunge la valoarea maxima (62) atunci va ramane blocat pana la un nou reset. Iesirea numaratorului consta in doua valori pe 4 biti fiecare - zeci si unitati.
+
+
+
+

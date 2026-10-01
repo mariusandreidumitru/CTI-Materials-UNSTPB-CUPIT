@@ -1,0 +1,416 @@
+Curs 3 Str. date Calc. 1
+ 
+
+
+COADA CIRCULARA
+      coada circulara (folosita in transmisiile de date)
+      |     xxxxxxxxxxxxxxxxxxxx|
+            indexPrim           indexUltim
+Daca vreau sa mai inserez un nou element X, il inserez la inceput pt ca este loc, la coada circulara: 
+      |X     xxxxxxxxxxxxxxxxxxx|
+
+Fata de coada liniara, se modifica functiile: inserare(), extragere() si afisare()
+Implementam o coada circulara de numere intregi.
+//Variabile globale:
+int C[1000];//dim. acoperitoare
+int indexPrim;//indexul primului element din coada (indexPrim). Este indexul de unde se extrage.
+int indexUltim;//indexul ultimului element din coada (indexUltim). Este indexul de inserare
+int nMax;//nr maxim de elemente ce se pot introduce in coada
+int nrElemente;//nr. efectiv de elemente aflate in coada , la un moment dat
+
+//Functii pt COADA CIRCULARA cu variabile globale:
+//Functia init () este aceeasi ca la coada liniara
+void init(int nrMaximElemente){
+  nMax=nrMaximElemente;
+  indexUltim=-1;
+  indexPrim=0;
+  //Cei doi indecsi puteau fi initializati si altfel (0,0 sau -1,-1, etc). 
+  // In functie de cum i-am initializat, scriem functiile cozii (inserare, extragere)
+  nrElemente=0;
+}
+
+//Functia esteVida() este aceeasi ca la coada liniara
+int esteVida(){
+ if(nrElemente==0)return 1;
+ else return false;
+}
+
+//Functia estePlina() este aceeasi ca la coada liniara
+int estePlina(){
+  if(nrElemente==nMax)return 1;
+  else return 0;
+}
+
+void inserare(int nr){
+ //Presupunem ca nu este plina ! (mai este loc de inserare)
+ indexUltim++;
+ if(indexUltim==nMax)indexUltim=0; 
+ //inserarea efectiva:
+ C[indexUltim]=nr;
+ nrElemente++;
+}
+
+int extragere(){
+ //presupunem ca nu este vida !
+ int nr=C[indexPrim];
+ indexPrim++;  
+ if(indexPrim==nMax)indexPrim=0;
+ nrElemente--;
+ return nr;
+}
+
+//Functia de afisare:
+//Sunt doua situatii la afisare:
+/* 
+     Ca la coada liniara:
+     |      xxxxxxx    |
+     0      P     U    nMax-1
+     P=index prim
+     U=indexUltim
+ 
+A doua posibilitate: (specifica cozii circulare)
+     |xxxx        xxxx|
+     0   U        P  
+*/
+void afisare(){
+ if(nrElemente==0){
+   cout<<"este vida !";
+   return;
+ }
+ 
+ int i;
+ if(indexPrim<=indexUltim)
+   for(i=indexPrim;i<=indexUltim;i++)
+      cout<<C[i]<<" ";
+ else{
+   //al doilea caz:
+   for(i=indexPrim;i<nMax;i++)
+      cout<<C[i]<<" ";
+   for(i=0;i<=indexUltim;i++)
+      cout<<C[i]<<" ";
+ }
+}
+//Program principal, de test:
+ init(100);
+ int i;
+ for(i=1;i<=10;i++)
+    inserare(i);
+ afisare();
+}
+
+
+OBS
+Daca nu foloseam variabile globale, programul pt coada liniara, se va modifica astfel:
+//Program principal, de test:
+int main(){
+//Variabile locale:
+int C[1000];
+int indexPrim;//indexul primului element din coada (indexPrim). Este indexul de unde se extrage.
+int indexUltim;//indexul ultimului element din coada (indexUltim). Este indexul de inserare
+int nMax;//nr maxim de elemente ce se pot introduce in coada
+int nrElemente;//nr. efectiv de elemente aflate in coada , la un moment dat
+  //void init(int nrMaximElemente, int& nMax, int& indexUltim, int& indexPrim, int& nrElemente)
+ init(100,nMax, indexUltim, indexPrim, nrElemente);
+ ......
+}
+
+//Functia pt COADA LINIARA FARA variabile globale:
+void init(int nrMaximElemente, int& nMax, int& indexUltim, int& indexPrim, int& nrElemente){
+  nMax=nrMaximElemente;
+  indexUltim=-1;
+  indexPrim=0;
+  //Cei doi indecsi puteau fi initializati si altfel (0,0 sau -1,-1, etc). 
+  // In functie de cum i-am initializat, scriem functiile cozii (inserare, extragere)
+  nrElemente=0;
+}
+
+....
+
+In general se recomanda evitarea folosirii variabilelor globale !
+Daca trebuia sa implementam doua cozi diferite in acelasi program, cu variabile globale, 
+toate functiile trebuiau dublate !
+Aveam  init_1() etc
+       init_2() etc
+
+COZI PRIORITARE
+ Ex: la un cabinet de urgente
+Implementam o coada LINIARA prioritara de numere intregi.
+Fiecare numar (element ce se va introduce in coada) are o prioritate.
+Elementele vor fi introduse in coada , tinand cont de prioritatea lor: cele mai prioritare,
+se introduc in fata.
+Vom implementa o coada liniara prioritara, cu variabile globale.
+Prin element vom intelege: numarul SI o prioritate atasata.
+RECAPITULARE STRUCTURI:
+Citim doua puncte. Sa vedem dac sunt egale. Fiecare punct(x,y) este o struct.
+
+typedef struct{
+    int x;
+    int y;} punct;
+int main(){
+ punct p1,p2;
+ //citire p1: se citeste NU global NU asa: cin>> p1; !!
+ //Se citesc cele 2 campuri pe rand:
+ cin>>p1.x;
+ cin>>p1.y;
+ //citire p2:
+ cin>>p2.x;
+ cin>>p2.y;
+ //Sunt egale? Este gresit asa: p1==p2
+ //Se compara camp cu camp:
+ if(p1.x==p2.x && p1.y==p2.y) cout<<"egale";
+ else cout<<"nu";
+ return 0;
+}
+COADA LINIARA PRIORITARA de elemente (un element e o structura cu 2 campuri):
+#include <iostream>
+using namespace std;
+typedef struct{
+   int nr;
+   int p;//prioritae
+} element;
+
+//Var. globale:
+element C[1000]; //UN mai este int C[1000];
+int indexPrim;//indexul primului element din coada (indexPrim). Este indexul de unde se extrage.
+int indexUltim;//indexul ultimului element din coada (indexUltim). Este indexul de inserare
+int nMax;//nr maxim de elemente ce se pot introduce in coada
+int nrElemente;//nr. efectiv de elemente aflate in coada , la un moment dat
+
+void init(int nrMaximElemente){
+  nMax=nrMaximElemente;
+  indexUltim=-1;
+  indexPrim=0;
+  //Cei doi indecsi puteau fi initializati si altfel (0,0 sau -1,-1, etc). 
+  // In functie de cum i-am initializat, scriem functiile cozii (inserare, extragere)
+  nrElemente=0;
+}
+
+int esteVida(){
+ if(nrElemente==0)return 1;
+ else return false;
+}
+
+int estePlina(){
+  //  |        xxxxxx|
+  if(indexUltim==nMax-1)return 1;//este coada liniara !
+  else return 0;
+}
+//Functia inserare() se modifica astfel:
+void inserare(element e){
+ //presunem ca este loc
+ //Daca este primul element introdus, se va insera pe prima pozitie:
+ if(nrElemente==0){
+   indexUltim=0;
+   C[indexUltim]=e;
+   nrElemente=1;
+   return;
+ }
+ //Daca elementul ce trebuie inserat, are cea mai mica prioritate comparativ cu cele care sunt
+ // deja in coada, el se va insera la sfarsit:
+ if(e.p<=C[indexUltim].p){
+     indexUltim++;
+     C[indexUltim]=e;
+     nrElemente++;
+     return;
+ }
+ //Trebuie sa cautam pozitia de inserare:  xxxxxXxxxx
+ int indexInserare, i;
+ //Parcurgem elementele aflate in coada si gasim pozitia de inserare:
+ for(i=indexPrim;i<=indexUltim;i++)
+    if(e.p>C[i].p){
+      indexInserare=i;
+      break;
+    }
+ //Pt a-l insera trebuie ca sa-i facem loc, deci algo de inserare a unui element intr-un vector.
+ //Mutam elementele din vector, cu o pozitie spre dreapta, dar incepand cu ultimul
+ for(i=indexUltim;i>=indexInserare;i--)
+    C[i+1]=C[i];
+ //inserez:
+ C[indexInserare]=e;
+ indexUltim++;
+ nrElemente++;
+}  
+
+//Functia de extragere(), nu se modifica:
+element extragere(){
+ //presupunem ca nu este vida !
+ element e=C[indexPrim];
+ indexPrim++;  
+ nrElemente--;
+ return e;
+}
+void afisare(){
+ if(nrElemente==0){
+   cout<<"este vida !";
+   return;
+ }
+ 
+ int i;
+ for(i=indexPrim;i<=indexUltim;i++)
+   cout<<C[i].nr<<" ";
+}
+//Program principal, de test:
+int main(){
+ init(100);
+ int i;
+ element e1,e2,e3;
+ e1.nr=10; e1.p=7;
+ e2.nr=0; e2.p=10;
+ e3.nr=6; e3.p=8;
+ inserare(e1);
+ inserare(e2);
+ inserare(e3);
+ afisare();// 0  6  10
+ return 0;
+}
+
+  
+LISTE SIMPLU INLANTUITE (LSI)
+Este alcatuita din noduri. Fiecare nod are cel putin 2 campuri:
+-un camp ce contine informatia de memorat
+-un camp ce contine adresa nodului urmator
+O variabila ce contine adresa unei alte variabile: variabila pointer
+RECAPITULARE POINTERI:
+Pointerii se declara in C: cu operatorul *
+(i-am studiat la cap. modularizare)
+Ex:
+int nr=5;
+int* adresa_nr; //am declarat o var. pointer
+Obtinem adresa unei variabile, cu operatorul &
+adresa_nr=&nr;
+
+double x=3.55;
+double* px=&x;
+
+Cand stim adresa unei variabile, deci un pointer,  accesam continutul variabilei 
+cu operatorul * (*adresa=valoare;)
+Exemplu:
+int nr;
+nr=5;
+int* p_nr=&nr;
+//Pot modifica nr si asa: (pe baza adresei)
+*p_nr=7;//nr=7 (adresare indirecta)
+
+Evident, puteam modifica nr si asa:
+nr=7; //adresare direceta
+
+O LSI este complet determinata  daca stim adresa ei de inceput.
+Vom nota adresa ei de inceput cu head.
+Ne imaginam o LSI ca un tren cu mai multe vagoane.
+Ex. de nod dintr-o LSI de numere intregi:
+( 15, adresaNodUrmator)
+
+Comparatie LSI cu vectori:
+- La vectori, accesarea unui element este imediata si nu depinde de 
+dimensiunea vector: O(1) timp de executie
+ La LSI, pt ca plecam de la primul nod: timp acces O(N) - Nr. de noduri
+Avantaj : vectori
+
+- La o LSI nu trebuie sa stiu de la inceput dimensiunea. Lista creste dinamic.
+  La vectori: o data stabilita dimensiunea, nu mai pot adauga peste dimensiune.
+Avantaj: LSI
+Dar, pt aceleasi informatii, LSI ocupa mai multa memorie.
+Avantaj, dpv memorie pt vectori
+
+-Operatia de inserare la inceput:
+  Pt. vectori: O(N)  pt ca trebuie sa fac N mutari
+  Pt. liste: O(1) , nu depinde de dimensiune
+  Avantaj: LSI
+
+NOU: alocarea dinamica a memoriei
+Pt a putea dauga oricand noi noduri intr-o LSI , nodurile se aloca dinamic
+ALOCAREA DINAMICA A MEMORIEI IN lb. C
+ Se folseste functia malloc() sau variante ale ei (calloc(),...)
+Semnatura:
+void* malloc(int nrOcteti)  
+  Returneaza adresa de inceput a zonei de memorie in care s-a alocat spatiu pt nrOcteti
+  Daca nu avem memorie disponibila, returneaza NULL.
+
+Cand vrem sa eliberam memoria, pt ca sa fie alocata in alte scopuri: free(adresaBlocAlocat) 
+Ex:
+Citim N. Alocam dinamic un vector a de N numere intregi.
+Citim cele N numere in vector. Si calculam suma lor.
+Obs: in loc sa-l declaram static, asa: int a[N]; - il alocam dinamic
+
+int N; cin>>N;
+int* a=(int*)malloc(N*sizeof(int));
+//Apoi se lucreaza ca si cu un vector nealocat dinamic:
+int i;
+for(i=0;i<N;i++)cin>>a[i];
+int S=0;
+for(i=0;i<N;i++)S=S+a[i];
+cout<<S;
+free(a);
+
+In C++, se lucreaza mai usor cu memoria dinamica, folosind operatorul new pt alocare 
+dinamica (returneaza adresa) si operatorul delete pt dezalocare., astfel:
+Ca sa aloc un vector a de 100 numere intregi:
+int*a=new int(100);
+...
+delete a;
+
+Daca vrem sa cerem spatiu doar pt un singur numar intreg:
+int* adresa= new int;
+
+Vom implementa o LSI de numere intregi.
+Mai usor, vom lucra cu variabile globale.
+Folosim variabila globala head pt adresa de inceput a listei.
+Un nod al listei are 2 campuri, deci este o structura (definita recursiv).
+O definim astfel: (structura autoreferita)
+typedef struct nod{
+   int nr; //informatia din nod
+   nod* next;//adresa nodului urmator
+}NOD;
+
+Comparare cu structura punct:
+typedef struct{
+          int x;
+          int y;}punct;
+punct p;
+
+La o LSI , variabila head memoreaza ADRESA primului nod:
+NOD* head;
+Atunci cand stiu adresa unei structuri, accesez un camp al ei cu operatorul ->
+Exemplu:
+head->nr=7;
+Este gresit: head.nr=7;
+
+IMPLEMENTARE LSI de numere intregi descrisa prin var. globala head:
+#include <iostream>
+using namespace std;
+typedef struct nod{
+   int nr; //informatia din nod
+   nod* next;//adresa nodului urmator
+}NOD;
+//var. globala:
+NOD* head;
+void init();//initializare lista
+void inserareLaInceput(int x);
+void afisare();
+int main(){
+ init();
+ inserareInceput(-1);
+ inserareInceput(0);
+ inserareInceput(20);
+ afisare();
+ return 0; 
+}
+void init(){
+ head=NULL;
+}
+
+void inserareLaInceput(int x){
+//distingem 2 cazuri: (lista este/ nu este vida)
+ if(head==NULL){
+   head=new NOD;
+   head->nr=x;
+   head->next=NULL;
+   return;
+ }
+ //lista nu este vida:
+  NOD* nodNou=new NOD;
+  nodNou->nr=x;
+  nodNou->next=head;
+  head=nodNou;
+}
+////////////////////////////////////////

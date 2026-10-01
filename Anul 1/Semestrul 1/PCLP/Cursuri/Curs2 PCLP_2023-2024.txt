@@ -1,0 +1,227 @@
+Curs 2 PCLP 
+
+Obiectul cout
+Citirea de la tastatura:
+cin
+int nr;
+cout<<"dati un numar:";
+cin>>nr;
+...
+dati un numar: 12
+
+Afisari mai complexe: mesaje+continut de variabile:
+int nr;
+cin>>nr;
+cout<<"Ati introdus numarul : "<<nr;
+endl
+Secvente ESC : \n 
+\\ 
+\"
+
+INSTR. DE ATRIBUIRE
+  Orice algo  poate fi scris cu 3 tipuri de instructiuni ( atribuire, decizie, repetare)
+  Prin atribuire introducem valori in variabile.
+Sintaxa:
+ numeVar=expresie;
+Ex:
+ int nr;
+ nr=7;//Se citeste: nr primeste val. 7 
+ nr=7*2+3;//o expresie mai complexa
+ int a,b;
+ cin>>a>>b;
+ int c=a*b+3;
+O expresie este o inlantuire de operanzi (termeni) si operatori ce este 
+ evaluata la un rezultat ( o valoare).
+Cel mai simplu algo nebanal din info este algo de interschimbare.
+Comutam continut a doua variabile
+a=3 b=5
+..............
+Dupa comutare:
+a=5 b=3
+
+Regula paharelor
+
+int a,b;
+cin>>a>>b;
+cout<<"La inceput: a="<<a<<" b="<<b;
+int aux;
+//trei atribuiri:
+aux=a;
+a=b;
+b=aux;
+cout<<"Dupa comutare: a="<<a<<" b="<<b;
+
+Expresiile se formeaza cu ajutorul operatorilor aritmetici.
+OPERATORI ARITMETICI (sunt 5 operatori)
++ 
+-
+*
+/
+% (modulo, restul impartirii)
+
+In ce ordine facem operatiile?
+Cea de la aritmetica !
+Au prioritati cunoscute de la mate: + si - au prioritati egale
+* / % au si ei prioritati egale, dar sunt mai prioritari decat + si -
+rez=2*3+4;// rezulta valoarea 10
+In cazul in care expresia contine operatori de prioritati egale, este evaluata 
+de la stanga la dreapta
+Ex:
+rez=2*16/4;//8
+Ca sa schimb ordinea de calcul a expresiei, folosim paranteze ( ), ca la matematica.
+Operatiile din paranteze se fac primele.
+rez=2*(3+4); //14
+
+Cel mai simplu ex de atribuire:
+Citesc doua numere a si b.
+Calculez si afisez suma si diferenta lor.
+
+Ex. de rulare:
+ a=3
+ b=1
+ suma=4
+ diferenta=2
+
+...
+int a,b;
+cout<"a="; cin>>a;
+cout<"b="; cin>>b;
+int s=a+b;
+int d=a-b;
+cout<<"suma="<<s<<"\ndiferenta="<<d;
+
+Alta aplicatie f. simpla:
+Citim a si b doua unghiuri ale unui triunghi. Sa calculam unghiul c.
+int a,b;
+cin>>a>>b;
+int c;
+//a+b+c=180
+c=180-(a+b);
+//c=180-a-b; La fel de corect.
+
+Operatorul / are o particularitate in C ca si in Java:
+Regula: Impartirea intre doua numere de tip intreg se face prin trunchiere rezultat
+3/2 ---> 1 (fara zecimale)
+Ex:
+int a=99;
+int b=100;
+int rez=a/b;//rez=0
+......
+int a=99;
+int b=100;
+double rez=a/b;//rez=0.0 Se aplica aceeasi regula, chiar daca var. rez este double.
+
+Daca vreau ca rezultatul sa fie exact (cu zecimale): cel putin unul dintre
+termeni sa fie nr real.
+
+int a=99;
+double rez=a/100.0;
+sau:
+double rez=a/100.;
+
+Aplicatie
+ Citim doua nr intregi a si b. Sa calculam media arit.
+int a,b;
+cin>>a>>b;
+double m;
+//m=(a+b)/2; GRESIT !!
+m=(a+b)/2.0;
+cout<<m;
+
+Scriem un program in care citim un unghi in grade si vrem sa calculam cati radiani 
+are.
+Regula de 3 simpla
+180 grade ------- PI (3.14 radiani)
+unghiGrade ------- x radiani=(unghiGrade*PI)/180
+
+    int unghiGrade;
+    cout<<"grade="; cin>>unghiGrade;
+    double xRadiani;
+    xRadiani=(unghiGrade*M_PI)/180;
+    cout<<xRadiani;
+    //grade=90
+    //1.5708
+
+Daca nu am constante la impartire, si vrem rezultat cu zecimale?
+int a,b;
+cin>>a>>b;
+//pres. ca b este diferit de 0
+double rez;//impartirea lui a la b
+rez=a/b;//gresit pt ca elimina zecimale
+rez=a/b.0;//gresit pt ca b.0 este considerat de compilator nume de var si 
+va da eroare de sintaxa (. nu poate apare in numede var)
+
+CORECT  Folosim operatorul cast (operatorul de fortare tip)
+Variabila b e de tipul int si o fortez la tipul double astfel: (double)b
+rez=a/(double)b;
+sau
+rez=(double)a/b;
+
+OPERATORUL MODULO %
+ Restrictie: termenii tb sa fie numere intregi ( op. % nu are sens pt numere reale)
+int a=10;
+int b=3;
+//Calculez restul impartirii lui a la b:
+int rest=a%b;//10 : 3= 3 rest 1
+20 % 9 va da 2 (20 : 9 = 2 rest 2)
+20 % 7 va da 6
+3 % 7 va da 7 ( 3 : 7=0 rest 3)
+
+Aplicatie directa la % : calcul cifra unitati a unui nr intreg ( de retinut!)
+nr=127
+cifra unitati u=?
+ u=nr % 10
+127 % 10 = 7
+127 :10= 12 rest 7
+
+85 % 10= 5
+8 % 10 = 8
+Program
+ Citim un numar intreg. Sa calculam cifra unitatilor
+int nr;
+cin>>nr;
+int u=nr%10;//am dat un nume sugestiv!
+cout<<nr;
+
+int u;
+u=nr%10;
+
+sau
+int u=nr%10;
+
+Aplicatie
+Citesc un timp exprimat in secunde . Sa calculam timpul exprimat in minute si secunde ramase.
+Exemplu: daca t=125 , va rezulta:
+min=125 : 60 =2
+sec=5
+
+int t;
+cout<<"dati un timp in secunde:"; cin>>t;
+int minute=t/60;//face trunchiere
+int secunde=t%60;
+cout<<"min="<<minute<<endl;
+cout<<"sec="<<secunde;
+
+Mai putem calcula si altfel secundele ramase ? Da:
+int sec=t-min*60;
+Alt exemplu:
+ Un timp t in secunde sa-l convertim in ore, minute si secunde ramas:
+    int t=3800;//timp in secunde
+    //Cate ore, minute si secunde sunt?
+    int ore=t/3600;
+    int minute=(t%3600)/60;
+    int secunde=t-3600*ore-60*min;
+//////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+

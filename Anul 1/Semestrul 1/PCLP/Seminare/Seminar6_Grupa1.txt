@@ -1,0 +1,204 @@
+SEMINAR 6 gr. 1 13.11.2023
+FUNCTII CU PARAMETRII DE INTRARE
+
+Problema 1
+Sa se scrie o functie ce are ca parametru un numar natural N.
+In functie se citesc N numere intregi, si se calculeaza si afiseaza media lor
+aritmetica.
+#include <iostream>
+
+using namespace std;
+
+void mediaArit(int n);
+
+int main()
+{
+    int n;
+    cout<<"n=";cin>>n;
+    mediaArit(n);
+
+    return 0;
+}
+
+void mediaArit(int n){
+    int sum=0;
+    int nr;
+    for(int i=1; i<=n; i++){
+        cout<<"nr=";cin>>nr;
+        sum=sum+nr;
+    }
+    double ma=sum/(double)n;
+    cout<<"media="<<ma;
+
+}
+Problema 2
+
+Sa se scrie o functie ce are ca parametru un numar intreg nr.
+In functie se afiseaza daca nr este patrat perfect.
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+void patratPerfect(int n);
+
+int main()
+{
+    int n;
+    cout<<"n=";cin>>n;
+    patratPerfect(n);
+
+    return 0;
+}
+
+void patratPerfect(int n){
+   if((int)sqrt(n)==sqrt(n))
+    cout<<"este patrat perfect";
+   else cout<<"Nu este patrat perfect";
+}
+
+
+
+Problema 3
+ Doua numere sunt prietene daca au acelasi numar de divizori.
+ Sa se scrie o functie ce are ca parametrii doua numere intregi 
+a si b. Functia returneaza valoarea 1 daca cele doua numere 
+sunt prietene si 0 daca nu sunt.
+SOLUTIA 1
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int suntPrietene(int a, int b);
+
+int main()
+{
+    int a, b;
+    cout << "a = "; cin >> a;
+    cout << "b = "; cin >> b;
+    if (suntPrietene(a, b) == 1)
+        cout << "Sunt prietene.";
+    else
+        cout << "Nu sunt prietene.";
+}
+
+int suntPrietene(int a, int b) {
+    int na = 2, nb = 2;
+    for (int i = 2; i <= a / 2; i++)
+        if (a % i == 0)
+            na++;
+    for (int i = 2; i <= b / 2; i++)
+        if (b % i == 0)
+            nb++;
+    if (na == nb)
+        return 1;
+    else
+        return 0;
+}
+SOLUTIA 2 (recomandata!):
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int suntPrietene(int a, int b);
+int nrDivizori(int nr);
+
+int main()
+{
+    int a, b;
+    cout << "a = "; cin >> a;
+    cout << "b = "; cin >> b;
+    if (suntPrietene(a, b) == 1)
+        cout << "Sunt prietene.";
+    else
+        cout << "Nu sunt prietene.";
+}
+
+int nrDivizori(int nr){
+    int nd=2;
+    for(int i=2;i<=nr/2;i++)
+        if(nr%i==0)nd++;
+    return nd;
+}
+int suntPrietene(int a, int b) {
+    int na=nrDivizori(a);
+    int nb=nrDivizori(b);
+    if (na == nb)
+        return 1;
+    else
+        return 0;
+}
+
+
+Problema 4
+ Sa se scrie o functie ce are ca paramterii de intrare 
+3 numere intregi a, b, c. In functie se afiseaza cmmdc al
+celor 3 numere.
+Ex: a=8, b=12, c=20
+   cmmdc=4
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int cmmdc(int a, int b);
+void afisareCmmdc(int a, int b, int c);
+
+int main()
+{
+    int a, b,c;
+    cout << "a = "; cin >> a;
+    cout << "b = "; cin >> b;
+    cout << "c = "; cin >> c;
+    afisareCmmdc(a,b,c);
+}
+
+int cmmdc(int a, int b){
+    while(a!=b)
+        if(a>b)a=a-b;
+        else b=b-a;
+    return a;
+}
+void afisareCmmdc(int a, int b, int c){
+   int c1=cmmdc(a,b);
+   int c2=cmmdc(c1,c);
+   cout<<"rezultat="<<c2;
+}
+
+
+Problema 5
+Sa se scrie o functie ce are ca parametru un numar intreg nr.
+Functia returneza media aritmetica a cifrelor acestui numar.
+Ex: nr=124
+    media=2.333
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double medieAritmetica(int nr);
+int main()
+{
+    int nr;
+    cout<<"Citim un numar ";
+    cin>>nr;
+    double rezultat=medieAritmetica(nr);
+    cout<<"Rezultatul este "<<rezultat;
+}
+double medieAritmetica(int nr){
+    int sum=0;
+    int c=0;//numarul de cifre
+    while(nr!=0){
+        sum=sum+(nr%10);
+        c++;
+        nr=nr/10;
+    }
+    return sum/(double)c;
+}
+
+Problema 6
+Sa se scrie o functie care stabileste daca un numar este nr prim sau nu.
+
+int estePrim(int nr){
+ if(nr<=1)return 0;
+ for(int i=2;i<=sqrt(nr);i++)
+    if(nr%i==0)return 0;
+ return 1;
+}

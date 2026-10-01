@@ -1,0 +1,355 @@
+/**
+Un program care afiseaza minimul si maximul a N nr.
+
+**/
+
+#include <iostream>
+
+using namespace std;
+
+int calculMinim(int N);
+void calculMinMax(int N, int& min, int& max);
+
+int main()
+{
+    int N;
+    cout << "N=" << endl;
+    cin >> N;
+
+    //int min = calculMinim(N);
+    int min, max;
+    calculMinMax(N, min, max);
+
+    cout << "Minimul este: " << min << " Maximul este: " << max << endl;
+
+    return 0;
+}
+
+// functie care intoarce minimul a N numere citite de la tastatura
+int calculMinim(int N) {
+    int min = 10000000;
+    int nr;
+    for (int i = 1; i <= N; i++) {
+        // citim nr curent
+        cout << "nr=";
+        cin >> nr;
+
+        // comparam fata de min
+        if (min > nr) {
+            min = nr;
+        }
+    }
+
+    return min;
+}
+
+// functie care intoarce minimul si maximul a N numere citite de la tastatura
+void calculMinMax(int N, int& min, int& max) {
+    min = 100000000;
+    max = -10000000;
+
+    int nr;
+    for ( int i = 1; i <= N; i++ ) {
+        cout << "nr=";
+        cin >> nr;
+
+        if (min > nr) {
+            min = nr;
+        }
+
+        if (max < nr) {
+            max = nr;
+        }
+    }
+}
+
+
+/*
+Se citesc N numre si se stocheaza intr-un vector;
+Sa se afiseze daca toate numerele sunt egale sau nu
+*/
+
+#include <iostream>
+
+using namespace std;
+
+void citireVector(int a[], int N);
+bool suntToateEgale(int a[], int N);
+
+int main()
+{
+    int N;
+    cout << "N=";
+    cin >> N;
+
+    int a[N];
+
+    citireVector(a, N);
+
+
+    bool rezultat = suntToateEgale(a, N);
+
+    cout << rezultat << endl;
+
+
+    return 0;
+}
+
+void citireVector(int a[], int N) {
+    for (int i = 0; i < N; i++) {
+        cout << "a[" << i << "]=";
+        cin >> a[i];
+    }
+}
+
+bool suntToateEgale(int a[], int N) {
+    for (int i = 1; i < N; i++) {
+        if (a[i] != a[0]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+/*
+Se citesc N numere, se stocheaza intr-un vector.
+Sa se calculeze maximul din el.
+Sa se afiseze cate numere pare si cate numere impare sunt in vector
+
+*/
+#include <iostream>
+
+using namespace std;
+
+void citireVector(int v[], int dim);
+void afisareVector(int a[], int dim);
+int maximVector(int a[], int dim);
+void nrPareNrImpare(int a[], int n, int& nrPare, int& nrImpare);
+
+
+int main()
+{
+    int N;
+    cout << "N= ";
+    cin >> N;
+
+    int a[N];
+
+    citireVector(a, N);
+
+    //int max = maximVector(a, N);
+
+    int nrPare, nrImpare;
+    nrPareNrImpare(a, N, nrPare, nrImpare);
+
+
+    afisareVector(a, N);
+
+    cout << "Nr de nr pare: " << nrPare << " Nr de nr impare: " << nrImpare << endl;
+
+    //cout << "Maximul este: " << max << endl;
+
+    return 0;
+}
+
+// O functie care introarce cate nr pare si cate nrImpare sunt intr-un vector
+void nrPareNrImpare(int a[], int n, int& nrPare, int& nrImpare) {
+    nrPare = 0;
+    nrImpare = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (a[i] % 2 == 0) {
+            nrPare++;
+        } else {
+            nrImpare++;
+        }
+    }
+}
+
+
+int nrPare(int a[], int N) {
+    int contor = 0;
+    for (int i = 0; i < N; i++) {
+        if (a[i] % 2 == 0) {
+            contor++;
+        }
+    }
+
+    return contor;
+}
+
+void citireVector(int v[], int dim) {
+    // citirea numerelor in vector
+    for (int i = 0; i < dim; i++) {
+        cout << "v[" << i << "]=";
+        cin >> v[i];
+    }
+}
+
+void afisareVector(int a[], int dim) {
+    for (int i = 0; i < dim; i++) {
+        cout << "a[" << i << "]=" << a[i] << " ";
+    }
+    cout << endl;
+}
+
+int maximVector(int a[], int dim) {
+    int max = a[0];
+    for (int i = 1; i < dim; i++) {
+        if (a[i] > max) {
+            max = a[i];
+        }
+    }
+
+    return max;
+}
+
+
+
+/* 
+    Un program care afiseza cifrele unui numar si de cate ori apar ele in el.
+*/
+#include <iostream>
+
+using namespace std;
+
+void intializareVector(int v[], int dim, int val);
+
+int main()
+{
+    int nr;
+    cout << "nr = ";
+    cin >> nr;
+
+    int v[10];
+    // initializam vectorul de aparitii cu 0
+    for (int i = 0; i < 10; i++) {
+        v[i] = 0;
+    }
+    // sau apelam functia: 
+    // initializareVector(v, 10, 0);
+
+    while (nr != 0) {
+        // calculam ultima cifra
+        int u = nr % 10;
+
+        v[u]++; // v[u] = v[u] + 1;
+
+        nr = nr / 10;
+    }
+
+    // afisam vectorul
+    for (int i = 0; i < 10; i++) {
+        if (v[i] > 0) {
+            cout << "Cifra " << i << " apare de: " << v[i] << " ori" << endl;
+        }
+    }
+
+
+    return 0;
+}
+
+// functie ce initializeaza un vector cu o valoare data ca parametru
+void intializareVector(int v[], int dim, int val) {
+    for (int i = 0; i < dim; i++) {
+        v[i] = val;
+    }
+}
+
+
+
+
+/*
+    Un program ce calculeaza suma elementelor dintr-un vector
+    Un program ce verifica daca elementele dintr-un vector sunt diferite
+    Un program ce sorteaza un vector prin algoritmul de interschimbare
+*/
+#include <iostream>
+
+using namespace std;
+
+int calculSuma(int a[], int dim);
+int toateDiferite(int a[], int dim);
+void sortare(int a[], int dim);
+
+int main()
+{
+    int a[] = {1, 2, 4, 2, 10, -9};
+
+    sortare(a, 6);
+
+    for (int i = 0; i < 6; i++) {
+        cout << a[i] << " ";
+    }
+    cout << endl;
+
+
+    return 0;
+}
+
+// o functie ce sorteaza crescator vectorul
+void sortare(int a[], int dim) {
+    for (int i = 0; i < dim - 1; i++) {
+        for (int j = i + 1; j < dim; j++) {
+            // compar elementul a[i] cu a[j]
+            if (a[i] < a[j]) {
+                // interschimb a[i] cu a[j]
+                int aux = a[i];
+                a[i] = a[j];
+                a[j] = aux;
+            }
+        }
+    }
+}
+
+// o functie care verifica daca toate elementele dintr-un vector sunt diferite
+int toateDiferite(int a[], int dim) {
+    for (int i = 0; i < dim - 1; i++) {
+        // compar elementul a[i] cu elementele din vector de dupa el
+        for (int j = i + 1; j < dim; j++) {
+            if (a[i] == a[j]) {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
+}
+
+
+// cautare liniare intr-un vector
+int cautare(int a[], int dim, int x) {
+    for (int i = 0; i < dim; i++) {
+        if (a[i] == x) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+
+// o functie care intoarce maximul dintr-un vector
+int maxim(int a[], int dim) {
+    // presupuem ca max se afla pe prima pozitie
+    int max = a[0];
+
+    for (int i = 1; i < dim; i++) {
+        if (a[i] > max) {
+            max = a[i];
+        }
+    }
+
+    return max;
+}
+
+int calculSuma(int a[], int dim) {
+    int rezultat = 0;
+    for (int i = 0; i < dim; i++) {
+        rezultat += a[i];
+    }
+
+    return rezultat;
+}

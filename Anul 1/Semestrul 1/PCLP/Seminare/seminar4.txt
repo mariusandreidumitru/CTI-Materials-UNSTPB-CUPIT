@@ -1,0 +1,238 @@
+SEMINAR 4
+TEMA pt seminarul 5:
+GRUPA 2
+A. Citim un numar real nr. Sa afsima daca a doua zecimala este 
+egala cu a treia sau nu.
+Ex1: nr=12.3447  A doua zecimala =4, a treia este 4 Deci sunt egale
+Ex2: nr=1.2345  NU 
+Ex3: nr=1.2 Sunt ambele 0, deci ewgale 
+
+B. Citim N, nr natural. Citim N numere intregi.
+Cate numere patrat perfect am introdus.
+
+C. Citim N, nr natural. Citim N numere intregi.
+Afisati care numar are cea mai mare cifra a zecilor.
+Exemplu:
+ N=3
+ nr=717
+ b=80
+ c=12345
+Se va afisa: nr 80 are cea mai mare cifra a zecilor
+
+GRUPA 1
+A. Citim un numar real nr. Sa afisam daca prima zecimala este 
+egala cu a treia sau nu.
+Ex1: nr=12.353447  Prima zecimala =3, a doua este 3 Deci sunt egale
+Ex2: nr=1.2345  NU 
+Ex3: nr=1 Sunt ambele 0, deci egale 
+
+B. Citim N, nr natural. Citim N numere intregi.
+Cate numere care au cifra zecilor egala cu cifra sutelor am introdus.
+
+C. Citim N, nr natural. Citim N numere intregi.
+Afisati care numar are cei mai multi divizori.
+Exemplu:
+ N=3
+ nr=8
+ nr=13
+ nr=12
+Se va afisa: nr 12 are cei mai multi divizori (are 6 divizori)
+
+TEMa pt astazi:
+ Citim un numar intreg. Sa comutam in numar cifra zecilor cu cifra miilor
+Ex: nr=123451 Rezulta nr=125431
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    int nr;
+    cin>>nr;
+    int u = nr%10;
+    int z = (nr/10)%10;
+    int s=(nr/100)%10;
+    int m = (nr/1000)%10;
+    //cout<<"m="<<m<<" z="<<z;
+    //Comutare cifra z cu cifra m
+    //12345 ---> 14325
+    int nrSup = nr/10000;
+    nr= nrSup*10000+ z*1000+100*s+10*m+u;
+    cout<<"nr="<<nr;
+    return 0;
+}
+
+
+
+1. Minimul dintre 3 numere
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int a,b,c;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    cout<<"c="; cin>>c;
+    int minim=a;
+    if(b<minim)minim=b;
+    if(c<minim)minim=c;
+    cout<<"minim="<<minim;
+    return 0;
+}
+
+2. Algo de patrat perfect
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    int nr;
+    cout<<"nr="; cin>>nr;
+    //este nr patrat perfect?
+    if(nr<0)cout<<"NU este";
+    else{
+        int radical=sqrt(nr);
+        if(radical*radical==nr)cout<<"este";
+        else cout<<"nu este";
+    }
+    return 0;
+}
+
+2B. Citim 4 numere intregi a,b,c,d. Sa afisam daca cele 4 numere sunt in 
+progresie aritmetica sau nu.
+Ex: 1 2 3 4 : da
+    1 2 5 6 : nu
+(if cu 2 alternative)
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    int a,b,c,d;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    cout<<"c="; cin>>c;
+    cout<<"d="; cin>>d;
+    int r = b - a;
+    if ((c - b == r) && (d - c == r))
+        cout << "Sunt in progresie aritmetica.";
+    else cout << "Nu sunt in progresie aritmetica.";
+    return 0;
+}
+
+
+3. Citim de la tastatura 3 numere intregi. Cate numere pozitive (>=0) 
+am introdus?
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    int a,b,c;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    cout<<"c="; cin>>c;
+    int contor=0;
+    if(a>=0)contor++;
+    if(b>=0)contor++;
+    if(c>=0)contor++;
+    cout<<contor;
+    return 0;
+}
+
+4. Citim doua numere reale pozitive, a si b.
+Care numar are partea zecimala mai mare ?
+Ex: a=1.78
+    b=8.987
+Rezultat: b 
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    double a,b;
+    cout<<"a="; cin>>a;
+    cout<<"b = "; cin >> b;
+    double parte_zecimala_a = a-(int)a;
+    double parte_zecimala_b = b-(int)b;
+
+    if (parte_zecimala_a > parte_zecimala_b)
+        cout<< "Parte zecimala a mai mare";
+    else
+        cout << "Parte zecimala b mai mare";
+
+    return 0;
+}
+
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    int a,b,c,contor;
+    cin>>a>>b>>c;
+    //Presupunem a,b,c>=o;
+    int radical1,radical2,radical3;
+    radical1=sqrt(a);
+    radical2=sqrt(b);
+    radical3=sqrt(c);
+    contor=0;
+    if(radical1*radical1==a)
+        contor++;
+    if(radical2*radical2==b)
+        contor++;
+    if(radical3*radical3==c)
+        contor++;
+    cout<<contor;
+
+    return 0;
+}
+
+6.Citim un numar intreg care are maxim 2 cifre.
+Afisati daca are toate cifrele egale sau nu.
+Ex: nr=12 NU
+    nr=11 DA
+    nr=7  DA
+ int cu,cz,x;
+    cin>>x;
+    if(x>=-9 && x<=9)
+        cout<<"egale";
+    else
+    {
+    cu=x%10;
+    cz=x/10%10;
+
+    if(cu==cz)
+        cout<<"nr are cifrele egale";
+    else
+        cout<<"nr nu are cifrele egale";
+    }
+
+7. Citim un numar intreg x. Citim a,b,c coeficientii 
+ec. de gradul 2: ax^2+bx+c=0.
+Este x solutie a acestei ecuatii?
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    int a,b,c;
+    cout<<"a="; cin>>a;
+    cout<<"b="; cin>>b;
+    cout<<"c="; cin>>c;
+    int x;
+    cout<<"x=";cin>>x;
+    if(a*x*x+b*x+c==0)cout<<"da";
+    else cout<<"nu";
+    return 0;
+}
+
+

@@ -1,0 +1,362 @@
+Curs 11 Str date
+ARBORI
+
+Definitie (recursiva):
+      Printr-un arbore A se întelege o multime finita de obiecte de date 
+numite noduri cu urmatoarele particularitati:
+* Exista un nod particular numit radacina,
+* Celelalte noduri ale arborelui sunt repartizate în 0, 1 sau mai multe submultimi disjuncte 
+ fiecare submultime fiind la rândul ei arbore.
+
+      
+Un arbore binar este un arbore în care fiecare nod are cel mult doi succesori
+ ( de obicei acestia sunt denumiti fiul stânga si fiul dreapta ).
+Un arbore în care exista noduri ce au mai mult de doi fii (succesori) se cheama 
+arbore multicai.
+Nodurile care nu au succesori sunt denumite frunze.
+Nodurile care au acelasi parinte sunt noduri frati.
+Arborii binari sunt cei mai simpli arbori, motiv pentru care sunt si cei mai utilizati.
+Un arbore in care cel putin un nod are mai mult de 2 fii, este denumit arbore multicai.
+      
+1.1. Modalitati de reprezentare a arborilor
+
+	   
+A.Reprezentarea unui arbore binar alocat dinamic 
+
+Este cea mai utilizata reprezentare pentru arborii binari.
+
+    Un nod al arborelui este o structura  ( tipul de date struct ), definita astfel:
+(cazul in care informatia utila din nod este un numar intreg)
+typedef struct nod{
+   int nr;//informatia din nod
+   nod* fSt;//referinta catre fiul stanga
+   nod* fDr;//referinta catre fiul dreapta
+}NOD;
+ NOD * rad; //referinta catre nodul radacina 
+      
+  Conform acestei modalitati de reprezentare, 
+arborele este specificat printr-o referinta la nodul radacina.
+
+B. Reprezentarea cu vectori
+
+     	În general se folosesc trei vectori “paraleli” care au aceeasi dimensiune ,
+egala cu numarul de noduri din arbore:  vectorul info[ ] care contine informatiile din nodurile arborelui, vectorii fst[ ] si fdr[ ] 
+în care se memoreaza  indicii  nodurilor (radacina are indexul 0, fiul stânga al radacinii are indexul 1, fiul dreapta al radacinii are indexul 2, etc.).
+Exemplu: fst[i] este  numarul  nodului care este fiul stanga al nodului numarul i.
+Daca nodul i nu are fiu stânga, atunci fst[i]= -1.
+Nu se poate folosi pt arbori multi-cai
+ 			
+     
+Reprezentarea cu vectori de tati     (legaturi fiu – tata )
+      Un arbore poate fi reprezentat prin legaturi de la fiu la tata. 
+Reprezentarea poate fi folosita ai pentru arborii binari si pentru arborii multicai.
+ Nu pastreaza info de fiu stanga/dreapta.
+                                     
+Tatal nodului 0 este -1 (nu are tata, fiind nodul radacina ).
+
+
+Parcurgerea (traversarea) arborilor BINARI
+      
+      Pentru a determina daca un arbore dat contine un nod cu o 
+informatie cautata trebuie efectuata o operatie de cautare în structura arborelui.
+Deci trebuie stabilit un procedeu prin care sa poata fi vizitat,
+o parcurgere sistematica a nodurilor
+Putem avea ca parcurgeri:
+1.Parcurgere pe nivel - care consta în vizitarea mai întâi a radacinii,
+ apoi a tuturor fiilor radacinii, apoi a fiilor fiilor a.a.m.d. 
+
+2.traversarea (parcurgerea) în pre-ordine -
+ mai este numita si parcurgerea RSD(Radacina, Stânga, Dreapta) si 
+consta în parcurgerea arborelui în urmatoarea ordine: 
+-radacina,
+-subarborele din stânga,
+-subarborele din dreapta.
+    	
+                         
+3.traversarea (parcurgerea) în post-ordine - mai este numita si
+ parcurgerea SDR(Stânga, Dreapta, Radacina) ai consta în parcurgerea arborelui
+ în urmatoarea ordine: 
+-subarborele din stânga,
+-subarborele din dreapta,
+-radacina.
+
+4.traversarea (parcurgerea) în in-ordine sau traversarea simetrica -
+ mai este numita ai parcurgerea SRD (Stânga, Radacina, Dreapta) si consta în parcurgerea:          			
+      -subarborele din stânga,
+      -radacina,
+      -subarborele din dreapta.
+
+Exemplificare pe caz concret a modurilor de parcurgere a arborilor:
+
+         0
+     1       2    
+  3    4
+          5
+
+Pe nivel: {0,1,2,3,4,5}
+RSD: {0,1,3,4,5,2}
+SRD: {3,1,4,5,0,2}
+SDR: {3,5,4,1,2,0}
+      
+
+Dintre cele 4 parcurgeri pt arbori binari, 3 se aplica si pt arbori multicai:
+- parcurgere în latime (pe nivel)
+- parcurgerea în preordine
+-parcurgerea în postordine
+
+
+APLICATII
+
+Reprezentarea unui arbore cu vectori paraleli. 
+Calculam numarul de frunze ale arborelui reprezentat astfel.
+
+#define N 3 //nr. noduri
+int main()
+{
+ int nr[N];//informatia din noduri
+ int fSt[N];//fSt[i] este nr. nodului fiului stang al nodului i
+ int fDr[N];
+ int i;
+ int nFrunze=0;//nr. de frunze
+ //Nodul i este nod frunza, daca fSt[i]=fDr[i]=-1
+ //Citirea arborelui:
+ for(i=0;i<N;i++){
+  cout<<"Nodul "<<i<<" : "<<endl;
+  cout<<"informatia: "; cin<<nr[i];
+  cout<<"fiul stanga al nodului "<<i<<" : "; cin<<fSt[i];
+  cout<<"fiul dreapta al nodului "<<i<<" : "; cin<<fDr[i];
+ }
+ //calcul nr. noduri frunza:
+ for(i=0;i<N;i++)
+   if((fSt[i]==-1)&&(fDr[i]==-1))nFrunze++;
+ cout<<nFrunze<<" noduri frunza.";
+ return 0;
+}
+
+TEMA:
+ Citim de la tastatura un arbore binar in reprezentarea cu vector de tati.
+ Cate frunze are?
+
+Exemple de prelucrari arbore binar:
+Vom reprezenta un arbore binar, cu reprezentarea dinamica.
+Numele functiilor sunt sugestive, ilustrând ce face fiecare.
+
+#include <iostream>
+#include <conio.h>
+#include <math.h>
+using namespace std;
+typedef struct nod{
+   int nr;
+   nod* fSt;
+   nod* fDr;}NOD;
+
+
+
+void rsd(nod* nodCrt);
+void srd(nod* nodCrt);
+void sdr(nod* nodCrt);
+void nPare(NOD* nodCrt, int&np);
+void nrPrime(nod* nodCrt, int&contor);
+void estePrezent(nod* nodCrt, int x, int& este);
+
+void nrNoduri(nod* nodCrt, int& n);
+
+void nrFrunze(nod* nodCrt, int&contor);
+void maxim(nod* nodCrt, int& max);
+int estePrim(int x);
+
+//O functie ce copiaza toate informatiile din arbore intr-un vector:
+void copiereArboreInVector(NOD* nodCrt,int a[],int& index)
+
+int main()
+{
+ NOD* rad;//variabila locala
+
+/*
+Pentru test, s-ar putea construi ai manual un arbore binar, 
+construind mai intâi nodurile frunza ai apoi legându-le corespunzîtor, ca în exemplul urmator.
+
+Construim acest arbore, ce are 3 frunze:
+(nodul radacina are numarul 0, ai informaaia din el este 7)
+           0:7
+    1:70             2:5
+                  3:88
+             4:55    5:20
+*/
+//Are 3 frunze. Le alocam primele: 
+//frunza cu indexul 4:
+NOD* n4=new NOD; n4->nr=55; n4->fSt=NULL; n4->fDr=NULL;
+//frunza cu indexul 5:
+NOD* n5=new NOD; n5->nr=20; n5->fSt=NULL; n5->fDr=NULL;
+//frunza cu indexul 1:
+NOD* n1=new NOD; n1->nr=70; n1->fSt=NULL; n1->fDr=NULL;
+//Completez nodurile ce au deja fiii completati:
+NOD* n3=new NOD; n3->nr=88; n3->fSt=n4; n3->fDr=n5;
+NOD* n2=new NOD; n2->nr=5; n2->fSt=n3; n2->fDr=NULL;
+//Utima completata e radacina:
+ rad=new NOD; rad->nr=7; rad->fSt=n1; rad->fDr=n2;
+
+
+ cout<<"Parcurgere srd:"<<endl;
+ srd(rad);
+ cout<<endl;
+ int np=0;
+ nPare(rad,np);
+ cout<<"nr de numere pare: ", np);
+ int contorPrime=0;
+ nrPrime(rad,contorPrime);
+ cout<<"nr prime="<<contorPrime;
+ cout<<endl;
+ //cautare in arbore:
+ int este=0;
+ int x;cout<<"x=";cin>>x;
+ estePrezent(rad,x,este);
+ if(este==0)cout<<"nu este prezent "<<x<<endl;
+ else cout<<"este prezent "<<x<<endl;
+ cout<<endl;
+ //calcul nr de noduri din arbore:
+ int N=0;//nr de noduri
+ nrNoduri(rad,N);
+  cout<<"N="<<N;
+ cout<<endl;
+ //calcul nr de frunze:
+ int nF=0;
+ nrFrunze(rad,nF);
+ cout<<"Nr frunze = "<<nF;
+ cout<<endl;
+ //Calcul maxim:
+ int max=rad->nr;
+ maxim(rad,max);
+ cout<<"maxim="<<max;
+ cout<<endl;
+ //Copiere informatii din arbore intr-un vector:
+ //void copiereArboreInVector(NOD* nodCrt,int a[],int& index)
+ int a[1000];//dim. acoperitoare
+ int index=0;
+ copiereArboreInVector(rad,a,index);
+ //nr de elemente copiate in vector, N:
+ int N=index;
+ //afisare vector:
+ for(int i=0;i<N;i++)
+  cout<<a[i]<<" ";
+
+ return 0;
+}
+
+
+void rsd(NOD* nodCrt)
+{
+ if(nodCrt==NULL)return;
+ cout<<nodCrt->nr<<"  ";
+ rsd(nodCrt->fSt);
+ rsd(nodCrt->fDr);
+}
+
+void srd(NOD* nodCrt)
+{
+ if(nodCrt==NULL)return;
+ srd(nodCrt->fSt);
+ cout<<nodCrt->nr<<"  ";
+ srd(nodCrt->fDr);
+}
+
+void sdr(NOD* nodCrt)
+{
+ if(nodCrt==NULL)return;
+ sdr(nodCrt->fSt);
+ sdr(nodCrt->fDr);
+ cout<<nodCrt->nr<<"  ";
+}
+
+void nPare(NOD* nodCrt, int&np){
+ if(nodCrt==NULL)return;
+ if(nodCrt->nr%2==0)nP++;
+ nPare(nodCrt->fSt,np);
+ nPare(nodCrt->fDr,np);
+
+
+int estePrim(int x)
+{
+ if(x<=1)return 0;
+ for(int i=2;i<=sqrt(x);i++)
+    if(x%i==0) return 0;
+ return 1;
+}
+
+void nrPrime(NOD* nodCrt, int& contor)
+{
+ if(nodCrt==NULL)return;
+ //parcurgere rsd:
+ if(estePrim(nodCrt->nr))
+   contor++;
+ nrPrime(nodCrt->fSt,contor);
+ nrPrime(nodCrt->fDr,contor);
+}
+
+void estePrezent(NOD* nodCrt, int x, int& este)
+{
+ if(nodCrt==NULL)return;
+ //parcurgere rsd:
+ if(nodCrt->nr == x){
+   este=1;//este prezent
+   return;} //s-a obtinut rezultatul final
+ estePrezent(nodCrt->fSt,x,este);
+ estePrezent(nodCrt->fDr,x,este);
+}
+
+
+//cate noduri are un arbore binar oarecare
+void nrNoduri(NOD* nodCrt, int& n)
+{
+  //parcurgere rsd: 
+ if(nodCrt==NULL)return;
+ n++;
+ nrNoduri(nodCrt->fSt,n);
+ nrNoduri(nodCrt->fDr,n);
+}
+//Alta solutie pentru functia nrNoduri() :
+/*
+int nrNoduri(NOD* nodCrt)
+{
+ //dividae et impera:
+ //cazul limita:
+ if(nodCrt==NULL)return 0;
+ return 1+nrNoduri(nodCrt->fSt)+nrNoduri(nodCrt->fDr);
+}
+
+*/
+
+//nr. de frunze ale unui arbore binar oarecare:
+void nrFrunze(NOD* nodCrt, int& contor)
+{
+ if(nodCrt==NULL)return;
+ //parcurgere rsd:
+ //este  frunzaa
+ if((nodCrt->fSt==NULL)&&(nodCrt->fDr==NULL)){
+    contor++;
+    return;
+ }
+ nrFrunze(nodCrt->fSt,contor);
+ nrFrunze(nodCrt->fDr,contor);
+}
+
+void maxim(NOD* nodCrt,int& max){
+ if(nodCrt==NULL)return;
+ if(nodCrt->nr>max)max=nodCrt->nr;
+ maxim(nodCrt->fSt,max);
+ maxim(nodCrt->fDr,max);
+}
+
+
+
+O functie ce copiaza toate informatiile din arbore intr-un vector:
+void copiereArboreInVector(NOD* nodCrt,int a[],int& index)
+{
+ if(nodCrt==NULL)return;
+ //parcurgere rsd:
+ a[index]=nodCrt->nr;
+ index++;
+ copiereArboreInVector(nodCrt->fSt,a,index);
+ copiereArboreInVector(nodCrt->fDr,a,index);
+}
+

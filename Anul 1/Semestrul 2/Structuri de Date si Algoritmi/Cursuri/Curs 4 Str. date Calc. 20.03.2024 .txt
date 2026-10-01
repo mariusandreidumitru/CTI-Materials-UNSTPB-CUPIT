@@ -1,0 +1,391 @@
+Curs 4 Str. date Calc. 1 
+Vom implementa o LSI de numere intregi.
+Mai usor, vom lucra cu variabile globale.
+Folosim variabila globala head pt adresa de inceput a listei.
+Un nod al listei are 2 campuri, deci este o structura (definita recursiv).
+O definim astfel: (structura autoreferita)
+typedef struct nod{
+   int nr; //informatia din nod
+   nod* next;//adresa nodului urmator
+}NOD;
+
+Obs:
+In cazul structurilor simple:
+typedef struct{
+          int x;
+          int y;}punct;
+punct p;
+//Accesez un camp cu operatorul .
+p.x=5;
+p.y=9;
+
+La o LSI , variabila head memoreaza ADRESA primului nod:
+NOD* head;
+Atunci cand stiu adresa unei structuri, accesez un camp al ei cu operatorul ->
+Exemplu:
+head->nr=7;
+Este gresit: head.nr=7;
+
+IMPLEMENTARE LSI de numere intregi descrisa prin var. globala head:
+#include <iostream>
+using namespace std;
+typedef struct nod{
+   int nr; //informatia din nod
+   nod* next;//adresa nodului urmator
+}NOD;
+//var. globala:
+NOD* head;
+void init();//initializare lista
+void inserareLaInceput(int x);
+void afisare();
+int main(){
+ init();
+ inserareLaInceput(-1);
+ inserareLaInceput(0);
+ inserareLaInceput(20);
+ inserareLaInceput(7);
+ afisare();
+ return 0;
+}
+void init(){
+ head=NULL;
+}
+
+void inserareLaInceput(int x){
+//distingem 2 cazuri: (lista este/ nu este vida)
+ if(head==NULL){
+   head=new NOD;
+   head->nr=x;
+   head->next=NULL;
+   return;
+ }
+ //lista nu este vida:
+  NOD* nodNou=new NOD;
+  nodNou->nr=x;
+  nodNou->next=head;
+  head=nodNou;
+}
+void afisare(){
+  if(head==NULL){
+    cout<<"este vida";
+    return;
+  }
+  //Parcurg lista plecand de la head:
+  NOD* nodCrt=head;
+  //parcurg lista:(vizitez fiecare nod)
+  for(;;){
+    //afisez informatia din nodCrt:
+    cout<<nodCrt->nr<<" ";
+    //trecem la urmatorul nod:
+    nodCrt=nodCrt->next;
+    //s-a terminat lista?
+    if(nodCrt==NULL)break;
+  }
+}
+
+
+O functie ce returneaza cate numere pare sunt in lista.
+Va trebui sa parcurgem lista.
+//pres. ca lista nu e vida
+int nPare(){
+ int contor=0;
+ //parcurg lista:
+ NOD* nodCrt=head;
+ for(;;){
+   //prelucrarea informatiei din nodul curent:
+   if(nodCrt->nr %2==0)contor++;
+   nodCrt=nodCrt->next;
+   if(nodCrt==NULL)break;
+ }
+ return contor;
+}
+
+ Scrieti o functie care verifica daca toate numerele din LSI
+sunt egale intre ele.
+
+int toateEgale(){
+    //pres. ca lista nu e vida
+    //Trebuie sa fie toate egale cu primul
+    int primul=head->nr;
+    //Parcurg lista:
+    NOD* nodCrt=head;
+    for(;;){
+        //compar nodCrt cu primul:
+        if(nodCrt->nr!=primul)return 0;
+        //avansez in lista:
+        nodCrt=nodCrt->next;
+        if(nodCrt==NULL)break;
+    }
+    return 1;
+}
+
+ Scrieti o functie ce returneaza maximul dintr-o LSI
+
+int maxim(){
+ //pres. ca nu e vida
+ //initializare:
+ int max=head->nr;
+ //parcurg lista:
+ NOD* nodCrt=head;
+ for(;;){
+   if(nodCrt->nr > max)max=nodCrt->nr;
+   nodCrt=nodCrt->next;
+   if(nodCrt==NULL)break;
+ }
+ return max;
+}
+
+Sol. 3:
+int maxim(){
+ //pres. ca nu e vida
+ //initializare:
+ int max=head->nr;
+ //parcurg lista plecand de la al doilea nod:
+ NOD* nodCrt=head->next;
+ 
+ while(nodCrt!=NULL){
+   if(nodCrt->nr > max)max=nodCrt->nr;
+   nodCrt=nodCrt->next;
+ }
+ return max;
+}
+
+  
+Cea mai complexa functie de la LSI:
+Insearea unui numar intr-o lista de numere intregi , pe o pozitie specificata (index)
+
+10-->20-->4--->77
+index=2 sa inserez nr 100
+10-->20-->100-->4--->77
+
+Ideea:
+daca index=0, avem inserareInceput()
+
+typedef struct nod{
+   int nr;
+   nod* next;} NOD;
+NOD* head;
+void inserare(int index, int x){
+ if(index==0){inserareInceput(x);return;}
+ NOD* nodNou=new NOD;
+ nodNou->nr=x;
+//plec de la head si ma opresc pe nodul anterior pozitiei de inserat:
+NOD* nodCrt=head;
+int i;
+for(i=1;i<index;i++)
+  nodCrt=nodCrt->next;
+//salvez adresa nodului nurmator:  
+NOD* adresaUrm=nodCrt;
+nodCrt->next=nodNou;
+nodNou->next=adresaUrm;
+}
+
+Exemplu:
+Copiere numere din lista intr-un vector.
+Vom da o dimensiune acoperitoare vectorului  in programul principal. 
+
+void copiere(int v[], int& nv){
+ //dimensiune vector=parametru de iesire
+ //pres. ca lista nu este vida
+ //Parcurg lista:
+ NOD* nodCrt=head;
+ int i=0;//index in vector
+ for(;;){
+   //prelucrare:
+   v[i]=nodCrt->nr;
+   i++;
+   //avansare in lista:
+   nodCrt=nodCrt->next;
+   if(nodCrt==NULL)break;
+ }
+ nv=i;
+}
+//Ex. de apel in main():
+int main(){
+ init();
+ //inserari:
+ ....
+ //Copiere in vector:
+ int a[1000];//acoperitor
+ int N;//dimensiune ocupata de lista in vector
+ copiere(a,N);
+ //afisare vector:
+ int i;
+ for(i=0;i<N;i++)
+   cout<<a[i]<<" ";
+ return 0;
+}
+
+O LSI de numere COMPLEXE. Sa o creem (inserareInceput()) si sa calculam suma numerelor
+ complexe din lista.
+Avem trei campuri in nod
+re
+im
+next
+typdef struct nod{
+  int re;
+  int im;
+  nod* next;}NOD;
+void inserareLaInceput(int re, int im){
+//distingem 2 cazuri: (lista este/ nu este vida)
+ if(head==NULL){
+   head=new NOD;
+   head->re=re;
+   head->im=im;
+   head->next=NULL;
+   return;
+ }
+ //lista nu este vida:
+  NOD* nodNou=new NOD;
+  nodNou->re=re;
+  nodNou->im=im;
+  nodNou->next=head;
+  head=nodNou;
+}
+
+void sumaListaAfisare(){
+{
+ //Pres. ca lista nu e vida
+ int sumaRe=0;//partea reala a sumei
+ int sumaIm=0;
+//Parcurgerea listei:
+ NOD* nodCrt;
+ //plecam din capul listei
+ nodCrt=head;
+ for(;;){
+  //adun informatiile din nodCrt:
+  sumaRe=sumaRe+nodCrt->re;
+  sumaIm=sumaIm+nodCrt->im;
+  nodCrt=nodCrt->next;//avansare in lista, la nodul urmator
+  if(nodCrt==NULL)break;
+ }
+ //afisare:
+ cout<<"parte re a sumeI; "<<sumaRe<<endl; 
+ cout<<"parte im a sumeI; "<<sumaIm<<endl; 
+}
+
+Exemplu de problema :
+ Pentru o lista simplu inlantuita de numere complexe scrieti o functie ce 
+returneaza cel mai mare modul de nr complex din lista (modul=sqrt(re*re+im*im) )
+
+Liste înlănţuite de siruri
+LISTA DE CUVINTE:
+#include <iostream>
+using namespace std;
+typedef char sir[31];//cuvinte de max. 30 caractere
+typedef struct nod{
+	  sir cuvant;
+	  nod* next;} NOD;
+
+
+NOD* head;//var. globala. head nu este o structura ! head este adresa unei structuri
+void init(); //initializarea listei
+int esteVida();
+void adaugareInceput(sir x);//inserarea la inceputul listei
+void afisare();
+int suntToateCuvinteleEgale();
+
+int main()
+{
+ init();
+ adaugareInceput("casa");
+ adaugareInceput("casa");
+ adaugareInceput("casa");
+ afisare();
+ cout<<endl;
+ int rez=suntToateCuvinteleEgale();
+ if(rez)cout<<"toate egale";
+ else cout<<"nu toate egale";
+....
+ return 0;
+}
+
+void init()
+{
+ head=NULL;//lista este vida la inceput
+}
+int esteVida(){
+ if(head==NULL)return 1;
+ else return 0;
+}
+
+void adaugareInceput(sir x)
+{
+//discernem doua cazuri:
+ //primul caz: lista este vida, nu a fost creata:
+ if(head==NULL){
+   head=new NOD;  //cu malloc procedam asa: head=(NOD*)malloc(sizeof(NOD));
+   //head->nr=x;
+   //copiez sirul x in campul head->cuvant:
+   strcpy(head->cuvant,x);
+   head->next=NULL;
+   return;}
+ //al doilea caz: lista exista deja. Trebuie sa inserez un nou nod la inceputul ei
+ 
+ NOD* nodNou; 
+ nodNou=new NOD;
+ strcpy(nodNou->cuvant,x);  
+ nodNou->next=head;
+ head=nodNou;
+}
+
+void afisare()
+{
+ if(head==NULL){
+   cout<< "lista este vida.";
+   return;}
+//Parcurgerea listei:
+ NOD* nodCrt;
+ //plecam din capul listei
+ nodCrt=head;
+ for(;;){
+  cout<< nodCrt->cuvant <<" ";
+  nodCrt=nodCrt->next;//avansare in lista, la nodul urmator
+  if(nodCrt==NULL)break;
+ }
+}
+
+int suntToateCuvinteleEgale(){
+  //Parcurg lista si compar fiecare cuvant cu primul.
+  //Presupunem ca lista nu e vida.
+  //primul cuvant este : head->cuvant
+//puteam pt claritate: sir primulCuvant; strcpy(primulCuvant, head->cuvant);
+  //Parcurg lista incepand cu al doilea nod:
+  NOD* nodCrt=head->next;
+  for(;;){
+    if(nodCrt==NULL)break;
+    //compare head->cuvant cu sirul nodCrt->cuvant:
+    if(strcmp(head->cuvant,nodCrt->cuvant)!=0)return 0;
+    nodCrt=nodCrt->next;
+  }
+  return 1;
+}
+
+AFISARE CUVANT DE LUNGIME MAXIMA:
+void afisareCuvantLungMax(){
+   int lMax=0; sir sMax="";
+   NOD* nodCrt=head;
+   for(;;){
+    //prelucrarea din nodul curent:
+    if(strlen(nodCrt->cuvant)>lMax){
+        lMax=strlen(nodCrt->cuvant);
+        strcpy(sMax,nodCrt->cuvant);
+    }
+    nodCrt=nodCrt->next;
+    if(nodCrt==NULL)break;
+   }
+   cout<<"rezultat="<<sMax;
+}
+
+Exercitiu:
+Lista simplu inlantuita de numere intregi fara variabile globale
+
+void inserare(NOD* head, int x); //GRESIT!
+//CORECT:
+void inserare(NOD*& head, int x);//head parametru de intrare/iesire
+int main(){
+ NOD* head=NULL;
+ inserare(head,7);
+.............. 
+
+

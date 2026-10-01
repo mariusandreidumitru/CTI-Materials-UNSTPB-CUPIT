@@ -1,0 +1,212 @@
+SIRURI DE CARACTERE
+
+1. O functie ce asre ca parametru un sir de caractere si returneaza 
+lungimea lui (similasra cu strlen()):
+
+int lungime(char* s){
+  //parcurg vector s, pana la 0 terminal:
+  int i=0;
+  for(;;){
+   if(s[i]==0)break; //s-a terminat sirul
+   i++;
+ }
+ return i;
+}
+
+Ex: de apel:
+int L=lungime("abc");//3
+
+2. Scrie o functie ce verifica daca toate caracterele sunt diferite intre ele
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+int siruriDif(char *s);
+
+int main()
+{
+ if( siruriDif("abcd")==1)
+    cout<<"diferite";
+ else
+    cout<<"nu sunt diferite";
+    return 0;
+}
+
+int siruriDif(char *s)
+{ int i,j;
+    for(i=0;i<strlen(s)-1;i++)
+        for(j=i+1;j<strlen(s);j++)
+            if(s[i]==s[j])
+                return 0;
+    return 1;
+}
+
+3. Sa splitam un sir s citit de la tastatura in doua jumatati: s1 si s2
+(siruri)
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+
+
+
+int main()
+{
+    char s[100];
+    char s1[100];
+    char s2[100];
+
+    //dsdsdsdsdsdsdsdsd
+
+    cout<<"Introdu s =  " ; cin.get(s, 100);
+    int L=strlen(s);
+    int i;
+    for(i=0;i<L/2;i++){
+
+        s1[i]=s[i];
+
+    }
+
+    s1[i]=0;
+    /*
+
+    for(i=L/2;i<L;i++){
+
+
+
+        s2[i-L/2]=s[i];
+    }
+
+    s2[i-L/2]=0;
+    */
+    int j=0; //index in s2
+    for(i=L/2;i<L;i++){
+       s2[j]=s[i];
+       j++;
+    }
+    s2[j]=0;
+
+    cout<<"Prima jumatate = " << s1<<endl;
+    cout<<"A doua jumatate = " << s2<< endl;
+
+}
+
+
+4. Criptarea cu algoritmul Caesar
+Este o criptare prin SUBSTITUTIE
+-se cripteaza doar literele (restul caracterelor se lasa neschimbate)
+-fiecare litera se cripteaza cu litera aflata la distanta 3 de ea
+A ---> D
+B ---> E
+...
+X ---> A
+Y ---> B
+Z ---> C
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+    char s1[100];
+    char s2[100];
+    cout<<"s1="; cin.get(s1,100) ;
+    //convertim pe s1 la luitere mari:
+    strupr(s1);
+    //Construim pe s2, s1 criptat cu Caesar:
+    //Parcurg pe s1:
+    int i;
+    for(i=0;i<strlen(s1);i++)
+    //Este s1[i] litera?
+     if(s1[i]>='A'&&s1[i]<='Z'){
+        if(s1[i]=='X') s2[i]='A';
+        else if(s1[i]=='Y') s2[i]='B';
+        else if(s1[i]=='Z') s2[i]='C';
+        else s2[i]=s1[i]+3;
+     } else s2[i]=s1[i];
+
+    s2[i]=0;
+    cout<<s2;
+
+    return 0;
+
+}
+
+
+Pentru a copia un sir in alt sir, folosim functia strcpy()
+Nu se foloseste operatorul = !
+Semnatura:
+strcpy(sir_destinatie, sir_sursa);
+Ex:
+char s1[100]="abc";
+char s2[s1];
+Vrem sa copiem pe s1 in s2:
+s2=s1; GRESIT !!
+strcpy(s2,s1);
+
+Pentru a alipi doua siruri (conacatenare) folosim functia:
+strcat(s2,s1);
+Lipeste pe s1, la sfarsitul lui s2
+
+Exemplu:
+Citim un nume si un prenume de la tastatura.
+Sa construim sirul numeComplet.
+
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+    char nume[100];
+    cout<<"nume="; cin.get(nume,100);
+    cin.get();//descarca ENTER din buffer tastatura
+
+    char prenume[100];
+    cout<<"prenume="; cin.get(prenume,100);
+    char numeComplet[200];
+    strcpy(numeComplet,nume);
+    strcat(numeComplet," ");
+    strcat(numeComplet,prenume);
+    cout<<numeComplet;
+    return 0;
+
+}
+
+TEMA
+Citim un sir s1 de la tastatura. Sirul poate contine si cifre.
+Sa construim numarul intreg continut in sir.
+s="ab1cd3v1";
+Va rezulta nr=131
+
+Daca s="abcd"
+Va rezulta: nu are cifre!
+
+Ideea:
+char s[100]; cin.get(s,100);
+char sNum[100];
+int j=0;
+for(i=0;i<strlen(s);i++)
+  if(s[i]>='0'&& s[i]<='9'){
+     sNum[j]=s[i];
+     j++;
+  }
+int nr=atoi(s);//conversie sir numeric in numar ArrayTOInt
+
+TEMA 
+Citim un sir s.
+Sa formam sirul s1, ce contine car. de pe poz. impare si s2, de pozitiile 
+pare.
+Ex: s="ABCDE"
+s1="BD"
+s2="ACE"
+
+TEMA DE CASA dupa vacanta
+Adunam doua numere foarte lungi, citite ca siruri.
+
+
+
+

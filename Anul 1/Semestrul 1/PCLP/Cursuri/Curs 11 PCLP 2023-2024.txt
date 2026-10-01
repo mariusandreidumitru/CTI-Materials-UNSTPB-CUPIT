@@ -1,0 +1,422 @@
+CURS 11
+
+EXEMPLU
+Inversarea unui vector prin copiere in alt vector
+a={1,2,5} 
+Obtin b={5,2,1}
+#include <iostream>
+//Inversarea unui vector prin copiere in alt vector
+//a={1,2,5}
+//Obtin b={5,2,1}
+//b[0]=a[N-1], b[1]=a[N-2]; ... b[i]=a[N-i-1]
+using namespace std;
+
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int a[N];
+    int i;
+    for(i=0;i<N;i++){
+        cout<<"nr=";
+        cin>>a[i];
+    }
+    int b[N];
+    for(i=0;i<N;i++)
+        b[i]=a[N-i-1];
+    for(i=0;i<N;i++)
+        cout<<b[i]<<" ";
+
+    return 0;
+}
+
+Daca foloseam o functie:
+
+void copiereInversare(int a[], int N, int b[]){
+  int i;
+  //construim vectorul b:
+  for(i=0;i<N;i++)
+     b[i]=a[N-i-1];  //b[0]=a[N-1], b[1]=a[N-2],b[2]=a[N-3],...
+}
+int main(){
+ int a[5]={1,2,3,9,7};
+ int b[5];
+ copiereInversare(a,5,b);
+ //afisare b:
+ for(i=0;i<N;i++)
+   cout<<b[i]<<" ";
+ return 0;
+}
+///////////////////////////////////
+
+Avem doi vectori a si b, cu dimensiunile na si nb.
+Sa construim vectorul c, obtinut prin concatenarea lui a cu b.
+Ex:
+int a[5]={1,2,3,9,7};
+int b[2]={0,-1};
+Va rezulta :
+int c[7]={1,2,3,9,7,0,-1};
+SOLUTIE:
+int main()
+{
+    int na=5;
+    int a[na]={1,2,3,9,7};
+    int nb=2;
+    int b[nb]={0,-1};
+    int c[na+nb];
+    //copiez in c pe a:
+    int i;
+    for(i=0;i<na;i++)
+        c[i]=a[i];
+    //copiez in continuarea lui c pe b:
+    for(i=0;i<nb;i++)
+        c[na+i]=b[i];
+    //afisare vector c:
+    for(i=0;i<na+nb;i++)
+        cout<<c[i]<<" ";//1 2 3 9 7 0 -1
+
+    return 0;
+}
+
+
+EXERCITIU
+Copiem dintr-un vector a, intr-un vector b, doar portiunea din a, cuprinsa 
+intre indecsii i1 si i2.
+int main()
+{
+    int N=6;
+    int a[N]={1,2,3,9,7,77};
+    int i1=2;
+    int i2=4;
+    //va copia doar bucata 3,9,7
+    int b[N];
+    int i;
+    for(i=i1;i<=i2;i++)
+        b[i-i1]=a[i];
+    int nb=i2-i1+1;//dimensiunea lui b
+    for(i=0;i<nb;i++)
+        cout<<b[i]<<" ";
+    return 0;
+}
+
+Varianta cu functie:
+ Sa se scrie o functie ce are ca parametrii un vector a, si indecsii i1 si i2, 
+ si un alt vector b. In functie se va copia in vectorul b, vectorul a intre indecsii i1 si i2 
+inclusiv.
+Ex: int a[5]={1,2,3,9,7};
+    int i1=1; int i2=3;
+    Rezulta b={2,3,9}
+
+void copiere(int a[], int N, int b[], int i1, int i2, int& nb){
+  //o alta solutie decat solutia precedenta !
+  int k=0; //index in b
+  int i;
+  for(i=i1;i<=i2;i++){
+     b[k]=a[i];
+     k++;
+  }
+  nb=k;
+}
+
+ Ex. de folosire:
+int main(){
+ int a[5]={1,2,3,4,5};
+ int i1; cin>>i1;
+ int i2; cin>>i2;
+ int nb;
+ copiere(a,5,b,i1,i2,nb);
+ for(int i=0;i<nb;i++)
+   cout<<b[i]<<" ";
+ return 0;
+}
+
+
+
+EXERCITIU
+Inversarea unui vector in el insusi
+a={1,2,3,4,5,6} 
+Obtin a={6,5,4,3,2,1}
+void inversare(int a[], int N){
+  int i;
+  //parcurg vector pana la jumatate:
+  for(i=0;i<N/2;i++){
+    //interschimb pe a[i] cu simetricul lui, deci cu a[N-i-1]:
+    int aux=a[i];
+    a[i]=a[N-i-1];
+    a[N-i-1]=aux;
+    //swap(a[i],a[N-i-1]);
+  }
+}
+int main()
+{
+    int a[5]={1,2,3,4,5};
+    inversare(a,5);
+    for(int i=0;i<5;i++)
+        cout<<a[i]<<" ";
+    return 0;
+}
+EXERCITIU
+ Copiere cifre numar intr-un vector
+#include <iostream>
+//nr=1768
+//rezulta a={8,6,7,1}
+using namespace std;
+
+int main()
+{
+    int nr; cout<<"nr="; cin>>nr;
+    int a[10];//dimensiune acoperitoare
+    int i=0;//index in vector
+    //algo de calcul cifre numar:
+    for(;;){
+        int cifra=nr%10;
+        a[i]=cifra;
+        i++;
+        nr=nr/10;
+        if(nr==0)break;
+    }
+    int N=i;//dimensiunea vectorului a
+    for(i=0;i<N;i++)
+        cout<<a[i]<<endl;
+    return 0;
+}
+
+Acelasi exemplu, dar sub forma de functie:
+Scrieti o functie in care se face copierea cifrelor unui numar dat ca parametru, 
+intr-un vector dat ca parametru.
+
+void copiere(int nr, int v[], int& nv){
+    int i=0;//index in vector
+    for(;;){
+        int cifra=nr%10;
+        v[i]=cifra; i++;
+        nr=nr/10;
+        if(nr==0)break;
+    }
+    nv=i;
+}
+int main(){
+ int nr; cin>>nr;
+ int a[20];//dimensiune acoperitoare
+ int na;
+ copiere(nr,a,na);
+ for(int i=0;i<na;i++)
+    cout<<a[i]<<" ";
+ return 0;
+}
+
+EXEMPLU
+Se citeste un numar natural. Afisati daca are toate cifrele diferite intre ele 
+sau nu.
+ Ideea? Trebuie memorate neaparat toate cifrele intr-un vector.
+
+void copiere(int nr, int v[], int& nv){
+    int i=0;//index in vector
+    for(;;){
+        int cifra=nr%10;
+        v[i]=cifra; i++;
+        nr=nr/10;
+        if(nr==0)break;
+    }
+    nv=i;
+}
+
+int toateDiferite(int a[], int N){
+ int i,j;
+ //parcurg vector:
+ for(i=0;i<N-1;i++)
+   //el. crt, a[i], il compar cu TOATE elem. de dupa el:
+   for(j=i+1;j<N;j++)
+      if(a[i]==a[j])return 0;
+ return 1;
+}
+int main(){
+ int nr; cin>>nr;
+ int a[20];//dimensiune acoperitoare
+ int na;
+ copiere(nr,a,na);
+ int dif=toateDiferite(a,na);
+ if(dif==1)cout<<"toate diferite";
+ else cout<<"nu";
+ return 0;
+}
+
+
+EXERCITIU
+Citim un numar natural N. Sa copiem primele N numere prime 
+intr-un vector.
+Ex: N=5
+v={2,3,5,7,11}
+#include <iostream>
+#include <math.h>
+using namespace std;
+int prim(int nr);
+int main()
+{
+    int N; cout<<"N="; cin>>N;
+    int v[N];
+    int i;
+    int nrCrt=1;
+    for(i=0;i<N;i++){
+        //se repeta pana gasim un numar prim:
+        for(;;){
+          if(prim(nrCrt)){
+            v[i]=nrCrt;
+            nrCrt++;
+            break;
+          }else nrCrt++;
+        }
+    }
+
+    for(i=0;i<N;i++)
+        cout<<v[i]<<endl;
+    return 0;
+}
+int prim(int nr){
+  if(nr<=1)return 0;
+  for(int i=2;i<=sqrt(nr);i++)
+    if(nr%i==0)return 0;
+  return 1;
+}
+
+
+EXEMPLU
+ Stergerea unui element dintr-un vector, de pe o pozitie (index) specificata.
+Ex:
+a={1,2,7,8,4,5};
+index=3
+Rezulta a={1,2,7,4,5}
+Ideea ?
+xxxxABCD
+Incepand de la pozitia (index+1) mutam spre stanga elementele lui a: a[i]=a[i+1];
+Rezulta in urma stergerii lui A:
+xxxxBCDD
+
+int main(){
+ int a[5]={1,2,3,4,5};
+ int index;
+ cout<<"index="; cin>>index;
+ int i;
+ int N=5;//dimensiune vector
+ for(i=index;i<N-1;i++)
+    a[i]=a[i+1];
+/* sau echivalent:
+  for(i=index+1; i<N;i++)
+     a[i-1]=a[i];
+*/
+ //afisare noul vector a:
+ for(i=0;i<N-1;i++)cout<<a[i]<<" ";
+ return 0;
+}
+
+EXEMPLU
+ INSERAREA unui element x dat, intr-un vector,  pe o pozitie (index) specificata.
+Ex:
+a={1,2,7,8,4,77};
+index=3
+x=100
+Rezulta a={1,2,7,100,8,4,77}
+Ideea ?
+Trebuie sa mutam la dreapta , cu o pozitie , incepand de la ultimul element !
+
+Trebuie ca vectorul sa aiba o dimensiune care sa permita inserarea.
+
+int main(){
+ int a[6]={1,2,3,4,5};
+ int index;
+ cout<<"index="; cin>>index;
+ int x; cout<<"x="; cin>>x;
+ int i;
+ int N=5;//dimensiune vector
+ for(i=N-1;i>=index;i--)
+    a[i+1]=a[i];
+ a[index]=x;
+ //afisare:
+ for(i=0;i<N+1;i++)
+   cout<<a[i]<<" ";
+  
+EXEMPLU
+ Sa se realizeze intersectia a doua multimi reprezentate prin vectori.
+a={1,2,3,4}
+b={7,4,3,12,44}
+Intersectia c={3,4}
+
+int main(){
+ int a[4]={1,2,3,4};
+ int b[5]={7,4,3,12,44};
+ int na=4;
+ int nb=5;
+//a si b sunt multimi: au toate elem. diferite intre ele
+ int c[na];//acoperitoare
+ int nc;//dimensiunea efectiva a lui c
+ int i,j;
+ int k=0;//index in vectorul c
+ for(i=0;i<na;i++){
+   //este a[i] in vector b ?
+   for(j=0;j<nb;j++)
+     if(a[i]==b[j]){
+       c[k]=a[i];
+       k++;
+       break;
+     }
+  }
+  nc=k;
+  //afisare:
+  for(i=0;i<nc;i++)
+     cout<<c[i]<<" "; 
+  return 0;
+}
+
+
+Sa criptam un sir folosind criptarea prin transpozitie cu matrice.
+
+sir="CAUTATI MAI INTAI";
+L=17
+N=5 dimensiunea matricii patratice
+C A U T A 
+T I _ M A
+I _ I N T
+A I _ _ _
+_ _ _ _ _
+
+Se citeste pe verticala:
+sirCriptat="CTIA_AI_I_U_I__TMN__AAT__"
+#include <iostream>
+#include <string.h>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+  char sir[100];
+  cout<<"sir="; cin.get(sir,100);
+  int L=strlen(sir);
+  int N;//dimensiunea matricii patratice
+  int radical=sqrt(L);
+  if(radical*radical==L)N=radical;
+  else N=radical+1;
+  //cout<<"N="<<N;
+  int a[N][N];
+  int i,j,k;
+  k=0;//index in sir
+  for(i=0;i<N;i++)
+    for(j=0;j<N;j++)
+      if(k<L){
+        a[i][j]=sir[k];
+        k++;
+      }else a[i][j]=' ';
+  //asamblez sirul criptat:
+  char sirCriptat[100];
+  k=0;//index in sirCriptat
+  for(i=0;i<N;i++)
+    for(j=0;j<N;j++){
+      sirCriptat[k]=a[j][i];
+      k++;
+    }
+  //il facem sir:
+  sirCriptat[k]=0;
+  cout<<sirCriptat;
+  return 0;
+}
+
+
+

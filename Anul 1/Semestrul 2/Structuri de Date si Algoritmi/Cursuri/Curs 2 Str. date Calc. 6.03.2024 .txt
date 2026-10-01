@@ -1,0 +1,397 @@
+Curs 2 Str. date Calc. 1 
+ 
+Alte exemple de functii recursive:
+Maximul dintr-un vector recursiv (nu se recomanda, doar ca ex. didactic)
+Ideea: luam maximul dintre ultimul element si maximul din restul vectorului (fara ultimul element)
+int maxim(int a[], int N){
+ //caz limita:
+ if(N==1)return a[0];
+ //caz general, reducem dim. problemei:
+ int max1=maxim(a,N-1);
+ if(a[N-1]>=max1)return a[N-1];
+ else return max1;
+}
+
+Afisarea recursiva a unui vector, in ordine inversa (de la ultimul la primul).
+Ex: a={1,7,6,3}
+3 6 7 1
+void afisareInversa(int a[], int N){
+ if(N==1)cout<<a[0]<<" ";
+ //caz general:
+ cout<<a[N-1]<<" ";
+ afisareInversa(a,N-1);
+}
+
+Sa verificam ca un sir este palindrom (simetric fata de mijloc)
+nerecursiv:
+int palindrom(char* s){
+ //parcurg sir pana la jumatate:
+ int L=strlen(s);
+ int i;
+ for(i=0;i<L/2;i++)
+   //compar pe s[i] cu simetricul lui:
+   if(s[i]!=s[L-i-1])return 0;
+ return 1;
+}
+
+varianta recursiva:
+Ideea: tinem doi indecsi s si d (stanga - dreapta)
+
+int palindrom(char* sir, int s, int d){
+//verific daca subsirul lui sir cuprins intre indecsii s si d este palindrom:
+ //caz limita (doua cazuri):
+ if(s==d)return 1;
+ if(s>d)return 0;
+
+ //caz general:
+ if(sir[s]!=sir[d])return 0;
+ //reduc problema:
+ s=s+1;
+ d=d-1;
+ return palindrom(sir,s,d);
+}
+
+int main(){
+ char sir[100];
+ cin.get(sir, 100);
+ int rezultat=palindrom(sir,0,strlen(sir)-1);
+ if(rezultat==1)cout<<"este";
+ else cout<<"nu este";
+ return 0;
+}
+ 
+
+Exemplu: 
+Calcul recursiv a cifrei maxime a unui numar intreg:
+vom da rezultatul cmax, ca parametru de iesire:
+void cifraMax(int nr, int& cmax){
+   if(nr==0)return;
+   int u=nr%10;
+   if(u>cmax)cmax=u;
+   cifraMax(nr/10,cmax);
+}
+int main()
+{
+    int nr=1018;
+    int cmax=0;//initializare a maximului
+    cifraMax(nr,cmax);
+    cout<<"cifra max="<<cmax;
+    return 0;
+}
+
+ 
+STRUCTURA DE STIVA (STACK). IMPLEMENTARE CU VECTORI.
+
+Definitie: stiva (engl. stack) este o structura de date de tipul LIFO (last in , first out)
+Imagine: o stiva de farfurii
+
+La ce serveste:
+
+ - in cazul apelului de functii, se salveaza intr-o stiva : adresa de revenire si parametrii
+ex:
+int maxim(int a, int b, int c){
+ int rez=a;
+ if(b>=rez)rez=b;
+ if(c>=rez)rez=c;
+ return rez;
+}
+int main(){
+ int a,b,c; cin>>a>>b>>c;
+ int m=maxim(a,b,c);//Aici, se salveaza in stiva 4 articole, in ordine:adresa de revenire, a, b,c
+ cout<<m;
+ return 0;
+} 
+ - ca o structura de date folosita de diversi algoritmi mai complecsi (ex: parcurgerea in adancime depth-first
+a unui graf)
+
+Care sunt variabilele folosite pt a implementa structura de stiva ? Care sunt functiile specifice ?
+Variabile folosite:
+ - vectorul in care memorez datele din stiva
+Vom da exemple de stive de int
+  int S[1000];//1000= dim. acoperitoare
+ -indexul varfului stivei (index ultim elem. introdus deja):
+  int iV;
+Cand stiva este vida (goala): iV=-1
+ -nr. max de elemente ce se pot introduce in stiva (nMax)
+
+Functii specifice:
+  -inserare in varful stivei: push()
+  -extragere element din varful stivei: pop()
+
+Implementare stiva de numere intregi: mai intai folosind variabile globale
+#include <iostream>
+using namespace std;
+//var. globale:
+int S[1000];//dim . acoperitoare
+int iV;//index varf (index ultim elent introdus in stiva)
+int nMax;//nr max. permis de elemente in stiva (nu e neaparat necesara aceasta var.)
+
+void init(int nrMaxElemente){
+  iV=-1;
+  nMax=nrMaxElemente;
+}
+int estePlina(){
+  if(iV==nMax-1)return 1;
+  else return 0;
+}
+
+int esteVida(){
+   if(iV==-1)return 1;
+   else return 0; 
+}
+
+void push(int x){  
+ //Pres. ca este loc!
+ iV++;
+ S[iV]=x;
+}
+int pop(){
+ //pres. ca nu este vida !
+ int ultim=S[iV];
+ iV--;
+ return ultim;
+}
+
+//Programul principal:
+int main(){
+  init(100); 
+  push(10); push(20); push(7);
+ //afisam pe ultimul:
+ int ultim=pop();
+ cout<<ultim;
+ return 0;
+}
+
+Ex: Afisarea unui vector in ordine inversa (ex. didactic !)
+int main(){
+ int N; cout<<"N="; cin>>N;
+ int a[N];
+ int i; 
+ for(i=0;i<N;i++)cin>>a[i];
+ //Stiva:
+ init(1000);//acoperitor
+ for(i=0;i<N;i++)push(a[i]);
+ while(!esteVida())
+   cout<<pop()<<endl;
+ return 0;
+}
+
+
+Afisez N numere citite de la tastatura in ordinea inversa a introducerii lor:
+int main(){
+ int N; cout<<"N="; cin>>N;
+ //Stiva:
+ init(1000);
+ int i;
+ for(i=1;i<=N;i++){
+   cout<<"nr="; cin>>nr; push(nr);
+ }
+ //afisare inversa:
+ while(!esteVida())
+   cout<<pop()<<endl;
+ return 0;
+}
+
+Exemplu clasic de utilizare stiva:
+Citim de la tastatura o expresie aritmetica ce contine paranteze.
+Sa afisam daca parantezele se inchid bine.
+(2+3)/(4-5)  DA
+(2+3)/((4-5) NU
+)2+3(/(4-5)  NU
+
+Idee: tinem o stiva de caractere.
+parcurgem sirul (expresia aritmetica). Daca este un car. ( , facem push().
+Daca este ), daca stiva este vida: NU se inchid bine
+             altfel, facem pop().
+La final stiva trebuie sa fie vida. 
+#include <iostream>
+using namespace std;
+//var. globale:
+char S[1000];//dim . acoperitoare
+int iV;//index varf (index ultim elent introdus in stiva)
+int nMax;//nr max. permis de elemente in stiva (nu e neaparat necesara aceasta var.)
+void init(int nrMaxElemente){
+  iV=-1;//la inceput stiva este vida
+  nMax=nrMaxElemente;
+}
+int estePlina(){
+ if(iV==nMax-1)return 1;
+ else return 0;
+}
+
+int esteVida(){
+ if(iV==-1)return 1;
+ else return 0;
+}
+
+void push(char x){
+ //Pres. ca este loc!
+ //inserez pe x in vectorul S[]:
+ iV++;
+ S[iV]=x;
+}
+char pop(){
+ //pres. ca nu este vida !
+ char x=S[iV];
+ iV--;
+ return x;
+}
+
+//Programul principal:
+int main(){
+ init(100);
+ cout<<"dati expresia aritmetica: ";
+ char e[100];
+ cin.get(e,100);
+ //Algoritm:
+ //Parcurg expresia:
+ int i;  
+ for(i=0;i<strlen(s);i++){
+    if(s[i]=='(')push('(');
+    else if(s[i]==')'){
+            if(esteVida()){
+                 cout<<"nu se inchid bine!"; return 0;
+            }else pop();
+         }
+    }//for i
+    
+ return 0;
+}
+TEMA:
+  Aceeasi problema, fara stiva ! (sem. 1)
+Tema - v. subiect de partial, posibil 
+ Construiti o stiva de cuvinte. In Programul principal citim N 
+cuvinte pe care le introducem in stiva.
+Apoi golim stiva (cu pop()) si afisam cuvintele.
+
+
+Ind:
+typedef char sir[100];
+sir S[1000];
+int iV;
+int nMax;
+Ind:
+  strcpy(S[iV],x); //NU mai este: S[iV]=x;
+
+
+Stiva: "Cei din urma, vor fi cei dintai "
+
+STRUCTURA DE COADA (implementare cu vectori)
+ (engl. queue)
+Coada este o structura de tipul FIFO (first in , first out)
+Unde se foloseste ?
+ - ca structura de date auxiliara pt algoritmi mai complecsi 
+   (parcurgerea grafurilor BF breadth first)
+ - in comunicatii de date
+
+Avem: coada liniara
+      |     xxxxxxx|
+                  indexUltim
+Daca vreau sa mai inserez un nou element, nu mai este loc la coada liniara 
+
+      coada circulara (folosita in transmisiile de date)
+      |     xxxxxxx|
+      0     |      indexUltim
+            indexPrim
+Daca vreau sa mai inserez un nou element X, il inserez la inceput pt ca este loc, la coada circulara: 
+      |X    xxxxxxx|
+ indexPrim         indexUltim
+IMPORTANT: Variabile ce descriu coada:
+int C[1000];//acoperitor
+int nMax;
+int indexPrim; //indexul primului element din coada
+int indexUltim; indexul ultimului element din coada
+
+Implementare cu vectori pt COADA LINIARA de numere intregi
+#include <iostream>
+using namespace std;
+//Variabile globale:
+int C[1000];
+int indexPrim;//indexul primului element din coada (indexPrim). Este indexul de unde se extrage.
+int indexUltim;//indexul ultimului element din coada (indexUltim). Este indexul de inserare
+int nMax;//nr maxim de elemente ce se pot introduce in coada
+int nrElemente;//nr. efectiv de elemente aflate in coada , la un moment dat
+
+//Functii pt COADA LINIARA cu variabile globale:
+void init(int nrMaximElemente){
+  nMax=nrMaximElemente;
+  indexUltim=-1;//nu este nici un element in coada
+  indexPrim=0;
+  //Cei doi indecsi puteau fi initializati si altfel (0,0 sau -1,-1, etc). 
+  // In functie de cum i-am initializat, scriem functiile cozii (inserare, extragere)
+  nrElemente=0;
+}
+
+int esteVida(){
+ if(nrElemente==0)return 1;
+ else return 0;
+}
+int estePlina(){
+  //  |        xxxxxx|
+  if(indexUltim==nMax-1)return 1;
+  else return 0;
+}
+
+void inserare(int nr){
+ //Presupunem ca nu este plina !
+ indexUltim++;
+ C[indexUltim]=nr;
+ nrElemente++;
+}
+
+int extragere(){
+ //presupunem ca nu este vida !
+ int nr=C[indexPrim];
+ indexPrim++;
+ nrElemente--;
+ return nr;
+}
+
+void afisare(){
+ if(nrElemente==0){
+   cout<<"este vida !";
+   return;
+ }
+ 
+ int i;
+ for(i=indexPrim;i<=indexUltim;i++)
+   cout<<C[i]<<" ";
+}
+//Program principal, de test:
+int main(){
+ init(100);
+ int i;
+ for(i=1;i<=10;i++)
+    inserare(i);
+ afisare();
+ return 0;
+}
+ 
+COADA LINIARA DE STRINGURI
+typedef char sir[41];// un sir de maxim 40 caractere
+//Var. globale:
+sir C[1000]; 
+int indexPrim;//indexul primului element din coada (indexPrim). Este indexul de unde se extrage.
+int indexUltim;//indexul ultimului element din coada (indexUltim). Este indexul de inserare
+int nMax;//nr maxim de elemente ce se pot introduce in coada
+int nrElemente;//nr. efectiv de elemente aflate in coada , la un moment dat
+ //Se modifica daor inserare() si extragere(), pt ca nu mai putem folosi atribuirea directa, pt siruri:
+
+void inserare(sir s){
+ //Presupunem ca nu este plina !
+ indexUltim++;
+ strcpy(C[indexUltim], s); 
+ nrElemente++;
+}
+
+sir extragere(){
+ //presupunem ca nu este vida !
+ sir s;
+ strcpy(s, C[indexPrim]);
+ indexPrim++;
+ nrElemente--;
+ return s;
+}
+
+//////////////////////////////////////////////////////
+

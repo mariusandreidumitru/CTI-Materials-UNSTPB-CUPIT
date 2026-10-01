@@ -1,0 +1,465 @@
+
+Curs 12
+  
+GRAFURI 
+Un graf consta din doua multimi: (V, E)
+V= multime de varfuri (nevida): trebuie sa aiba cel putin un element
+E= multime de perechi (a,b) unde a,b sunt varfuri din multimea V
+Daca in pereche nu conteaza ordinea ( deci daca (a,b) este acelasi lucru cu (b,a)): graful este NEORIENTAT.
+In cazul grafurilor neorientate  , perechea de doua varfuri, se cheama MUCHIE (edge -eng)
+
+#0-------#1
+|         |
+|         |
+#2-------#3
+V={0,1,2,3}
+E={(0,1),(1,3),(0,2),(2,3)}
+
+Daca conteaza ordine in perechea de varfuri: graful este ORIENTAT. In acest caz perechea de varfuri se cheama ARC.
+Exemplu:
+#0------->#1------>#2
+
+#3
+
+V={0,1,2,3}
+E=multimea de arce={(0,1),(1,2)}
+
+Varful 3 este varf izolat.
+
+GRAFURI NEORIENTATE
+1) Grad al unui nod (varf): nr de muchii ce au extremitati in varful respectiv.
+grad=degree(engl.)
+#0-------#1
+|         |
+|         |
+#2-------#3      #4
+
+d(2)=gradul nodului 2=2
+d(4)=0  (nod izolat)
+
+Obs: pt grafuri ORIENTATE, pt un nod avem grad interior si grad exterior
+-grad interior : cate arce intra in nodul respectiv
+-grad exterior: cate arce ies din nodul respectiv
+#0-------> #1
+|        
+|
+\/ 
+#2 
+
+gradIn(0)=0
+gradExterior(0)=2
+gradIn(1)=1
+
+
+2) subgraf al grafului G=(V,E) : este un graf G1=(V1,E1) unde V1 este inclus in V (elimin din graf niste varfuri)
+iar E1 contine toate muchiile din E care au ambele varfuri in V1.
+Mnemo: subgraf--submultime a lui V
+Exemplu:
+Graful G:
+#0------- #1
+|         |
+|         |
+#2-------#3  
+
+Un subgraf G1 al lui G:
+#0
+|         
+|         
+#2-------#3   g1=(V1,E1)  V1={0,2,3}  E1={(0,2),(2,3)}
+
+3)Graf partial al grafului G=(V,E) : este un graf G1=(V,E1) unde 
+iar E1 se obtine din E prin eliminarea unor muchii.
+Exemplu:
+Graful G:
+#0-------#1
+|         |
+|         |
+#2-------#3  
+
+Un graf partial G1 al lui G:
+#0-------#1
+|         
+|         
+#2       #3  
+
+Am eliminat din G doua muchii.
+
+Exemple de grafuri:
+Reteaua de cai ferate a unei tari.
+Reteaua de strazi dintr-un oras. Varfurile=intersectiile, muchiile=strazi
+Pt ca exista strazi cu sens unic, graful va fi orientat.
+
+REPREZENTARE GRAFURI NEORIENTATE
+A. Prin matricea de adiacenta
+Graful ce are N varfuri: matrice de adiac. este o matrice patratica de dim. N (va fi simetrica fata 
+de diag. princ.). Se defineste astfel:
+a[i][j]=1 daca intre vf. i si j este muchie
+a[i][j]=0 daca nu exista muchie
+
+Prin definitie: a[i][i]=0
+#0-------#1
+|        
+| 
+#2  
+N=3 (nr de varfuri)
+ Matricea de adiac:
+0 1 1
+1 0 0
+1 0 0
+
+Aplicatie:
+Citim N. Citim matricea de adiac a unui graf neorientat. Citim un varf x.
+Sa calculam gradul varfului x. (nr de valori de 1 pe linia x a matricii)
+
+int N; cin>>N;
+int a[N][N];
+int i,j;
+//Citim pe jumatate matricea de adiac, pt ca este simetrica (deasupra diag. princ.):
+for(i=0;i<N-1;i++)
+  for(j=i+1;j<N;j++){
+    cin>>a[i][j];
+    a[j][i]=a[i][j];
+  }
+for(i=0;i<N;i++)a[i][i]=0;
+//citire x:
+cout<<"x="; cin>>x;
+int grad=0;
+//parcurg linia x:
+for(i=0;i<N;i++)
+   grad=grad+a[x][i];
+/* Puteam calcula si asa:
+ for(i=0;i<N;i++)
+     if(a[x][i]==1)grad++;
+*/
+cout<<grad;
+    
+
+Alte reprezentari pt grafuri:
+B) Reprezentarea cu vector de muchii (vector de arce in cazul grafurilor orientate)
+#0-------#1
+|        
+| 
+#2  
+N=3 (nr de varfuri)
+m={(0,1),(0,2)}
+
+Reprezentam o muchie (a,b) ca o structura:
+typdef struct{
+   int a;//nod de plecare al muchiei
+   int b;//nodul de sosire al muchiei
+}muchie;
+muchie m[100];//max 100 de muchii
+
+Un graf ce are N=3000 varfuri, matricea de adicenta va avea 3000*3000=
+9 milioane de elemente . F. mult si posibil ineficient.
+Daca graful acesta are putine muchii, este mai eficient sa-l reprezentam ca
+vector de muchii.
+PROBLEMA:
+Reprezentare graf neorientat ca vector de muchii, plecand de la matricea de adiacenta:
+Stim matricea de adiacenta. Sa calculam vectorul de muchii:
+
+typdef struct{
+   int a;//nod de plecare al muchiei
+   int b;//nodul de sosire al muchiei
+}muchie;
+muchie m[100];//max 100 de muchii
+//Citim matricea de adiacenta:
+int N; cin>>N;
+int a[N][N];
+int i,j;
+//Citim pe jumatate matricea de adiac, pt ca este simetrica (deasupra diag. princ.):
+for(i=0;i<N-1;i++)
+  for(j=i+1;j<N;j++){
+    cin>>a[i][j];
+    a[j][i]=a[i][j];
+  }
+for(i=0;i<N;i++)a[i][i]=0;
+//construiesc vectorul de muchii:
+int im=0;//index in vector de muchii
+//Parcurg matricea de adiacenta, deasupra diag. principale:
+for(i=0;i<N-1;i++)
+  for(j=i+1;j<N;j++)
+    if(a[i][j]==1){
+       //intre i si j este o muchie, o introduc in vectorul m:
+       m[im].a=i;
+       m[im].b=j;
+       im++;
+    }
+int nrTotalMuchii=im;
+
+
+Pt examen: de stiut si transformarea inversa:
+Se dau N, nr de varfuri, M - nr de muchii si vectorul de muchii.
+Sa construim matricea de adiacenta.
+
+
+C)reprezentarea cu liste de adiacente (liste inlantuite de vecini)
+Avem N noduri in graf. Vom avea N liste de vecini.
+Exemplu: 
+#0-------#1
+|        
+| 
+#2  
+
+0: {1,2}
+1: {0}
+2: {0}
+   
+Daca graful este orientat:
+#0-------> #1
+|        
+|
+\/ 
+#2 
+
+0: {1,2}
+1: {}
+2: {}
+
+Lista de adiacente pt un nod o vom implementa ca o lista inlantuita.
+Deci graful G va fi reprezentat printr-un vector de liste inlantuite
+#include <iostream>
+
+using namespace std;
+ const int N=4;
+ //structura de nod al listei simplu inlantuite
+ typedef struct nod {
+  int vf;//nr varf
+  nod* next;
+ }NOD;
+ //Graful: un vector de N liste inlantuite de vecini:
+ NOD* head[N];//head[i]: adresa de inceput a  liste de vecini ai nodului i
+ void afisareLista (int i);
+ void creareLista(int i);
+ int main(){
+   int i;
+   for(i=0;i<N;i++)
+      creareLista(i);
+   for(i=0;i<N;i++)
+      afisareLista(i);
+   return 0;
+ }
+
+ void afisareLista(int i){ 
+  //i=nr nod pt care am creat lista de vecini
+  if(head[i]==NULL){
+    cout<<"Nodul "<<i<<" nu are vecini. Lista este vida."<<endl;
+    return;
+  }
+  NOD* nodCrt=head[i];
+  for(;;){
+    //afisam informatia din nodul curent:
+    cout<<nodCrt->vf<<" ";
+    //trecem la nodul urmator:
+    nodCrt=nodCrt->next;
+    if(nodCrt==NULL)break;
+  }
+  cout<<endl;
+ }
+ 
+ void creareLista(int i){
+    //i=nr nod pt care vom crea lista de vecini
+    int nrVecini;
+    cout<<"Nr vecini ai nodului "<<i<<": ";
+    cin>>nrVecini;
+    if(nrVecini==0){
+      head[i]=NULL;
+      return;
+    }
+    head[i]=new NOD;
+    cout<<"Dati numar nod vecin cu nodul "<<i<<": ";
+    int nrVecinCrt; cin>>nrVecinCrt;
+    head[i]->vf=nrVecinCrt;
+    //Citesc restul vecinilor:
+    NOD* nodCrt=head[i];
+    for(int k=2;k<=nrVecini;k++){
+      cout<<"Dati numar nod vecin cu nodul "<<i<<": ";
+      cin>>nrVecinCrt;
+      NOD* nodPrecedent=nodCrt;
+      nodCrt=new NOD;
+      nodCrt->vf=nrVecinCrt;
+      //facem legatura intre nodul precedent si cel curent:
+      nodPrecedent->next=nodCrt;
+    }
+    nodCrt->next=NULL;
+ }
+
+
+METODE DE PARCURGERE A GRAFURILOR - vizitam nodurile o singura data
+Prin parcurgere, plecand de la un nod de start, este posibil, daca graful 
+ are noduri izolate, sa nu putem vizita toate nodurile grafului.
+
+1) parcurgerea in adancime (depth first : DF)
+2) parcurgerea pe latime (breadth first: BF)
+                 
+         PARCURGERE DF
+Algoritmul de parcurgere in adancime
+    Se foloseste o structura de date auxiliara : o stiva. 
+Vizitarea nodurilor grafului poate sa inceapa cu orice nod.
+
+Se introduce nodul de start in stiva, se marcheaza ca vizitat, se afiseaza.
+Urmarim sa afisam ordinea de parcurgere DF.
+nod curent=nodul de start
+SE REPETA
+      se cauta un singur vecin nevizitat al nodului curent.
+      daca exista atunci
+         Il introducem in stiva si se afiseaza
+         se marcheaza ca vizitat
+         acest nod devine nodul current.
+     daca nu exista vecini nevizitati, se extrage din stiva cu pop() si acesta extras devine       nodCrt.
+CAT TIMP stiva nu este vidă
+Daca graful are noduri izolate nu se vor parcurge toate nodurile.
+
+#0------#2--------#3
+|                  |
+|                  |
+|                  |
+#1----------------/
+
+Nod start=0: {0,1,3,2}
+
+Nod start=3: {3,1,0,2}
+*/
+
+#include <iostream>
+
+using namespace std;
+#define N 4
+//Stiva:
+int S[N];//stiva
+int iV;
+
+void initStiva(){iV=-1;}
+void push(int x){iV++;S[iV]=x;}
+int pop(){ int nr=S[iV];iV--;return nr;}
+int esteVidaStiva(){if(iV==-1)return 1; else return 0;}
+
+int  main (){
+       //graful este dat prin matricea de adiacenta (putem sa o si citim. Aici: este initializata direct)
+       int a[N][N]={ {0,1,1,0},
+                     {1,0,0,1},
+                     {1,0,0,1},
+                     {0,1,1,0}};
+
+       initStiva();
+       int nodStart;
+       cout<<"nod start="; cin>>nodStart;
+       int i;
+       int esteVizitat[N];
+       for (i=0;i<N;i++)
+             esteVizitat[i]=0;//niciun nod nu este vizitat
+       push(nodStart);
+       cout<<nodStart<<" ";
+       esteVizitat[nodStart]=1;//este deja vizitat
+
+       int nodCrt=nodStart;
+       for (;;){
+        //caut vecin nevizitat al lui nodCrt:
+        //Parcurgem toate nodurile de la 0 la N-1:
+        int gasit=0;
+        //parcurg varful grafului in cautarea unui vecin
+        for (i=0;i<N;i++)
+          if ((a[nodCrt][i]==1)&&(esteVizitat[i]==0)) {
+              gasit=1;
+              break;}
+        if (gasit==1) {
+            //introduce in stiva
+            push(i);
+            esteVizitat[i]=1;
+            cout<<i<<" ";
+            nodCrt=i;}
+        else {
+              if (esteVidaStiva()) break; //stiva este goala;se iese din for(;;)
+              else nodCrt=pop();//extrag un vf din stiva si acesta devine nod crt
+        }
+
+       }//for;;
+   return 0;
+}
+
+
+PARCURGERE BF (LATIME)
+
+Algoritmul de parcurgere in latime (f. asemanator cu cel studiat la arbori!)
+     -se foloseste ca structura auxiliara o coada liniara
+    -spre deosebire de parcurgerea in adancime, la parcurgerea in latime pentru nodul curent 
+            se genereaza toti vecinii si se adauga in coada
+Algoritm:
+    -se introduce nodul de start in coada 
+    - nodCrt=nodStart
+    -se marcheaza ca vizitat
+    -CAT TIMP COADA NU ESTE VIDA , SE REPETA
+          -se extrage primul nod din coada
+          -se afiseaza
+          -se genereaza toti vecinii care nu au fost deja vizitati, si se vor introduce in coada
+          -vecinii se marcheaza ca vizitati
+  
+
+Daca graful are noduri izolate nu se vor parcurge toate nodurile.
+
+#0------#2--------#3
+|                  |
+|                  |
+|                  |
+#1----------------/        
+
+Nod start=0: {0,1,2,3}
+Nod start=2: {2,0,3,1}
+
+Nod start=3: 
+     pas 1, in coada: {3}
+     pas 2, in coada: {1,2}
+     pas 3, in coada:  {2,0}
+     pas 4, in coada: {0}
+     pas 5, in coada: {}
+Ordinea de vizitare:       
+ {3,1,2,0}
+
+
+#include <iostream>
+using namespace std;
+#define N 4
+//Stiva:
+int C[N];//coada liniara
+int prim;//capat de extragere
+int ultim;//capat de inserare
+int nrElemCoada;
+
+void initCoada(){ultim=-1;prim=0;nrElemCoada=0;}
+void inserare(int x){ultim++;C[ultim]=x;nrElemCoada++;}
+int extragere(){ int nr=C[prim];prim++;nrElemCoada--; return nr;}
+int esteCoadaVida(){if(nrElemCoada==0)return 1; else return 0;}
+
+int  main (){
+       //matricea de adiacenta:
+       int a[N][N]={ {0,1,1,0},
+                     {1,0,0,1},
+                     {1,0,0,1},
+                     {0,1,1,0}};
+
+      
+       initCoada();
+       int nodStart;
+       cout<<"nod start="; cin>>nodStart;
+       int i;
+       int esteVizitat[N];
+       for (i=0;i<N;i++)
+             esteVizitat[i]=0;//toate sunt nevizitate, din start
+
+       inserare(nodStart);
+       esteVizitat[nodStart]=1;
+
+       while(!esteCoadaVida()){
+        int nod=extragere();
+        //dupa extragere, afisare:
+        cout<<nod<<" ";
+        //caut toti vecinii nevizitati, deci parrcurg linia nod di matricea de adiacenta:
+        for (i=0;i<N;i++)
+          if ((a[nod][i]==1)&&(esteVizitat[i]==0)){
+            inserare(i);
+            esteVizitat[i]=1;
+          }
+       }//for;;
+   return 0;
+}
+

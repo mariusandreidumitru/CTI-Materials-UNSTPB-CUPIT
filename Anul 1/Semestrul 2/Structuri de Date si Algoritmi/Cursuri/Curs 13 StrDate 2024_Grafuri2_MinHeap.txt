@@ -1,0 +1,459 @@
+Curs 13 Structuri de date an1 Calc 
+
+GRAFURI (continuare)
+Definitie:
+Graf neorientat complet:
+ Fiecare varf este conectat printr-o muchie cu toate celelalte varfuri.
+
+-La un graf neorientat complet ce are N noduri, gradul oricarui nod este : N-1.
+-Cate muchii are un graf neorientat complet ce are N noduri ?
+  nrMuchii=(N-1)+(N-2)+(N-3)+...+1=N*(N-1)/2
+
+N=3 nrMuchii=3
+N=4 nrMuchii=6
+  
+
+                             
+Doar pentru grafuri ORIENTATE si fara cicluri (DIGRAFURI).
+Daca (a,b) e un arc, totdeauna, in sortarea topologica a nodurilor, nodul a
+trebuie sa apara inaintea lui b. 
+Pot fi mai multe solutii.
+
+Ex: 
+   #0------>#1------->#3
+    |
+    |
+    \/
+    #2
+Arce: (0,1) (0,2) (1,3) 
+
+Ex. de sortari topologice:
+{0,1,2,3}
+{0,2,1,3}
+{0,1,3,2}
+
+{0,2,3,1} NU este sortare topologica (3 apare inaintea lui 1)
+
+Observatie:
+Primul nod din sortarea topologica are gradul interior 0. (este SURSA)
+
+DIGRAFURI 
+Bibliografie: 
+  Cormen, ...- Algoritmi
+ Sunt grafuri orientate fara cicluri.
+ eng: directed acyclic graph (DAG)
+ Pentru dag-uri:  sortare topologica
+Este o ordine liniara a nodurilor dag-ului a.i. daca avem arc de la nodul i la nodul j,
+totdeauna nodul i va fi inaintea nodului j in sortarea topologica.
+Aplicatie:
+O ordine liniara pentru diverse activitati:
+   - ordine a activitatilor intr-un proiect
+   - ordine a activitatilor la realizarea unei retete in bucatarie
+   - ordine a activitatilor la imbracarea unui echipament de protectie 
+   Activitatile sunt noduri intr-un graf orientat DAG
+   Ordinea liniara nu este neaparat unica
+
+Care nod este un candidat bun pentru a-l pune primul in ordinea topologica ?
+Orice nod care are gradIn=0 !
+
+
+Orice dag are cel putin un nod cu gradIn=0 si cel putin un nod cu gradOut=0
+
+Ideea: tinem intr-o stiva, toate nodurile ce au gradIn=0. Acestea le punem primele
+in ordinea topologica
+In stiva totdeauna sunt doar noduri ce au gradIn=0 .
+#include <iostream>
+using namespace std;
+const int N=5;//nr noduri
+const int M=6;//nr de muchii
+typedef struct{
+  int a; int b; }muchie;
+//Stiva:
+int S[N];//stiva
+int iV;
+
+void initStiva(){iV=-1;}
+void push(int x){iV++;S[iV]=x;}
+int pop(){ int nr=S[iV];iV--;return nr;}
+int esteVidaStiva(){if(iV==-1)return 1; else return 0;}
+int main()
+{
+  /*
+  #0------>#1<------#4
+   |        |       |
+   |        \/      |
+   \------> #2<-----/
+            /\
+            |
+            |
+           #3
+
+nod 0 gradIn: 0
+nod 1 gradIn: 2
+nod 2 gradIn: 4
+nod 3 gradIn: 0
+nod 4 gradIn: 0
+4 3 0 1 2
+
+4 3 0 2 1 ??? NU este corecta ordine topologica pt ca 1 trebuie sa fie inaintea lui doi
+
+ */
+
+//Alegem sa reprezentam graful ca vector de muchii:
+muchie m[M];  //vectorul de muchii
+m[0].a=0;m[0].b=1;
+m[1].a=0;m[1].b=2;
+m[2].a=1;m[2].b=2;
+m[3].a=3;m[3].b=2;
+m[4].a=4;m[4].b=2;
+m[5].a=4;m[5].b=1;
+
+int ordineTopologica[N];
+int gradIn[N]; //gradele interioare ale fiecarui nod
+int i;
+for(i=0;i<N;i++)gradIn[i]=0;
+//Calcul grade interioare ale fiecarui nod:
+//(*,2) cresc gradIn[2]
+//parcurg vector de muchii:
+for(i=0;i<M;i++)
+  gradIn[m[i].b]++;
+//afisare gradeIn:
+for(i=0;i<N;i++)
+  cout<<"nod "<<i<<" gradIn: "<<gradIn[i]<<endl;
+//Construiesc o stiva  in care bag nodurile ce au gradIn=0
+initStiva();
+for(i=0;i<N;i++)
+   if(gradIn[i]==0)push(i);
+//Cat timp stiva nu este vida, repeta:
+int iot=0;//index in ordinea topologica
+while(!esteVidaStiva()){
+  int vf=pop();
+  ordineTopologica[iot]=vf; iot++;
+  //pentru fiecare nod adiacent cu varf (vf,nod), decrementez gradIn[nod]
+  for(i=0;i<M;i++)
+   if(m[i].a==vf){
+     gradIn[m[i].b]--;//pt ca elimin nodul [i].a=vf, care era conectat cu m[i].b, scad gradIn pt nodul m[i].b:
+     if(gradIn[m[i].b]==0)push(m[i].b);
+  }
+}//while
+//Afisare:
+for(i=0;i<N;i++)
+  cout<<ordineTopologica[i]<<" ";
+    return 0;
+}
+
+////////////////////////////////
+
+STRUCTURA DE DATE MIN-HEAP
+DEFINITIE:
+Un arbore binar COMPLET este un arbore binar in care toate nivelele sunt pline (cu noduri) cu 
+exceptia ultimului nivel, care poate fi incomplet, dar este umplut cu noduri incepand din stanga,
+in ordine.
+
+Ex. de arbore binar care este complet:
+
+            12
+         /     \
+       5        200
+    /    \     /   
+  4       8   10    
+
+
+
+Ex. de arbore binar care NU este complet (ultimul nivel nu este completat de la stanga):
+            12
+         /     \
+       5        200
+    /    \        \
+  4       8       30
+
+
+DEFINITIE:
+ Un Min-Heap este un arbore binar COMPLET, in care pentru ORICE nod, valoarea din acel nod 
+este mai mica sau egala cu valorile din nodurile fii ai lui.
+Exemplu:
+            4                       10
+         /     \                /       \  
+       10       15             12           31 
+      /  \      /              /  \        /  \
+    30   20   7               41    51    62   41
+
+Un Min-Heap se reprezinta tipic ca un vector. Daca un nod este stocat pe pozitia i (indexul=i)
+in vector, atunci fiul sau stanga va fi stocat la indexul 2i+1, iar fiul dreapta la indexul 2i+2 .
+Vom nota vectorul cu heap[]. Radacina Min-Heap-ului va fi memorata in heap[0];
+Pentru nodul heap[i] avem:
+ heap[(i -1) / 2]  este nodul parinte al lui heap[i]
+ heap[2 * i + 1] este fiul stang al lui heap[i]
+ heap[2 * i + 2] este fiul drept al lui heap[i]
+
+Implementare min-heap in lb. C:
+#include <iostream>
+using namespace std;
+int heap[1000];//acoperitor
+int iH;//index in heap
+int N;//dimensiune heap
+void init(){
+ iH=-1;//nici un nod in heap
+}
+int esteVida(){
+		if(iH==-1)return 1;
+		else return 0;
+}
+int parinte(int i){
+		return (i-1)/2;
+}
+int fiuStanga(int i){
+		//copiii nodului i se gasesc la pozitiile 2*i+1 si 2*i+2
+		//Posibil sa nu aiba fii !
+		if(2*i+1>iH)return -1;//nu are fii
+		else return 2*i+1;
+}
+int fiuDreapta(int i){
+		//copiii nodului i se gasesc la pozitiile 2*i+1 si 2*i+2
+		//Posibil sa nu aiba fiu dreapta!
+		if(2*i+2>iH)return -1;//nu are fii
+		else return 2*i+2;
+}
+void comutareUp(int indexNodInHeap){
+//urca in heap, daca este cazul, nodul de pe pozitia indexNodInHeap:
+		for(;;){
+			if(indexNodInHeap==0)break;//am urcat in varf de tot. Nu are parinte
+			int indexP=parinte(indexNodInHeap);
+			if(heap[indexNodInHeap]<heap[indexP]){
+				//facem comutare: (se putea folosi functia swap() !)
+				int aux=heap[indexNodInHeap];
+				heap[indexNodInHeap]=heap[indexP];
+				heap[indexP]=aux;
+				indexNodInHeap=indexP;}
+			else break;
+		}//for;;
+}
+void inserare(int key){
+		//presupun ca este loc
+		iH++;
+		//adaug pe prima pozitie neocupata in heap, si apoi,
+		 //(nu conteaza ca fratii lui din stanga sunt > sau < ca el),
+		 //il comut cu parintele lui, daca este mai mic ca parintele, samd.
+		heap[iH]=key;
+		comutareUp(iH);
+}
+
+
+void comutareDown(int indexNodInHeap){//pt functia de stergere nod din heap
+		for(;;){
+			if(indexNodInHeap==iH)break;//am coborat de tot
+			//pe care fiu aleg pt a face comutarea cu el ?
+			//Ex: 10 20 aleg fiu stanga : 10
+			//Ex: 20 10 aleg fiu dreapta: 10 (cel mai mic)
+			int indexFiuSt=fiuStanga(indexNodInHeap);
+			if(indexFiuSt==-1)break; //nu are fii
+			int indexFiuDr=fiuDreapta(indexNodInHeap);
+			int indexFiu;//indexul fiului pe care-l alegem pentru comutare
+			if(indexFiuDr==-1)indexFiu=indexFiuSt;
+			else if(heap[indexFiuDr]<heap[indexFiuSt])indexFiu=indexFiuDr;
+			else indexFiu=indexFiuSt;
+			if(heap[indexNodInHeap]>heap[indexFiu]){
+				//facem comutare:
+				int aux=heap[indexNodInHeap];
+				heap[indexNodInHeap]=heap[indexFiu];
+				heap[indexFiu]=aux;
+				indexNodInHeap=indexFiu;}
+			else break;//nu mai avem ce comuta
+		}//for;;
+}
+int stergere(int indexStergere){
+		//presupun ca nu este vida
+		int key=heap[indexStergere];
+		//il pun pe ultimul din heap, in locul lui:
+		heap[indexStergere]=heap[iH];
+		//am scos un element din heap:
+		iH--;
+		comutareDown(indexStergere);
+		return key;
+}
+ int getMin(){
+    	//presupun ca nu este vida
+    	return heap[0];
+}
+void afisare(){
+		cout<<"min heap: "<<endl;
+		for(int i=0;i<=iH;i++)
+			cout<<heap[i]<<" ";
+        cout<<endl;
+}
+int main()
+{
+       init();
+	   inserare(10);
+	   inserare(4);
+	   inserare(9);
+	   inserare(1);
+	   inserare(7);
+	   inserare(0);
+	   inserare(5);
+	   inserare(3);
+	   afisare();
+	   cout<<"minim="<<getMin()<<endl;
+	   int indexStergere=2;
+	   stergere(indexStergere);
+	   cout<<"Dupa stergerea de la index=2:\n";
+	   afisare();
+	   cout<<"minim="<<getMin()<<endl;
+
+	   //Utilizare minHeap pt a sorta un vector a[]:
+	   int a[]={7,4,2,8,9,1,5,1};
+	   int na=8;
+	   int i;
+	   init();
+	   for(i=0;i<na;i++)
+	   	 inserare(a[i]);
+	   int b[100];//aici va fi vector sortat crescator
+	   for(i=0;i<na;i++)
+	   	 b[i]=stergere(0); //extrage minimul, il pune in vectorul sortat b,  si sterge minimul din heap
+	   //afisare b:
+	   cout<<"Vector sortat:\n";
+	   for(i=0;i<na;i++)
+	   	cout<<b[i]<<" ";
+	   	//1 1 2 4 5 7 8 9
+	   return 0;
+}
+
+
+///////////////////////////
+GRAFURI: algoritmul Dijkstra (NU ESTE SUBIECT DE EXAMEN!)
+
+Scop: calcul cel mai scurt drum intre doua noduri ale unui graf (neorientat sau orientat)
+Fiecare muchie are un cost sau distanta sau pondere  asociata.
+
+Algoritm Dijkstra (  toate ponderile trebuie sa fie pozitive) - NU SE CERE LA EXAMEN !
+
+Foloseste  o coada prioritara Q ce poate fi implementata cu vectori sau, mai eficient in
+maj. cazurilor se implementeaza  ca un heap binar.
+
+Algo. Djkstra ne da distanta minima de la un nod sursa s, la fiecare nod al grafului.
+Algoritmul este comentat in sursa programului.
+
+//Drumul minim DIJKSTRA cu arrays
+#include <iostream>
+#include <limits.h>
+using namespace std;
+
+const int INFINIT=INT_MAX; //La INT_MAX nu mai pot sa adaug la el w, ca nu mai face corect adunarea !!
+
+const int N=9;//Nr noduri graf;
+const int M=14;//nr de muchii
+typedef struct{
+  int a; int b;
+  int w;//poate fi interpretata ca un timp necesar parcurgerii muchiei
+  }muchie;
+
+
+int main()
+{
+ int Q[N];//vector in care la inceput introducem toate varfurile
+ muchie m[M];  //vectorul de muchii
+//Graful prezentat la curs: un graf neorintat Sursa desenului grafului :
+// https://www.geeksforgeeks.org/dijkstras-algorithm-for-adjacency-list-representation-greedy-algo-8/
+//Il reprezentam ca vector de muchii.
+  m[0].a=0;m[0].b=1;m[0].w=4;
+  m[1].a=0;m[1].b=7;m[1].w=8;
+  m[2].a=1;m[2].b=2;m[2].w=8;
+  m[3].a=1;m[3].b=7;m[3].w=11;
+  m[4].a=2;m[4].b=3;m[4].w=7;
+  m[5].a=2;m[5].b=5;m[5].w=4;
+  m[6].a=2;m[6].b=8;m[6].w=2;
+  m[7].a=3;m[7].b=4;m[7].w=9;
+  m[8].a=3;m[8].b=5;m[8].w=14;
+  m[9].a=4;m[9].b=5;m[9].w=10;
+  m[10].a=5;m[10].b=6; m[10].w=2;
+  m[11].a=6;m[11].b=7; m[11].w=1;
+  m[12].a=6;m[12].b=8; m[12].w=6;
+  m[13].a=7;m[13].b=8; m[13].w=7;
+ int i;
+ int s=0;//nodul sursa. De unde pleaca. Putem alege orice alt nod ! Poate fi citi s de la tastatura.
+//Cel mai scurt drum de la nodul s la orice alt nod:
+ int shortest_s_[N];
+ for(i=0;i<N;i++)shortest_s_[i]=INFINIT;//poate nici nu exista drum
+ shortest_s_[s]=0;
+
+ int nodPredecesor[N];//pentru a memora drumul minim
+ for(i=0;i<N;i++)nodPredecesor[i]=-1;//si pt nodul s
+ //Introducem in Q toate varfurile:
+ for(i=0;i<N;i++)Q[i]=i;
+ int contorQ=N;
+ while(contorQ>0){//cat timp Q nu este vida
+    //extrag din Q nodul u pe cel cu shortest_s_[u] minim:
+    //parcurg vectorul shortest_s_[]:
+    //u - nodul cel mai apropiat de s, dintre toate nodurile din Q:
+    //Calcul nod u:
+    int u=Q[0];int dist_min_de_s=shortest_s_[u]; int index_u=0;
+    for(i=1;i<contorQ;i++)
+     if(shortest_s_[Q[i]]<dist_min_de_s){
+       u=Q[i];
+       dist_min_de_s=shortest_s_[u];
+       index_u=i;}
+
+      //cout<<"u extras="<<Q[index_u]<<endl;
+    //Am gasit u, cel mai apropiat de S, dintre cele contorQ aflate in Q.
+    //Il extrag din Q:
+    //Pun pe ultimul in locul lui si decrementez nr de noduri ramase in Q:
+    Q[index_u]=Q[contorQ-1];
+    contorQ--;
+    //Ne imaginam ca din u pornesc "alergatori" spre varfurile adiacente lui u:
+    //Ce varfuri sunt adiacente cu acest nod u?
+    //Parcurg vector de muchii:
+    for(i=0;i<M;i++){
+     if(m[i].a==u){
+      //v -varf adiacent lui u
+      int v=m[i].b;//arcul ajunge din u in v cu distanta m[i].w
+      int w=m[i].w;//distanta de la u la v
+      if(shortest_s_[u]==INFINIT)continue;//nu mai pot adauga w la INT_MAX !
+      if(shortest_s_[u]+w<shortest_s_[v]){
+            //este o varinta cu distanta mai scurta ca sa ajung de la s la v astfel:
+            // din s merg in u si din u in v:
+          shortest_s_[v]=shortest_s_[u]+w;
+          nodPredecesor[v]=u;}
+       continue; //nu poate sa mai fie si m[i].b==u
+     }//if m[i].a==u
+     //si m[i].b poate fi u !
+      if(m[i].b==u){
+      //v -varf adiacent lui u
+      int v=m[i].a;//arcul ajunge din u in v cu distanta m[i].w
+      int w=m[i].w;//distanta de la u la v
+      if(shortest_s_[u]==INFINIT)continue;//nu mai pot adauga w la INT_MAX !
+      if(shortest_s_[u]+w<shortest_s_[v]){
+            //este o varinta cu distanta mai scurta ca sa ajung de la s la v astfel:
+            // din s merg in u si din u in v:
+          shortest_s_[v]=shortest_s_[u]+w;
+          nodPredecesor[v]=u;}
+       }//if m[i].a==b
+    }//for i
+ }//while
+ //Afisam drumurile minime de la s la fiecare nod al grafului:
+ int d;//nod destinatie
+ for(d=0;d<N;d++){
+   cout<<"\n\nDrumul cel mai scurt  de la "<< s<<" la "<<d<<" este: "<<shortest_s_[d]<<endl;
+   if(s==d)continue;//nu am drum de afisat
+ //afisare drum , de la s la d:
+
+   int nodCrt=d;
+   //drumul de la s la d, dar , in ordine inversa:
+   int drum[N];
+   drum[0]=d;
+   int nd=1;//nr de noduri in drum
+   for(;;){
+    nodCrt=nodPredecesor[nodCrt];
+    drum[nd]=nodCrt;nd++;
+    if(nodCrt==s)break;}//for;;
+ //afisare drum, dar in ordine normala, de la s la d:
+   cout<<"DRUM DE LA "<<s<<" LA "<<d<<" :"<<endl;
+   for(i=nd-1;i>=0;i--)
+    cout<<drum[i]<<" ";
+  }//for d
+    return 0;
+}
+
+
+
+///////////////////////////////////////////////////////
+

@@ -1,0 +1,563 @@
+CURS 9
+
+Metoda BACKTRACKING ('cont)
+Aranjamente de N luate cate p ( grupe de p elem. in care conteaza ordinea)
+Solutia are p componente
+
+/*
+N=3
+nr=1
+nr=2
+nr=3
+p=2
+1 2
+1 3
+2 1
+2 3
+3 1
+3 2
+*/
+#include <iostream>
+
+using namespace std;
+
+//Var. globale:
+int N;//dim. vector
+int p;//dim. grupei
+int a[1000];//multimea din care calculez aranj. (dimensiune acoperitoare)
+int X[1000];//vectorul solutie ( reprezinta o grupa a multimii a)
+void afisare();
+int valid(int k);
+void back(int k);
+int main(){
+    cout<<"N="; cin>>N;
+    int i;
+    for(i=0;i<N;i++){
+        cout<<"nr="; cin>>a[i];
+    }
+    cout<<"p="; cin>>p;
+    back(0);
+    return 0;
+}
+void back(int k){
+   int i;
+  //construieste pe X[k]
+  //Da urmatoarea val. disponibila lui X[k]
+  //Multimea de valori disponibile: a[0], a[1],...,a[N-1]
+  if(k==p)//s-a completat vector solutie
+    afisare();
+  else
+    //parcurg multimea de val. disponibile:
+   for(i=0;i<N;i++) {
+     X[k]=a[i];
+     if(valid(k))back(k+1);
+   }
+}
+int valid(int k){
+ //stim ca X[0],...,X{k-1] este valida
+ //Daca adaug pe X[k], mai este valida?
+ //Trebuie ca: X[k] sa fie diferit de cele anterioare din X!
+ for(int i=0;i<=k-1;i++)
+    if(X[k]==X[i])return 0;
+ return 1;
+}
+
+void afisare(){
+  for(int i=0;i<p;i++)
+    cout<<X[i]<<" ";
+  cout<<endl;
+}
+
+
+COMBINARI 
+Se da o multime a de N elemente. Sa afisam toate grupele de 
+p elemente luate din cele N, in grupa NU conteaza ordinea
+Ex: a={1,2,3} N=3
+p=2
+Grupele sunt: {1,2}, {1,3}, {2,3}
+  {3,2} NU este o noua solutie !
+
+//Combinari
+Var. cu var. globale:
+/*
+N=3
+nr=1
+nr=2
+nr=3
+p=2
+1 2
+
+1 3
+
+2 3
+
+*/
+#include <iostream>
+
+using namespace std;
+
+//Var. globale:
+int N;//dim. vector
+int p;//dim. grupei
+int a[1000];//multimea din care calculez aranj. (dimensiune acoperitoare)
+int X[1000];//vectorul solutie ( reprezinta o grupa a multimii a)
+void afisare();
+int valid(int k);
+void back(int k);
+int main(){
+    cout<<"N="; cin>>N;
+    int i;
+    for(i=0;i<N;i++){
+        cout<<"nr="; cin>>a[i];
+    }
+    cout<<"p="; cin>>p;
+    back(0);
+    return 0;
+}
+void back(int k){
+   int i;
+  //construieste pe X[k]
+  //Da urmatoarea val. disponibila lui X[k]
+  //Multimea de valori disponibile: a[0], a[1],...,a[N-1]
+  if(k==p)//s-a completat vector solutie
+    afisare();
+  else
+    //parcurg multimea de val. disponibile:
+   for(i=0;i<N;i++) {
+     X[k]=a[i];
+     if(valid(k))back(k+1);
+   }
+}
+
+int valid(int k){
+  //Le luam in ordine crescatoare
+ //stim ca X[0],...,X{k-1] este valida
+ //X[0]<X[1]<X[2],...<X[k-1]
+ //Daca adaug pe X[k], mai este valida?
+ //Trebuie ca: X[k]>X[k-1]
+ if(k==0)return 1;
+ if(X[k]>X[k-1])return 1;
+ else return 0;
+}
+
+void afisare(){
+  for(int i=0;i<p;i++)
+    cout<<X[i]<<" ";
+  cout<<endl;
+}
+////////////////
+
+Var. fara var. globale (exercitiu de programare pt sem. 1)
+#include <iostream>
+
+using namespace std;
+
+void back(int k, int a[], int N, int X[], int p);
+void afisare(int X[], int p);
+int valid(int k, int X[]);
+int main(){
+  int i;
+  int N;
+  cout<<"N="; cin>>N;
+  int a[N];
+  int p;
+  cout<<"p="; cin>>p;
+  int X[p];//vector solutie
+  for(i=0;i<N;i++){
+    cout<<"nr="; cin>>a[i];//avem grija ca numerele sa fie diferite !
+  }
+  back(0,a,N,X,p);
+ return 0;
+}
+void back(int k, int a[], int N, int X[], int p){
+  int i;
+//da urmatoarea val. disponibila lui X[k]:
+  if(k==p)afisare(X,p);
+  else
+  for(i=0;i<N;i++){
+    X[k]=a[i];
+    if(valid(k,X))back(k+1,a,N,X,p);
+  }
+}
+
+void afisare(int X[], int p){
+ for(int i=0;i<p;i++)
+   cout<<X[i]<<" ";
+ cout<<endl;
+}
+int valid(int k, int X[]){
+  //Stim ca X[0],X[1],...,X[k-1] este valida
+  //Adaugand pe X[k], solutia partiala X[0],X[1],...,X[k-1],X[k] este valida ?
+  //Le luam in ordine crecatoare !
+  //Stim ca: X[0]<X[1]<...<X[k-1]
+  //Adaug si pe X[k]: mai este ordine crescatoare?
+  if(k==0)return 1;
+  if(X[k]>X[k-1])return 1;
+  else return 0;
+}
+
+
+COLORARE HARTA
+Fiind dată o hartă cu N ţări, se cer toate soluţiile de colorare a hărţii, 
+utilizând cel mult p  culori, astfel încât oricare două ţări,
+ce au frontiera comună, să fie colorate diferit. 
+Observaţie: Pentru memorarea informaţiilor despre frontierele comune dintre 
+oricare două ţări, folosim ca structură de date, matricea vecine[][]. 
+Astfel: vecine[i][j]=1 – dacă există frontieră între ţara i şi ţara j.
+ Dacă nu există, vecine[i][j]=0.
+
+Sursa programului:
+
+#include <iostream>
+
+using namespace std;
+
+//Var. globale:
+int N;//nr de tari
+int p;//nr de culori
+int X[100];//vectorul solutie ( nr maxim de tari 100)
+//X[k]=culoarea cu care se coloreaza tara k (poate fi :0,1,...,(p-1)
+//Dimensiunea efectiva alui X este N
+int vecine[100][100];//info de vecintate
+void afisare();
+int valid(int k);
+void back(int k);
+int main(){
+  int i,j;
+  cout<<"N="; cin>>N;
+  cout<<"p="; cin>>p;
+  //info de vecinatate:
+  for(i=0;i<N-1;i++)
+   for(j=i+1;j<N;j++){
+    cout<<i<<" : "<<j<<" = ";
+    cin>>vecine[i][j];
+    vecine[j][i]=vecine[i][j];
+   }
+
+  for(i=0;i<N;i++)
+    vecine[i][i]=1;
+ back(0);
+ return 0;
+}
+
+void back(int k){
+ //da urmatoarea valoare disponibila pt X[k]:
+ //S-a completat vectorul solutie ?
+ int i;
+ if(k==N)afisare();
+ else{
+   //dam urm. val. dispo. pt X[k]: (cu for se parcurge sirul de valori disponibile)
+   for(i=0;i<p;i++){
+       X[k]=i;
+       //este corecta solutia partiala gasita ? X[0],X[1],..., X[k] ?
+       if(valid(k))back(k+1);
+   }
+ }
+}
+
+//Functia valid difera de la problema la problema:
+int valid(int k){
+  //Stim ca X[0],X[1],...,X[k-1] este valida
+  //Adaugand pe X[k], solutia partiala X[0],X[1],...,X[k-1],X[k] este valida ?
+  //Trebuie ca X[k], culoarea tarii k, sa fie diferita de
+  // culorile tarilor vecine:
+  for(int i=0;i<=k-1;i++)
+     if(vecine[i][k]==1 && X[i]==X[k]) return 0;
+  return 1;
+}
+
+void afisare(){
+ for(int i=0;i<N;i++)
+   cout<<X[i]<<" ";
+ cout<<endl;
+}
+
+
+PROBLEMA: 
+Generarea multimii partilor unei multimi
+a={1,2,7} N=3
+Toate submultimile posibile: 2^3=8
+-vida
+{1}
+{2}
+{7}
+{1,2}
+{1,7}
+{2,7}
+{1,2,7}
+
+
+
+Ideea:
+1 2 7
+Vectorul solutie are tot N componente: X[k]=0 cand in submultime NU iau pe a[k] sau X[k]=1 cand luam pe a[k]
+0 0 0
+1 0 0
+0 1 0
+0 0 1
+1 1 0
+....
+1 1 1
+
+#include <iostream>
+
+using namespace std;
+
+//Var. globale:
+int N;//dim. vector
+int a[1000];//multimea initiala - dim. N
+int X[1000];//o codificare a solutiei
+//X[k]=0 sau 1
+void afisare();
+void back(int k);
+int main(){
+  int i;
+  cout<<"N="; cin>>N;
+   for(i=0;i<N;i++){
+    cout<<"nr="; cin>>a[i];//avem grija ca numerele sa fie diferite !
+  }
+  back(0);
+ return 0;
+}
+
+void back(int k){
+ //da urmatoarea valoare disponibila pt X[k]:
+ //S-a completat vectorul solutie ?
+ int i;
+ if(k==N)afisare();
+ else{
+   //dam urm. val. dispo. pt X[k]: (cu for se parcurge sirul de valori disponibile)
+   for(i=0;i<=1;i++){
+       X[k]=i;
+       //orice solutie partiala este corecta
+       back(k+1);
+   }
+ }
+}
+
+void afisare(){
+ for(int i=0;i<N;i++)
+   if(X[i]==1)cout<<a[i]<<" ";
+ cout<<endl;
+}
+
+PROBLEMA MONEZILOR (problema de optimizare)
+Se dau N tipuri de monezi. Să se plătească o sumă dată S, folosind un număr total de monezi, minim. 
+Se consideră că există un număr suficient de monezi din fiecare tip.
+
+Aceasta este o problemă de optimizare, prin backtracking. Nu se cere ca de obicei la backtracking,
+ să se afișeze toate soluțiile ci una singură: cea mai bună. Dar și în acest caz,
+tot se vor genera toate posibilitățile și se va păstra pentru afișare, doar soluția cea mai bună.
+
+Presupunem ca putem plati suma S cu tipurile de monezi disponibile
+Ex: S=200
+    tipMonezi={1,20, 50,70}
+Solutia: 4 monezi de 50
+Sursa programului:
+
+#include <iostream>
+#include <limits.h> //INT_MAX cel mai mare numar intreg
+using namespace std;
+
+
+#define N 3//numarul de tipuri de monezi distincte
+int S;//suma data
+int valoareMonezi[N]={10,1, 7};//prima moneda are valoarea 100, a doua 1, s.a.m.d.
+int X[N];//solutia curenta. Astfel X[0]=numar de monezi luate din tipul valoareMonezi[0]
+         //X[k] poate lua valorile: 0,1,....S/valoareMonezi[k]
+int XOptim[N];
+int nrMinMonezi;
+//protipuri:
+void back(int k);
+int valid(int k);
+int main()
+{
+	int i;
+	cout<<"Introduceti valoarea sumei de bani:";
+	cin>>S;
+	//initializare nrminmonezi cu cel mai mare nr intreg
+
+	nrMinMonezi=INT_MAX;
+
+	back(0);
+
+	cout<<"\nNr minim de monezi este: "<<
+             nrMinMonezi<<endl;
+	for(i=0;i<N;i++)
+	  cout<<XOptim[i]<<" monezi de valoare "<<valoareMonezi[i] <<endl;
+	return 0;}
+
+void back(int k)
+{       int i, nrMonezi;
+ if(k==N){//s-a completat vectorul solutie. Nu o voi afisa aici !
+		//comparare cu cea mai buna solutie de pana acum
+                //Cate monezi foloseste aceasta solutie ?
+		nrMonezi=0;
+		for(i=0;i<N;i++) nrMonezi=nrMonezi+X[i];
+		if(nrMonezi<nrMinMonezi){
+			//solutia curenta este mai buna, deci o memorez:
+			nrMinMonezi=nrMonezi;
+			for(i=0;i<N;i++)XOptim[i]=X[i];
+		}
+ }
+ else
+ for(i=0;i<=S/valoareMonezi[k];i++){
+	X[k]=i;//nr de bucati luate din moneda valoareMonezi[k]
+    if(valid(k))back(k+1);
+ }
+}
+
+int valid(int k){
+ //Stim ca X[0],X[1],..,X[k-1] este valida
+ //Adaugand pe X[k] mai este valida ?
+ //Avem doua situatii:
+ //1) daca k=N-1, deci daca s-a completat vectorul solutie, atunci este valida daca cu monezile luate
+ //  suma totala este chiar S
+ //2) daca k<N-1, deci daca NU s-a completat vectorul solutie, atunci este valida daca cu monezile luate
+ //  suma totala este <= S
+ //Calculam suma de bani stransa cu monezile luate:
+ int suma=0;
+ int i;
+ for(i=0;i<=k;i++)
+   suma=suma+X[i]*valoareMonezi[i];
+ if(k==N-1){
+    if(suma==S)return 1;
+    else return 0;}
+ else{
+    if(suma<=S)return 1;
+    else return 0;}
+}
+
+
+
+Testare program:
+S=106
+valoareMonezi[]={1,5,10,100}
+Solutia: 1x100+1x5+1x1  deci 3 monezi
+
+S=14
+valoareMonezi: 1,7,10
+
+Greedy: Plateste cu moneda de 10 
+S=14=1x10+4x1  Total: 5 monezi
+Solutia cea mai buna: S=14=2x7  Total: 2 monezi
+
+
+Tema
+  Se citeste un numar natural N. Se citesc N numere intregi in vectorul a.
+Sa se afiseze toate permutarile multimii a cu conditia ca int-o permutare 
+nu sunt doua numere pare alaturate
+Ex: a={1,2,3,4}
+3,2,1,4 DA
+1,2,4,3 NU
+
+Problema de permutari cu o conditie suplimentara:
+int valid(int k){
+ //stim ca X[0],...,X{k-1] este valida
+ //Daca adaug pe X[k], mai este valida?
+ //trebuie ca X[k] si X[k-1] sa nu fie ambele pare:
+ 
+ if(k>=1 && X[k]%2==0 && X[k-1]%2==0)return 0;
+
+ //Trebuie ca: X[k] sa fie diferit de cele anterioare din X!
+ for(int i=0;i<=k-1;i++)
+    if(X[k]==X[i])return 0;
+ return 1;
+}
+
+
+PROGRAMAREA DINAMICA 
+Este folosita tipic cand se cere o valoare optima (un maxim sau un minim).
+Cu programarea dinamica, descompunem problema in subprobleme ( ca la dividae et impera),
+ dar spre deosebire de dividae et impera, subproblemele nu mai sunt disjuncte.
+Pentru a gasi solutia pornim de la cele mai mici subprobleme, si, folosindu-ne de
+rezultatele acestor subprobleme, trecem la rezolvarea subproblemelor mai mari.
+Pentru a evita recalcularea solutiilor subproblemelor, retinem solutiile lor intr-un vector/matrice/...
+
+
+A. Calcul termen de rang N din sir Fibonacci (solutia prin programare dinamica)
+a_0=1
+a_1=1
+a_N=a_(N-1) + a_(N-2) //suma ultimilor doi termeni
+
+VECTORUL SOLUTIE: int fib[N];
+Il voi construi incepand cu fib[0].
+Se cere: fib[N-1]
+int N; cout<<"N=";
+cin>>N;
+
+int fib[N];
+if(N==0)cout<<"1";
+else if(N==1)cout<<"1";
+else{
+  fib[0]=1;
+  fib[1]=1;
+  int i;
+  for(i=2;i<N;i++)
+     fib[i]=fib[i-1]+fib[i-2];
+  cout<<fib[N-1];
+}
+
+B. Se citeste un numar N (N>=1). Care este numarul minim de pasi ce trebuie facuti pentru 
+a ajunge de la N la 1, prin trei operatii posibile:
+- scad 1
+- impart la 2 daca numarul se divide cu 2
+- impart la 3 daca nr se divide cu 3
+
+Ex: N=6
+6:3=2
+2:2=1
+Raspuns: nr minim de pasi =2
+
+Folosim un vector nrMinPasi[] cu componentele nrMinPasi[1], nrMinPasi[2], ..., nrMinPasi[N} si solutia va fi
+nrMinPasi[N]
+nrMinPasi[i]: nr minim de pasi prin care ajung de la nr. i la 1
+Calculam asa: 
+nrMinimPasi[1]
+nrMinimPasi[2]
+...
+nrMinimPasi[N]
+
+int N; cin>>N;
+int nrMinimPasi[N+1];
+nrMinimPasi[1]=0;//este deja 1
+//ca sa ajungem la N, trebuie sa le calculam pe toate pana la N:
+for(i=2;i<=N;i++){
+   //nrMinimPasi[i]=?
+   int nrMinimPasi[i]=nrMinimPasi[i-1]+1;
+   //pot gasi o solutie mai buna?
+   if(i%2==0){int rez=1+nrMinimPasi[i/2];
+              if(rez<nrMinimPasi[i])nrMinimPasi[i]=rez;} 
+   if(i%3==0){int rez=1+nrMinimPasi[i/3];
+              if(rez<nrMinimPasi[i])nrMinimPasi[i]=rez;} 
+}
+
+cout<<"solutia="<<nrMiniPasi[N];
+
+
+c. Cea mai lunga secventa crescatoare dintr-un vector (secventa: inseamna ca sunt alaturate)
+a={ -1,2,5,3,4,7,9,0,1}
+rezultat=4 (3,4,7,9)
+
+Memoram intr-un vector lCrescMax[] pana la elementul
+i din vector
+          a={ -1,2,5,3,4,7,9,0,1}
+lCrescMax[]={  1,2,3,1,2,3,4,1,2}
+Solutia finala va fi max din vectorul lCrescMax[]: 4
+
+int N=9;
+int a[]={ -1,2,5,3,4,7,9,0,1};
+int lCrescMax[N];
+lCrescMax[0]=1;
+for(i=1;i<N;i++)
+  if(a[i]>=a[i-1])lCrescMax[i]=lCrescMax[i-1]+1;
+  else lCrescMax[i]=1;
+
+//Solutia:
+int sol=lCrescMax[0];
+for(i=1;i<N;i++)
+   if(lCrescMax[i]>sol)sol=lCrescMax[i]);
+cout<<sol;
+
+Tema:
+Modificati solutia a.i. sa afisati si toata secventa gasita, nu doar lungimea ei

@@ -1,0 +1,19 @@
+Olivier Bonaventure - Computer Networking : Principles, Protocols and Practice
+Andrew S. Tanenbaum, ReÅ£ele de calculatoare
+V.M. Ionescu, I. Sima, E. Sofron - Aplicatii software pentru protocoale de comunicaÈ›ie. Ed. MatrixROM, 2008, ISBN 987-973-755-302-7
+Tutorials Point - Data Communication and Computer Network. 2014
+Bob Dickerson - Notes on Computer Networks. 2005
+Ivan Marsic - Computer Networks. Performance and Quality of Service, Ed. Rutgers University, June 11, 2013
+Kali Linux Guide
+Computer and Network Security
+ReÈ›ele locale
+Sisteme de Operare
+Gestiunea Serviciilor de ReÈ›ea
+Operating Systems (Practical Android)
+Operating Systems 2
+Cyberdefences and cyberintelligence
+Applied Cryptography
+Computer and Network Security
+Programare Web
+Proiectarea ReÈ›elelor
+Sisteme de operare ETTI

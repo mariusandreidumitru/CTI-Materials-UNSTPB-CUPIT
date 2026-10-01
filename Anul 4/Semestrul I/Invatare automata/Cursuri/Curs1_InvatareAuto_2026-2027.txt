@@ -1,0 +1,304 @@
+Invatare automata Curs 1 
+
+Invatare automata (engl. Machine learning):
+Pe baza unor date disponibile un sistem sa poata invata.
+Un scop posibil: Sa poata predictiona niste evenimente .
+Analiza datelor disponibile !
+ML machine learning - foloseste seturi mari de date.
+
+Cel mai folosit limbaj : Python (datorita bibliotecilor )
+Este folosit de asemenea si limbajul Java.
+
+Ce facem la curs ?
+- analiza statistica a datelor disponibile
+- predictii
+Este o firma care vinde inghetata. Avem date disponibile din vanzarile anterioare.
+Astazi ( zi, luna , temperatura de afara ) cate inghetate ne asteptam sa vindem ? (cu atatea
+ma aprovizionez)
+
+Baza cursului:
+Retele neuronale care invata automat sa recunoasca diverse forme.
+Arhitecturi:
+  accent pus pe RN feed forward si algo. de invatare: backpropagation
+
+Limbajul folosit la curs : Java (Accent pus pe: vectori, matrici, ArrayList, fisiere text)
+
+Valori pe care le putem calcula pentru a analiza datele disponibile ?
+
+
+///////// Recapitulare vectori: maximul dintr-un vector (prezentat la curs in Eclipse) ///////////
+
+public class Main {
+
+	public static void main(String[] args) {
+		int a[]= {1,-12,7,77,5};
+		int maxim=calculMax(a);
+		System.out.println("maxim="+maxim);
+	}
+	static int calculMax(int a[]) {
+		int maxim=a[0];
+		for(int i=1;i<a.length;i++)
+			if(a[i]>maxim)maxim=a[i];
+		return maxim;
+	}
+
+}
+
+////////// Maximul dintr-o matrice: ///////////////
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		int a[][]= {{1,-12,7,77,5},
+				    {122,3}};
+		
+		int maxim=calculMax(a);
+		System.out.println("maxim="+maxim);
+	}
+	static int calculMax(int a[][]) {
+		int maxim=a[0][0];
+		for(int i=0;i<a.length;i++)
+			//parcurg linia i:
+			for(int j=0;j<a[i].length;j++)
+			   if(a[i][j]>maxim)maxim=a[i][j];
+		return maxim;
+	}
+
+}
+
+////// Maximul dintr-un fisier text de numere intregi, in care fiecare numar intreg este pe o linie separata. //////////
+ Exemplu:
+12
+34
+-90
+5
+
+Maxim=34
+ALGO:
+Citim fisierul linie cu linie
+  Citim prima linie separat
+  Initializam maximul cu numarul din prima linie
+  SE REPETA PANA LA SFARSITUL FISIERULUI
+     - citim linia curenta ca String
+     - o convertim la int
+     - compar cu maximul curent
+
+Pentru citire fisiere: clasa BufferedReader si metoda readLine():
+  public String readLine()
+In caz de sfarsit de fisier va returna null
+     
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		try {
+			//creez un obiect BufferedReader:
+			FileReader fr=new FileReader("date.txt");
+			BufferedReader bfr=new BufferedReader(fr);
+			//citim prima linie.
+			//Presupunem ca are cel putin o linie
+			String s=bfr.readLine();
+			int maxim=Integer.parseInt(s);//"125"--->125
+			//Citim restul fisierului:
+			for(;;) {
+				s=bfr.readLine();
+				if(s==null)break;
+				int nrCrt=Integer.parseInt(s);
+				if(nrCrt>maxim)maxim=nrCrt;
+			}
+			bfr.close();fr.close();
+			System.out.println("maxim="+maxim);
+		}catch(IOException e) {
+			System.exit(1);
+		}					
+	}		
+}
+ML opereaza cu seturi mari de date.
+
+Marimi statistice care se calculeza pt seturi de date:
+//////////// Calcul medie aritmetica (suma valori/ numarul lor)   /////////////////
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		int N;
+		Scanner sc=new Scanner(System.in);
+		System.out.print("N=");
+		N=sc.nextInt();
+		int a[]=new int[N];
+		for(int i=0;i<N;i++) {
+			System.out.print("nr=");
+			a[i]=sc.nextInt();
+		}
+		double ma=medie(a);
+		System.out.println(ma);
+	}
+    static double medie(int a[]) {
+    	int suma=0;
+    	for(int i=0;i<a.length;i++)
+    		suma=suma+a[i];
+    	double ma=suma/(double)a.length;
+    	return ma;
+    }
+}
+
+//////////  Calcul mediana unui set de numere ////////////
+Definitie: Mediana este valoarea din mijlocul setului de date , SORTAT.
+Ex: {1,7,5,3,2}
+Care este mediana ?
+Sortez: {1,2,3,5,7}  Rezulta mediana =3
+
+Daca setul de date are lungime para, prin definitie mediana este
+media aritmetica a celor doua valori din mijloc.
+ Ex: 
+{1,7,5,3,2,4}
+Care este mediana ?
+Sortez: {1,2,3,4,5,7}  Rezulta mediana =(3+4)/2=3.5
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		int N;
+		Scanner sc=new Scanner(System.in);
+		System.out.print("N=");
+		N=sc.nextInt();
+		int a[]=new int[N];
+		for(int i=0;i<N;i++) {
+			System.out.print("nr=");
+			a[i]=sc.nextInt();
+		}
+		double mediana=calculMediana(a);
+		System.out.println(mediana);
+	}
+	static double calculMediana(int a[]) {
+		//sortez crecator vector:
+		Arrays.sort(a);
+		int N=a.length;//dimensiune vector
+		if(N%2==1)return a[N/2];
+		else return (a[(N-1)/2]+a[N/2])/2.0;
+	}
+
+}
+
+
+////////////// Deviatia standard ///////////////////
+Este o masura pentru: cat de apropiate de media aritmetica sunt valorile 
+Se defineste o valoare din set ca fiind "normala"  daca ea se gaseste in intervalul:
+(medie - deviatia st, medie + deviatia st)
+
+Calcul  deviatia standard pentru un set de 3 valori: a, b,c (numere reale)
+m=media aritmetica=(a+b+c)/3
+dev_standard=sqrt( ((a-m)*(a-m) + (b-m)*(b-m) + (c-m)*(c-m) )/3 ) 
+Pe cazul general: (x1,x2,...x_N)
+dev_standard=sqrt( ((x1-m)*(x1-m) + (x2-m)*(x2-m) + ...(x_N-m)*(x_N-m) )/N ) 
+  
+Deviatia standard dintr-un vector:
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		int N;
+		Scanner sc=new Scanner(System.in);
+		System.out.print("N=");
+		N=sc.nextInt();
+		int a[]=new int[N];
+		for(int i=0;i<N;i++) {
+			System.out.print("nr=");
+			a[i]=sc.nextInt();
+		}
+		double devStandard=calculDevStandard(a);
+		System.out.println(devStandard);
+	}
+	static double calculDevStandard(int a[]) {
+    	double ma=medie(a);
+    	double suma=0;
+    	for(int i=0;i<a.length;i++)
+    		suma=suma+(a[i]-ma)*(a[i]-ma);
+    	double devStandard=Math.sqrt(suma/a.length);
+    	return devStandard;
+    }
+	static double medie(int a[]) {
+    	int suma=0;
+    	for(int i=0;i<a.length;i++)
+    		suma=suma+a[i];
+    	double ma=suma/(double)a.length;
+    	return ma;
+    }
+}
+
+
+
+////////////////Calculul celei mai frecvente valori dintr-un set de numere.////////////////
+Ex: 3,4,5,4,-1,3,4,2  cmfv=4
+
+Citim N valori de la tastatura intr-un vector.
+Calculam cmfv din set.
+
+Algo:
+initializam cmfv cu prima vaoare din vector si numarul maxim de aparitii cu nr de aparitii pt primul numar.
+Tinem un vector de semafoare: aFostAnalizat[i]=true daca numarul de pe pozitia i a fost deja contorizat
+Parcurgem restul vectorului si pe ntru elem. curent calculam de cate ori apare.
+ ...
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		int N;
+		Scanner sc=new Scanner(System.in);
+		System.out.print("N=");
+		N=sc.nextInt();
+		int a[]=new int[N];
+		for(int i=0;i<N;i++) {
+			System.out.print("nr=");
+			a[i]=sc.nextInt();
+		}
+		boolean aFostAnalizat[]=new boolean[N];
+		for(int i=0;i<N;i++)
+			aFostAnalizat[i]=false;
+		//DE cate ori apare primul numar?
+		int contor=1;
+		for(int i=1;i<N;i++)
+			if(a[i]==a[0]) {
+				contor++;
+				aFostAnalizat[i]=true;
+			}
+		//Initializare:
+		int cmfv=a[0];
+		int contorMax=contor;
+		//Restul numerelor:
+		for(int i=1;i<N;i++) {
+			//de cate ori apare a[i]?
+			if(aFostAnalizat[i]==true)continue;
+			contor=1;
+			for(int j=i+1;j<N;j++)
+				if(a[i]==a[j]) {
+					contor++;
+					aFostAnalizat[j]=true;
+				}
+			if(contor>contorMax) {
+				cmfv=a[i];
+				contorMax=contor;
+				}
+			}
+		System.out.println("cmfv="+cmfv+" nr aparitii="+contorMax);
+	}
+	
+}
+
+
+

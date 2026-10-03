@@ -71,8 +71,8 @@ Materiale pentru Facultatea de Electronica, Comunicatii si Calculatoare, special
 |----------|------------------------------------------------|---|---|---|-----|----|---------|
 | I        | [Prelucrarea imaginilor (PI)](https://github.com/mariusandreidumitru/CTI-Materials-UNSTPB-CUPIT/tree/main/Anul%204/Semestrul%20I/Prelucrarea%20imaginilor)                  | 2 | - | 2 | -   | C  | 4       |
 | I        | [Procesarea semnalelor (PS)](https://github.com/mariusandreidumitru/CTI-Materials-UNSTPB-CUPIT/tree/main/Anul%204/Semestrul%20I/Procesarea%20semnalelor)                  | 3 | - | 2 | -   | E  | 5       |
-| I        | [Sisteme de calcul in timp real (SCTR)](https://github.com/mariusandreidumitru/CTI-Materials-UNSTPB-CUPIT/tree/main/Anul%204/Semestrul%20I/Sisteme%20de%20calcul%20in%20timp@20real)                                          | 2 | - | 2 | - | E  | 4       |
-| I        | [Sisteme de calcul in timp real (SCTR)](https://github.com/mariusandreidumitru/CTI-Materials-UNSTPB-CUPIT/tree/main/Anul%204/Semestrul%20I/Sisteme%20de%20calcul%20in%20timp@20real)                   | - | - |             - | 1   | V  | 2       |
+| I        | [Sisteme de calcul in timp real (SCTR)](https://github.com/mariusandreidumitru/CTI-Materials-UNSTPB-CUPIT/tree/main/Anul%204/Semestrul%20I/Sisteme%20de%20calcul%20in%20timp%20real)                                          | 2 | - | 2 | - | E  | 4       |
+| I        | [Sisteme de calcul in timp real (SCTR)](https://github.com/mariusandreidumitru/CTI-Materials-UNSTPB-CUPIT/tree/main/Anul%204/Semestrul%20I/Sisteme%20de%20calcul%20in%20timp%20real/Laboratoare)                   | - | - |             - | 1   | V  | 2       |
 | I        | [Criptografie si Securitate informationala (CSI)](https://github.com/mariusandreidumitru/CTI-Materials-UNSTPB-CUPIT/tree/main/Anul%204/Semestrul%20I/Criptografie%20si%20Securitate%20informationala)                  | 2 | - | 2 | -   | E  | 4     |
 | I        | [Activitate de cercetare proiectare](ACP)                 | - | - | - | 2 | V  | 3    |
 | I        | [Sisteme inteligente](SI)                 | 2 | - | 1 | - | C  | 4    |
